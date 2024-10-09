@@ -89,12 +89,8 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
 int main(void) {
     //Initialization
     const int screenWidth = tilemapSizeX * tileSize, screenHeight = tilemapSizeY * tileSize;
-    Camera2D mainCamera;
     InitWindow(screenWidth, screenHeight, "Base platformer - Prototype");
     SetTargetFPS(60);
-    mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
-    mainCamera.rotation = 0;
-    mainCamera.zoom = 1.5f;
     
     //--------------------------------------------------------------------------------------
     //User properties
@@ -158,29 +154,6 @@ int main(void) {
         //Clamping forces
         if(currentVelocity.y > 32) currentVelocity.y = 32;
         else if (currentVelocity.y < -32) currentVelocity.y = -32;
-
-        //Calculating camera positions
-        Vector2 cameraTarget = {(800 / mainCamera.zoom), (450 / mainCamera.zoom)};
-
-        //Updating camera position in x axys
-        if(currentPosition.x > (cameraTarget.x - (characterSize.x * 0.5f)) &&
-        currentPosition.x < ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
-            mainCamera.target.x = currentPosition.x + (characterSize.x * 0.5f);
-        } else if (currentPosition.x < (cameraTarget.x - (characterSize.x * 0.5f))){
-            mainCamera.target.x = cameraTarget.x;
-        } else if (currentPosition.x > ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
-            mainCamera.target.x = screenWidth - cameraTarget.x;
-        }
-
-        //Updating camera position in y axys
-        if(currentPosition.y >= (cameraTarget.y - (characterSize.y * 0.5f)) &&
-        currentPosition.y <= ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
-            mainCamera.target.y = currentPosition.y + (characterSize.y * 0.5f);
-        } else if (currentPosition.y < (cameraTarget.y - (characterSize.y * 0.5f))){
-            mainCamera.target.y = cameraTarget.y;
-        } else if (currentPosition.y > ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
-            mainCamera.target.y = screenHeight - cameraTarget.y;
-        }
         
         //Collisions under the character
         bool floorCollision = checkCollisionDown(currentPosition, characterSize, collisiontilemap, tileSize);
@@ -208,6 +181,7 @@ int main(void) {
         if(IsKeyDown(KEY_W) && currentVelocity.y == 0 &&
         ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
         currentPosition.y + characterSize.y >= screenHeight)){
+            //Adding jump force
             currentAcceleration.y -= 16;
         }
         
@@ -219,10 +193,13 @@ int main(void) {
         //Moving left
         if(IsKeyDown(KEY_A)){
             if(leftCollision){
+                //Fixing position due to fast collision
                 currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
+                //Resetting forces when colliding
                 currentVelocity.x = 0;
                 currentAcceleration.x = 0;
-            } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
+            } else if(currentPosition.x > 0){
+                //Moving
                 currentAcceleration.x -= 1.5f;
             }
         }
@@ -235,19 +212,25 @@ int main(void) {
         //Moving right
         if(IsKeyDown(KEY_D)){
             if(rightCollision){
+                //Fixing position due to fast collision
                 currentPosition.x = (tilePointX2.x * tileSize) + tileSize - characterSize.x;
+                //Resetting forces when colliding
                 currentVelocity.x = 0;
                 currentAcceleration.x = 0;
             } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
+                //Moving
                 currentAcceleration.x += 1.5f;
             }
         }
         
         //Limiting up movement with screen
         if(currentPosition.y < 0){
+            //Limiting going over screen
             currentPosition.y = 0;
             currentVelocity.y = 0;
         }
+        if(currentPosition.x < 0) currentPosition.x = 0;
+        if(currentPosition.x + characterSize.x > tileSize * tilemapSizeX) currentPosition.x = tileSize * tilemapSizeX - characterSize.x;
         
         //Crouch
         if(IsKeyDown(KEY_S)){
