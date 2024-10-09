@@ -91,7 +91,7 @@ int main(void) {
     SetTargetFPS(60);
     mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
     mainCamera.rotation = 0;
-    mainCamera.zoom = 2;
+    mainCamera.zoom = 1.5f;
     
     //--------------------------------------------------------------------------------------
     //User properties
@@ -150,21 +150,22 @@ int main(void) {
         //Brain logic
 
         //Updating camera position from x axys
-        if(currentPosition.x >= 400 - (characterSize.x / 2) && currentPosition.x <= ((screenWidth - 400) - (characterSize.x / 2))){
+        if(currentPosition.x > (800 / mainCamera.zoom) - (characterSize.x / 2) &&
+        currentPosition.x < ((screenWidth - (800 / mainCamera.zoom)) - (characterSize.x / 2))){
             mainCamera.target.x = currentPosition.x + (characterSize.x / 2);
-        } else if (currentPosition.x < 400 - (characterSize.x / 2)){
-            mainCamera.target.x = 400;
-        } else if (currentPosition.x > ((screenWidth - 400) - (characterSize.x / 2))){
-            mainCamera.target.x = screenWidth - 400;
+        } else if (currentPosition.x < (800 / mainCamera.zoom) - (characterSize.x / 2)){
+            mainCamera.target.x = (800 / mainCamera.zoom);
+        } else if (currentPosition.x > ((screenWidth - (800 / mainCamera.zoom)) - (characterSize.x / 2))){
+            mainCamera.target.x = screenWidth - (800 / mainCamera.zoom);
         }
 
         //Updating camera position from y axys
-        if(currentPosition.y >= 224 - (characterSize.y / 2) && currentPosition.y <= ((screenHeight - 224) - (characterSize.y / 2))){
+        if(currentPosition.y >= (448 / mainCamera.zoom) - (characterSize.y / 2) && currentPosition.y <= ((screenHeight - (448 / mainCamera.zoom)) - (characterSize.y / 2))){
             mainCamera.target.y = currentPosition.y + (characterSize.y / 2);
-        } else if (currentPosition.y < 224 - (characterSize.y / 2)){
-            mainCamera.target.y = 224;
-        } else if (currentPosition.y > ((screenHeight - 224) - (characterSize.y / 2))){
-            mainCamera.target.y = screenHeight - 224;
+        } else if (currentPosition.y < (448 / mainCamera.zoom) - (characterSize.y / 2)){
+            mainCamera.target.y = (448 / mainCamera.zoom);
+        } else if (currentPosition.y > ((screenHeight - (448 / mainCamera.zoom)) - (characterSize.y / 2))){
+            mainCamera.target.y = screenHeight - (448 / mainCamera.zoom);
         }
         
         //Collisions under the character
