@@ -116,9 +116,9 @@ int main(void) {
         {0,0,0,0,0,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,3,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,2,3,3,4,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -132,9 +132,9 @@ int main(void) {
         {0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -156,27 +156,27 @@ int main(void) {
         currentAcceleration.y += 1;
 
         //Clamping forces
-        if(currentVelocity.y > 16) currentVelocity.y = 16;
-        else if (currentVelocity.y < -16 ) currentVelocity.y = -16;
+        if(currentVelocity.y > 32) currentVelocity.y = 32;
+        else if (currentVelocity.y < -32) currentVelocity.y = -32;
 
         //Calculating camera positions
         Vector2 cameraTarget = {(800 / mainCamera.zoom), (450 / mainCamera.zoom)};
 
         //Updating camera position in x axys
-        if(currentPosition.x > cameraTarget.x - (characterSize.x * 0.5f) &&
+        if(currentPosition.x > (cameraTarget.x - (characterSize.x * 0.5f)) &&
         currentPosition.x < ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
             mainCamera.target.x = currentPosition.x + (characterSize.x * 0.5f);
-        } else if (currentPosition.x < cameraTarget.x - (characterSize.x * 0.5f)){
+        } else if (currentPosition.x < (cameraTarget.x - (characterSize.x * 0.5f))){
             mainCamera.target.x = cameraTarget.x;
         } else if (currentPosition.x > ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
             mainCamera.target.x = screenWidth - cameraTarget.x;
         }
 
         //Updating camera position in y axys
-        if(currentPosition.y >= cameraTarget.y - (characterSize.y * 0.5f) &&
+        if(currentPosition.y >= (cameraTarget.y - (characterSize.y * 0.5f)) &&
         currentPosition.y <= ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
             mainCamera.target.y = currentPosition.y + (characterSize.y * 0.5f);
-        } else if (currentPosition.y < cameraTarget.y - (characterSize.y * 0.5f)){
+        } else if (currentPosition.y < (cameraTarget.y - (characterSize.y * 0.5f))){
             mainCamera.target.y = cameraTarget.y;
         } else if (currentPosition.y > ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
             mainCamera.target.y = screenHeight - cameraTarget.y;
@@ -205,7 +205,9 @@ int main(void) {
         }
         
         //Jumping
-        if(IsKeyDown(KEY_W) && currentVelocity.y == 0 && (floorCollision || currentPosition.y + characterSize.y >= screenHeight)){
+        if(IsKeyDown(KEY_W) && currentVelocity.y == 0 &&
+        ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
+        currentPosition.y + characterSize.y >= screenHeight)){
             currentAcceleration.y -= 16;
         }
         
@@ -214,14 +216,14 @@ int main(void) {
         Vector2 pointX1 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
         
-        //Walking left
+        //Moving left
         if(IsKeyDown(KEY_A)){
             if(leftCollision){
                 currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
                 currentVelocity.x = 0;
                 currentAcceleration.x = 0;
             } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
-                currentAcceleration.x -= 5;
+                currentAcceleration.x -= 1.5f;
             }
         }
         
@@ -230,14 +232,14 @@ int main(void) {
         Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
         
-        //Walking right
+        //Moving right
         if(IsKeyDown(KEY_D)){
             if(rightCollision){
                 currentPosition.x = (tilePointX2.x * tileSize) + tileSize - characterSize.x;
                 currentVelocity.x = 0;
                 currentAcceleration.x = 0;
             } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
-                currentAcceleration.x += 5;
+                currentAcceleration.x += 1.5f;
             }
         }
         
@@ -268,13 +270,13 @@ int main(void) {
         
         //Calculating physics
         currentVelocity.y += currentAcceleration.y;
+        currentVelocity.x *= 0.85f;
         currentPosition.y += currentVelocity.y;
         currentVelocity.x += currentAcceleration.x;
         currentPosition.x += currentVelocity.x;
     
         //Resetting gravity
         currentAcceleration.x = 0;
-        currentVelocity.x = 0;
         currentAcceleration.y = 0;
            
         //--------------------------------------------------------------------------------------
