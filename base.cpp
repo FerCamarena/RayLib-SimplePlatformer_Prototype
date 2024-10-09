@@ -180,6 +180,9 @@ int main(void) {
             currentPosition.y = ((int)tilePointA.y * tileSize) - characterSize.y;
             currentVelocity.y = 0;
             currentAcceleration.y = 0;
+            if((currentPosition.y + characterSize.y) > screenHeight){
+                currentPosition.y = screenHeight - characterSize.y;
+            }
         }
         
         //Jumping
@@ -222,10 +225,6 @@ int main(void) {
         //Limiting movement with screen
         if(currentPosition.y < 0){
             currentPosition.y = 0;
-            currentVelocity.y = 0;
-        }
-        if(currentPosition.y + characterSize.y > screenHeight){
-            currentPosition.y = screenHeight - characterSize.y;
             currentVelocity.y = 0;
         }
         
