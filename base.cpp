@@ -86,8 +86,12 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
 int main(void) {
     //Initialization
     const int screenWidth = tilemapSizeX * tileSize, screenHeight = tilemapSizeY * tileSize;
+    Camera2D mainCamera;
     InitWindow(screenWidth, screenHeight, "Base platformer - Prototype");
     SetTargetFPS(60);
+    mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
+    mainCamera.rotation = 0;
+    mainCamera.zoom = 2;
     
     //--------------------------------------------------------------------------------------
     //User properties
@@ -145,6 +149,24 @@ int main(void) {
     while (!WindowShouldClose()) {
         //Brain logic
 
+        //Updating camera position from x axys
+        if(currentPosition.x >= 400 - (characterSize.x / 2) && currentPosition.x <= ((screenWidth - 400) - (characterSize.x / 2))){
+            mainCamera.target.x = currentPosition.x + (characterSize.x / 2);
+        } else if (currentPosition.x < 400 - (characterSize.x / 2)){
+            mainCamera.target.x = 400;
+        } else if (currentPosition.x > ((screenWidth - 400) - (characterSize.x / 2))){
+            mainCamera.target.x = screenWidth - 400;
+        }
+
+        //Updating camera position from y axys
+        if(currentPosition.y >= 224 - (characterSize.y / 2) && currentPosition.y <= ((screenHeight - 224) - (characterSize.y / 2))){
+            mainCamera.target.y = currentPosition.y + (characterSize.y / 2);
+        } else if (currentPosition.y < 224 - (characterSize.y / 2)){
+            mainCamera.target.y = 224;
+        } else if (currentPosition.y > ((screenHeight - 224) - (characterSize.y / 2))){
+            mainCamera.target.y = screenHeight - 224;
+        }
+        
         //Collisions under the character
         bool floorCollision = checkCollisionDown(currentPosition, characterSize, collisiontilemap, tileSize);
         Vector2 pointA = {currentPosition.x, currentPosition.y + characterSize.y + 1};
@@ -239,21 +261,23 @@ int main(void) {
         //--------------------------------------------------------------------------------------
         //Graphic logic
         BeginDrawing();
-            //Clearing the image with background color
-            ClearBackground(PURPLE);
-            //#Displaying the full tilesheet 
-            //#DrawTexture(tilesheet, 0, 0, WHITE);
-            //Drawing tilemap
-            for(int x = 0; x < tilemapSizeX; x++){
-                for(int y = 0; y < tilemapSizeY; y++){
-                    Vector2 tilePosition = {x * tileSize, y * tileSize};
-                    int tileIndex = tilemap[y][x];
-                    //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+            BeginMode2D(mainCamera);
+                //Clearing the image with background color
+                ClearBackground(PURPLE);
+                //#Displaying the full tilesheet 
+                //#DrawTexture(tilesheet, 0, 0, WHITE);
+                //Drawing tilemap
+                for(int x = 0; x < tilemapSizeX; x++){
+                    for(int y = 0; y < tilemapSizeY; y++){
+                        Vector2 tilePosition = {x * tileSize, y * tileSize};
+                        int tileIndex = tilemap[y][x];
+                        //Drawing single tile
+                        DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                    }
                 }
-            }
-            //Drawing character
-            DrawRectangle(currentPosition.x, currentPosition.y, characterSize.x, characterSize.y, GOLD);
+                //Drawing character
+                DrawRectangle(currentPosition.x, currentPosition.y, characterSize.x, characterSize.y, GOLD);
+            EndMode2D();
         EndDrawing();
     }
     //--------------------------------------------------------------------------------------
