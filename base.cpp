@@ -110,11 +110,11 @@ int main(void) {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,3,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
@@ -124,13 +124,13 @@ int main(void) {
     int collisiontilemap[tilemapSizeY][tilemapSizeX] = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -157,6 +157,13 @@ int main(void) {
             mainCamera.target.x = (800 / mainCamera.zoom);
         } else if (currentPosition.x > ((screenWidth - (800 / mainCamera.zoom)) - (characterSize.x / 2))){
             mainCamera.target.x = screenWidth - (800 / mainCamera.zoom);
+        //Gravity
+        currentAcceleration.y += 1;
+
+        //Clamping forces
+        if(currentVelocity.y > 16) currentVelocity.y = 16;
+        else if (currentVelocity.y < -16 ) currentVelocity.y = -16;
+
         }
 
         //Updating camera position from y axys
@@ -196,14 +203,14 @@ int main(void) {
         Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
         
         //Walking left
-        if(!leftCollision && IsKeyDown(KEY_A)){
-            if(currentPosition.x > 0){
+        if(IsKeyDown(KEY_A)){
+            if(leftCollision){
+                currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
+                currentVelocity.x = 0;
+                currentAcceleration.x = 0;
+            } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
                 currentAcceleration.x -= 5;
             }
-        } else if(leftCollision && IsKeyDown(KEY_A)){
-            currentPosition.x = ((int)tilePointX1.x * tileSize) + tileSize;
-            currentVelocity.x = 0;
-            currentAcceleration.x = 0;
         }
         
         //Collisions on the right of the haracter
@@ -212,14 +219,14 @@ int main(void) {
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
         
         //Walking right
-        if(!rightCollision && IsKeyDown(KEY_D)){
-            if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
+        if(IsKeyDown(KEY_D)){
+            if(rightCollision){
+                currentPosition.x = (tilePointX2.x * tileSize) + tileSize - characterSize.x;
+                currentVelocity.x = 0;
+                currentAcceleration.x = 0;
+            } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
                 currentAcceleration.x += 5;
             }
-        } else if(rightCollision && IsKeyDown(KEY_D)){
-            currentPosition.x = ((int)tilePointX2.x * tileSize) + tileSize - characterSize.x;
-            currentVelocity.x = 0;
-            currentAcceleration.x = 0;
         }
         
         //Limiting movement with screen
@@ -233,7 +240,7 @@ int main(void) {
             //Detecting when key is pressed
             if(IsKeyPressed(KEY_S)){
                 //Moving the player once
-                currentPosition.y = currentPosition.y + 24;
+                currentPosition.y = currentPosition.y + 10;
             }
             //Decreasing character size
             characterSize.y = 42;
@@ -241,7 +248,7 @@ int main(void) {
             //Detecting when key is released
             if(IsKeyReleased(KEY_S)){
                 //Moving the player once
-                currentPosition.y = currentPosition.y - 24;
+                currentPosition.y = currentPosition.y - 10;
             }
             //Resetting character size
             characterSize.y = 52;
