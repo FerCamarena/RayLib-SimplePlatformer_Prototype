@@ -95,6 +95,13 @@ int main(void) {
     //--------------------------------------------------------------------------------------
     //User properties
 
+    //Camera variables
+    Camera2D mainCamera;
+    mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
+    mainCamera.rotation = 0;
+    mainCamera.zoom = 1.5f;
+    Vector2 cameraAcceleration = {0,0};
+
     //Tilemap variables
     Texture2D tilesheet = LoadTexture("./assets/tilesheet_complete.png");
     Rectangle tiles[] = {
@@ -262,6 +269,45 @@ int main(void) {
         currentAcceleration.x = 0;
         currentAcceleration.y = 0;
            
+        //Calculating camera positions
+        Vector2 cameraLimits = {((800 + (tileSize / 2)) / mainCamera.zoom), ((400 + tileSize * 2) / mainCamera.zoom)};
+        Vector2 cameraLeftFocus = {(cameraLimits.x - (characterSize.x * 0.5f)), (cameraLimits.y - (26 * 0.5f))};
+        Vector2 cameraRightFocus = {((screenWidth - cameraLimits.x) - (characterSize.x * 0.5f)), ((screenHeight - cameraLimits.y) - (26 * 0.5f))};
+
+        //Updating camera position in x axys
+        if(currentPosition.x > cameraLeftFocus.x &&
+        currentPosition.x < cameraRightFocus.x){
+            mainCamera.target.x = currentPosition.x + (characterSize.x * 0.5f);
+        } else if (currentPosition.x < cameraRightFocus.x){
+            mainCamera.target.x = cameraLimits.x;
+        } else if (currentPosition.x > cameraLeftFocus.x){
+            mainCamera.target.x = screenWidth - cameraLimits.x;
+        }
+
+        //Updating camera position in Y axys
+        if(currentPosition.y >= cameraLeftFocus.y &&
+        currentPosition.y <= cameraRightFocus.y){
+            mainCamera.target.y = currentPosition.y + (26 * 0.5f);
+        } else if (currentPosition.y < cameraRightFocus.y){
+            mainCamera.target.y = cameraLimits.y;
+        } else if (currentPosition.y > cameraLeftFocus.y){
+            mainCamera.target.y = screenHeight - cameraLimits.y;
+        }
+
+        //Updating camera acceleration
+        cameraAcceleration.x = currentVelocity.x * currentVelocity.x / 8;
+        if(currentVelocity.x < 0) cameraAcceleration.x *= -1; 
+        cameraAcceleration.y = currentVelocity.y * currentVelocity.y / 64;
+        if(currentVelocity.y < 0) cameraAcceleration.y *= -1;
+
+        //Reducing camera acceleration
+        cameraAcceleration.x *= 0.85f;
+        cameraAcceleration.y *= 0.85f;
+
+        //Setting camera target with accelerations
+        mainCamera.target.x += cameraAcceleration.x * 2;
+        mainCamera.target.y += cameraAcceleration.y * 2;
+
         //--------------------------------------------------------------------------------------
         //Graphic logic
         BeginDrawing();
