@@ -17,7 +17,7 @@ int tileSize = 64;
 //Locking for tile position on current tilemap
 Vector2 checkTilePosition(Vector2 checkPosition, int tileSize){
     //Calculating position
-    Vector2 tilePosition = {checkPosition.x / tileSize, checkPosition.y / tileSize};
+    Vector2 tilePosition = {(int)(checkPosition.x / tileSize), (int)(checkPosition.y / tileSize)};
     //Returning position
     return tilePosition;
 }
@@ -41,7 +41,8 @@ bool checkCollisionDown(Vector2 characterPosition, Vector2 characterSize, int co
     Vector2 tilePointA = checkTilePosition(pointA, tileSize);
     Vector2 tilePointB = checkTilePosition(pointB, tileSize);
     //Checking types on points
-    if(checkTileType(tilePointA, collisiontilemap) == 1 || checkTileType(tilePointB, collisiontilemap) == 1) return true;
+    if(checkTileType(tilePointA, collisiontilemap) > 0 ||
+    checkTileType(tilePointB, collisiontilemap) > 0) return true;
     else return false;
 }
 
@@ -50,7 +51,7 @@ bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int co
     //PointC
     Vector2 pointC = {characterPosition.x - 1, characterPosition.y};
     //PointD
-    Vector2 pointD = {characterPosition.x - 1, characterPosition.y + (characterSize.y / 2)};
+    Vector2 pointD = {characterPosition.x - 1, characterPosition.y + (characterSize.y * 0.5f)};
     //PointE
     Vector2 pointE = {characterPosition.x - 1, characterPosition.y + characterSize.y - 1};
     //Precalculating
@@ -58,7 +59,9 @@ bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int co
     Vector2 tilePointD = checkTilePosition(pointD, tileSize);
     Vector2 tilePointE = checkTilePosition(pointE, tileSize);
     //Returning on each case
-    if(checkTileType(tilePointC, collisiontilemap) == 1 || checkTileType(tilePointD, collisiontilemap) == 1 || checkTileType(tilePointE, collisiontilemap) == 1) return true;
+    if(checkTileType(tilePointC, collisiontilemap) == 1 ||
+    checkTileType(tilePointD, collisiontilemap) == 1 ||
+    checkTileType(tilePointE, collisiontilemap) == 1) return true;
     else return false;
 }
 
@@ -67,7 +70,7 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
     //PointC
     Vector2 pointF = {characterPosition.x + characterSize.x, characterPosition.y};
     //PointD
-    Vector2 pointG = {characterPosition.x + characterSize.x, characterPosition.y + (characterSize.y / 2)};
+    Vector2 pointG = {characterPosition.x + characterSize.x, characterPosition.y + (characterSize.y * 0.5f)};
     //PointE
     Vector2 pointH = {characterPosition.x + characterSize.x, characterPosition.y + characterSize.y - 1};
     //Precalculating
@@ -149,14 +152,6 @@ int main(void) {
     while (!WindowShouldClose()) {
         //Brain logic
 
-        //Updating camera position from x axys
-        if(currentPosition.x > (800 / mainCamera.zoom) - (characterSize.x / 2) &&
-        currentPosition.x < ((screenWidth - (800 / mainCamera.zoom)) - (characterSize.x / 2))){
-            mainCamera.target.x = currentPosition.x + (characterSize.x / 2);
-        } else if (currentPosition.x < (800 / mainCamera.zoom) - (characterSize.x / 2)){
-            mainCamera.target.x = (800 / mainCamera.zoom);
-        } else if (currentPosition.x > ((screenWidth - (800 / mainCamera.zoom)) - (characterSize.x / 2))){
-            mainCamera.target.x = screenWidth - (800 / mainCamera.zoom);
         //Gravity
         currentAcceleration.y += 1;
 
@@ -164,15 +159,27 @@ int main(void) {
         if(currentVelocity.y > 16) currentVelocity.y = 16;
         else if (currentVelocity.y < -16 ) currentVelocity.y = -16;
 
+        //Calculating camera positions
+        Vector2 cameraTarget = {(800 / mainCamera.zoom), (450 / mainCamera.zoom)};
+
+        //Updating camera position in x axys
+        if(currentPosition.x > cameraTarget.x - (characterSize.x * 0.5f) &&
+        currentPosition.x < ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
+            mainCamera.target.x = currentPosition.x + (characterSize.x * 0.5f);
+        } else if (currentPosition.x < cameraTarget.x - (characterSize.x * 0.5f)){
+            mainCamera.target.x = cameraTarget.x;
+        } else if (currentPosition.x > ((screenWidth - cameraTarget.x) - (characterSize.x * 0.5f))){
+            mainCamera.target.x = screenWidth - cameraTarget.x;
         }
 
-        //Updating camera position from y axys
-        if(currentPosition.y >= (448 / mainCamera.zoom) - (characterSize.y / 2) && currentPosition.y <= ((screenHeight - (448 / mainCamera.zoom)) - (characterSize.y / 2))){
-            mainCamera.target.y = currentPosition.y + (characterSize.y / 2);
-        } else if (currentPosition.y < (448 / mainCamera.zoom) - (characterSize.y / 2)){
-            mainCamera.target.y = (448 / mainCamera.zoom);
-        } else if (currentPosition.y > ((screenHeight - (448 / mainCamera.zoom)) - (characterSize.y / 2))){
-            mainCamera.target.y = screenHeight - (448 / mainCamera.zoom);
+        //Updating camera position in y axys
+        if(currentPosition.y >= cameraTarget.y - (characterSize.y * 0.5f) &&
+        currentPosition.y <= ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
+            mainCamera.target.y = currentPosition.y + (characterSize.y * 0.5f);
+        } else if (currentPosition.y < cameraTarget.y - (characterSize.y * 0.5f)){
+            mainCamera.target.y = cameraTarget.y;
+        } else if (currentPosition.y > ((screenHeight - cameraTarget.y) - (characterSize.y * 0.5f))){
+            mainCamera.target.y = screenHeight - cameraTarget.y;
         }
         
         //Collisions under the character
@@ -180,20 +187,25 @@ int main(void) {
         Vector2 pointA = {currentPosition.x, currentPosition.y + characterSize.y + 1};
         Vector2 tilePointA = checkTilePosition(pointA, tileSize); 
         
-        //Gravity
-        if(!floorCollision){
-            currentAcceleration.y += 1;
-        } else if(currentVelocity.y >= 0){
-            currentPosition.y = ((int)tilePointA.y * tileSize) - characterSize.y;
-            currentVelocity.y = 0;
-            currentAcceleration.y = 0;
-            if((currentPosition.y + characterSize.y) > screenHeight){
-                currentPosition.y = screenHeight - characterSize.y;
+        //Falling down
+        if(floorCollision && currentVelocity.y >= 0){
+            //Edge hopping
+            if(checkTileType(tilePointA, collisiontilemap) == 1 ||
+            (int)(currentPosition.y + characterSize.y) % tileSize < 12) {
+                //Fixing position to tile position
+                currentPosition.y = (tilePointA.y * tileSize) - characterSize.y;
+                //Reseting forces
+                currentVelocity.y = 0;
+                currentAcceleration.y = 0;
+                //Preventing falling from screen 
+                if((currentPosition.y + characterSize.y) > screenHeight){
+                    currentPosition.y = screenHeight - characterSize.y;
+                }
             }
         }
         
         //Jumping
-        if(IsKeyDown(KEY_W) && (floorCollision || currentPosition.y + characterSize.y >= screenHeight) && currentVelocity.y >= 0){
+        if(IsKeyDown(KEY_W) && currentVelocity.y == 0 && (floorCollision || currentPosition.y + characterSize.y >= screenHeight)){
             currentAcceleration.y -= 16;
         }
         
@@ -229,7 +241,7 @@ int main(void) {
             }
         }
         
-        //Limiting movement with screen
+        //Limiting up movement with screen
         if(currentPosition.y < 0){
             currentPosition.y = 0;
             currentVelocity.y = 0;
@@ -237,7 +249,7 @@ int main(void) {
         
         //Crouch
         if(IsKeyDown(KEY_S)){
-            //Detecting when key is pressed
+            //Detecting when key is just pressed
             if(IsKeyPressed(KEY_S)){
                 //Moving the player once
                 currentPosition.y = currentPosition.y + 10;
@@ -245,7 +257,7 @@ int main(void) {
             //Decreasing character size
             characterSize.y = 42;
         } else {
-            //Detecting when key is released
+            //Detecting when key is just released
             if(IsKeyReleased(KEY_S)){
                 //Moving the player once
                 currentPosition.y = currentPosition.y - 10;
