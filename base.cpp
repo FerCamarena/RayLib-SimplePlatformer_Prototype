@@ -8,8 +8,6 @@
 #define tilemapSizeX 25
 #define tilemapSizeY 14
 int tileSize = 64;
-//#const int tilemapSizeX = screenWidth / tileSize;
-//#const int tilemapSizeY = screenHeight / tileSize;
 
 //--------------------------------------------------------------------------------------
 //User methods
@@ -111,7 +109,43 @@ int main(void) {
         {2 * tileSize, 0 * tileSize, tileSize, tileSize},  // 3 Curved center
         {3 * tileSize, 0 * tileSize, tileSize, tileSize},  // 4 Curved right
     };
-    int tilemap[tilemapSizeY][tilemapSizeX] = {
+    int bg2Tilemap[tilemapSizeY + 2][tilemapSizeX + 4] = {
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    };
+    int bg1Tilemap[tilemapSizeY + 2][tilemapSizeX + 8] = {
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    };
+    int baseTilemap[tilemapSizeY][tilemapSizeX] = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0,0,0},
@@ -127,18 +161,18 @@ int main(void) {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     };
-    int collisiontilemap[tilemapSizeY][tilemapSizeX] = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    int collisionTilemap[tilemapSizeY][tilemapSizeX] = {
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -149,6 +183,10 @@ int main(void) {
     Vector2 currentPosition = {386, 16};
     Vector2 currentVelocity = {0, 0};
     Vector2 currentAcceleration = {0, 0};
+    Vector2 characterMid = {(characterSize.x * 0.5f), (characterSize.y * 0.5f)};
+
+    //Parallax variables
+    Vector2 parallaxPositionOffset = {0, 32};
 
     //--------------------------------------------------------------------------------------
     //Game loop
@@ -163,15 +201,15 @@ int main(void) {
         else if (currentVelocity.y < -32) currentVelocity.y = -32;
         
         //Collisions under the character
-        bool floorCollision = checkCollisionDown(currentPosition, characterSize, collisiontilemap, tileSize);
+        bool floorCollision = checkCollisionDown(currentPosition, characterSize, collisionTilemap, tileSize);
         Vector2 pointA = {currentPosition.x, currentPosition.y + characterSize.y + 1};
         Vector2 tilePointA = checkTilePosition(pointA, tileSize); 
         
         //Falling down
         if(floorCollision && currentVelocity.y >= 0){
             //Edge hopping
-            if(checkTileType(tilePointA, collisiontilemap) == 1 ||
-            (int)(currentPosition.y + characterSize.y) % tileSize < 12) {
+            if(checkTileType(tilePointA, collisionTilemap) == 1 ||
+            (int)(currentPosition.y + characterSize.y) % tileSize < 24) {
                 //Fixing position to tile position
                 currentPosition.y = (tilePointA.y * tileSize) - characterSize.y;
                 //Reseting forces
@@ -189,11 +227,11 @@ int main(void) {
         ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
         currentPosition.y + characterSize.y >= screenHeight)){
             //Adding jump force
-            currentAcceleration.y -= 16;
+            currentAcceleration.y -= 20;
         }
         
         //Collisions on the left of the character
-        bool leftCollision = checkCollisionLeft(currentPosition, characterSize, collisiontilemap, tileSize);
+        bool leftCollision = checkCollisionLeft(currentPosition, characterSize, collisionTilemap, tileSize);
         Vector2 pointX1 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
         
@@ -212,7 +250,7 @@ int main(void) {
         }
         
         //Collisions on the right of the haracter
-        bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisiontilemap, tileSize);
+        bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisionTilemap, tileSize);
         Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
         
@@ -268,30 +306,39 @@ int main(void) {
         //Resetting gravity
         currentAcceleration.x = 0;
         currentAcceleration.y = 0;
-           
+        
         //Calculating camera positions
-        Vector2 cameraLimits = {((800 + (tileSize / 2)) / mainCamera.zoom), ((400 + tileSize * 2) / mainCamera.zoom)};
-        Vector2 cameraLeftFocus = {(cameraLimits.x - (characterSize.x * 0.5f)), (cameraLimits.y - (26 * 0.5f))};
-        Vector2 cameraRightFocus = {((screenWidth - cameraLimits.x) - (characterSize.x * 0.5f)), ((screenHeight - cameraLimits.y) - (26 * 0.5f))};
+        Vector2 cameraLowerFocus = {(mainCamera.offset.x / mainCamera.zoom) + characterMid.x, (mainCamera.offset.y / mainCamera.zoom) + characterMid.y};
+        Vector2 cameraUpperFocus = {(screenWidth - cameraLowerFocus.x) + characterMid.x, (screenHeight - cameraLowerFocus.y) + characterMid.y};
+
+        //Offseting parallax with camera
+        if (currentPosition.x >= cameraLowerFocus.x && (currentPosition.x + characterSize.x) <= cameraUpperFocus.x) {
+            if(currentVelocity.x > 1) parallaxPositionOffset.x += 0.5f;
+            else if(currentVelocity.x < -1) parallaxPositionOffset.x -= 0.5f;
+        }
+        if (currentPosition.y >= cameraLowerFocus.y && (currentPosition.y + characterSize.y) <= cameraUpperFocus.y) {
+            if(currentVelocity.y > 1) parallaxPositionOffset.y += 0.5f;
+            else if(currentVelocity.y < -1) parallaxPositionOffset.y -= 0.5f;
+        }
 
         //Updating camera position in x axys
-        if(currentPosition.x > cameraLeftFocus.x &&
-        currentPosition.x < cameraRightFocus.x){
-            mainCamera.target.x = currentPosition.x + (characterSize.x * 0.5f);
-        } else if (currentPosition.x < cameraRightFocus.x){
-            mainCamera.target.x = cameraLimits.x;
-        } else if (currentPosition.x > cameraLeftFocus.x){
-            mainCamera.target.x = screenWidth - cameraLimits.x;
+        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x &&
+        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x){
+            mainCamera.target.x = currentPosition.x + characterMid.x;
+        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x){
+            mainCamera.target.x = cameraLowerFocus.x;
+        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x){
+            mainCamera.target.x = cameraUpperFocus.x;
         }
 
         //Updating camera position in Y axys
-        if(currentPosition.y >= cameraLeftFocus.y &&
-        currentPosition.y <= cameraRightFocus.y){
-            mainCamera.target.y = currentPosition.y + (26 * 0.5f);
-        } else if (currentPosition.y < cameraRightFocus.y){
-            mainCamera.target.y = cameraLimits.y;
-        } else if (currentPosition.y > cameraLeftFocus.y){
-            mainCamera.target.y = screenHeight - cameraLimits.y;
+        if(currentPosition.y + characterMid.y + 1 > cameraLowerFocus.y &&
+        currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y){
+            mainCamera.target.y = currentPosition.y + characterMid.y;
+        } else if (currentPosition.y + characterMid.y <= cameraLowerFocus.y){
+            mainCamera.target.y = cameraLowerFocus.y;
+        } else if (currentPosition.y + characterMid.y >= cameraUpperFocus.y){
+            mainCamera.target.y = cameraUpperFocus.y;
         }
 
         //Updating camera acceleration
@@ -311,16 +358,34 @@ int main(void) {
         //--------------------------------------------------------------------------------------
         //Graphic logic
         BeginDrawing();
+            //Clearing the image with background color
+            ClearBackground(PURPLE);
+            //Drawing bg2 tilemap
+            for(int x = 0; x < tilemapSizeX + 4; x++){
+                for(int y = 0; y < tilemapSizeY + 2; y++){
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
+                    int tileIndex = bg2Tilemap[y][x];
+                    //Drawing single tile
+                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                }
+            }
+            //Drawing bg1 tilemap
+            for(int x = 0; x < tilemapSizeX + 8; x++){
+                for(int y = 0; y < tilemapSizeY + 2; y++){
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
+                    int tileIndex = bg1Tilemap[y][x];
+                    //Drawing single tile
+                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                }
+            }
             BeginMode2D(mainCamera);
-                //Clearing the image with background color
-                ClearBackground(PURPLE);
                 //#Displaying the full tilesheet 
                 //#DrawTexture(tilesheet, 0, 0, WHITE);
-                //Drawing tilemap
+                //Drawing base tilemap
                 for(int x = 0; x < tilemapSizeX; x++){
                     for(int y = 0; y < tilemapSizeY; y++){
-                        Vector2 tilePosition = {x * tileSize, y * tileSize};
-                        int tileIndex = tilemap[y][x];
+                        Vector2 tilePosition = {((float)x * tileSize), ((float)y * tileSize)};
+                        int tileIndex = baseTilemap[y][x];
                         //Drawing single tile
                         DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
                     }
