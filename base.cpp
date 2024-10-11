@@ -334,7 +334,7 @@ int main(void) {
         //Updating camera position in Y axys
         if(currentPosition.y + characterMid.y + 1 > cameraLowerFocus.y &&
         currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y){
-            mainCamera.target.y = currentPosition.y + characterMid.y;
+            mainCamera.target.y = currentPosition.y + 26 + (IsKeyDown(KEY_S)? -10 : 0);
         } else if (currentPosition.y + characterMid.y <= cameraLowerFocus.y){
             mainCamera.target.y = cameraLowerFocus.y;
         } else if (currentPosition.y + characterMid.y >= cameraUpperFocus.y){
