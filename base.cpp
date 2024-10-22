@@ -360,13 +360,13 @@ int main(void) {
         }
 
         //Updating camera position in X axys
-        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x &&
-        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x){
+        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + 64 &&
+        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x+ - 64){
             mainCamera.target.x = currentPosition.x + characterMid.x;
-        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x){
-            mainCamera.target.x = cameraLowerFocus.x;
-        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x){
-            mainCamera.target.x = cameraUpperFocus.x;
+        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x + tileSize){
+            mainCamera.target.x = cameraLowerFocus.x + tileSize;
+        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x - tileSize){
+            mainCamera.target.x = cameraUpperFocus.x - tileSize;
         }
 
         //Updating camera position in Y axys
@@ -414,7 +414,7 @@ int main(void) {
             //Drawing bg2 tilemap
             for(int x = 0; x < tilemapSizeX + 4; x++){
                 for(int y = 0; y < tilemapSizeY + 2; y++){
-                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f) - (tileSize / 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
                     DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
@@ -423,7 +423,7 @@ int main(void) {
             //Drawing bg1 tilemap
             for(int x = 0; x < tilemapSizeX + 8; x++){
                 for(int y = 0; y < tilemapSizeY + 1; y++){
-                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) - (tileSize / 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
                     DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
@@ -443,9 +443,6 @@ int main(void) {
                 }
                 //Drawing character
                 DrawTextureRec(characters, characterSprite, sprite, GOLD);
-                DrawText(TextFormat("%i", forward), 200, 300, 20, RED);
-                DrawText(TextFormat("%i", animationState), 200, 270, 20, RED);
-                DrawText(TextFormat("%i", (tileSize * (forward? 1 : -1))), 200, 240, 20, RED);
             EndMode2D();
         EndDrawing();
     }
