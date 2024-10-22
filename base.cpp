@@ -15,7 +15,7 @@ int tileSize = 64;
 //Locking for tile position on current tilemap
 Vector2 checkTilePosition(Vector2 checkPosition, int tileSize){
     //Calculating position
-    Vector2 tilePosition = {(int)(checkPosition.x / tileSize), (int)(checkPosition.y / tileSize)};
+    Vector2 tilePosition = {(float)((int)(checkPosition.x / tileSize)), (float)((int)(checkPosition.y / tileSize))};
     //Returning position
     return tilePosition;
 }
@@ -105,20 +105,20 @@ int main(void) {
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                      // 00 Empty
-        {0 * tileSize, 3 * tileSize, tileSize, tileSize},  // 01 Fill main
-        {0 * tileSize, 2 * tileSize, tileSize, tileSize},  // 02 Fill random
-        {1 * tileSize, 3 * tileSize, tileSize, tileSize},  // 03 Floor main
-        {1 * tileSize, 0 * tileSize, tileSize, tileSize},  // 04 Floor center
-        {2 * tileSize, 1 * tileSize, tileSize, tileSize},  // 05 Floor left
-        {2 * tileSize, 0 * tileSize, tileSize, tileSize},  // 06 Floor right
-        {5 * tileSize, 3 * tileSize, tileSize, tileSize},  // 07 Platf main
-        {5 * tileSize, 0 * tileSize, tileSize, tileSize},  // 08 Platf center
-        {5 * tileSize, 2 * tileSize, tileSize, tileSize},  // 09 Platf left
-        {5 * tileSize, 1 * tileSize, tileSize, tileSize},  // 10 Platf right
-        {6 * tileSize, 4 * tileSize, tileSize, tileSize},  // 11 Edge left
-        {6 * tileSize, 3 * tileSize, tileSize, tileSize},  // 12 Edge right
-        {2 * tileSize, 3 * tileSize, tileSize, tileSize},  // 13 Edge left
-        {2 * tileSize, 2 * tileSize, tileSize, tileSize},  // 14 Edge right
+        {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 01 Fill main
+        {0 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 02 Fill random
+        {1 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 03 Floor main
+        {1 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 04 Floor center
+        {2 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},  // 05 Floor left
+        {2 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 06 Floor right
+        {5 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 07 Platf main
+        {5 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 08 Platf center
+        {5 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 09 Platf left
+        {5 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},  // 10 Platf right
+        {6 * (float)tileSize, 4 * (float)tileSize, (float)tileSize, (float)tileSize},  // 11 Edge left
+        {6 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 12 Edge right
+        {2 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 13 Edge left
+        {2 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 14 Edge right
     };
     int bg2Tilemap[tilemapSizeY + 2][tilemapSizeX + 4] = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
