@@ -195,6 +195,9 @@ int main(void) {
     Vector2 currentAcceleration = {0, 0};
     Vector2 characterMid = {(characterSize.x * 0.5f), (characterSize.y * 0.5f)};
     int animationState = 0;
+    int frameLimit = 1;
+    int frameLoop = 0;
+    int animRate = 20;
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -203,8 +206,7 @@ int main(void) {
     //Game loop
     while (!WindowShouldClose()) {
         //Brain logic
-
-        animationState = 0;
+        
         //Gravity
         currentAcceleration.y += 1;
 
@@ -234,6 +236,16 @@ int main(void) {
             }
         }
         
+        //Setting default animation
+        if (currentVelocity.y == 0 && floorCollision) {
+            frameLimit = 1;
+            animationState = 0;
+        } else if (currentVelocity.y < 0 && !floorCollision) {
+            animationState = 2;
+            frameLoop = 2;
+            frameLimit = 2;
+        }
+
         //Jumping
         if(IsKeyDown(KEY_W) && currentVelocity.y == 0 &&
         ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
@@ -241,6 +253,9 @@ int main(void) {
             //Adding jump force
             currentAcceleration.y -= 20;
             animationState = 2;
+            frameLimit = 2;
+            frameLoop = 0;
+            animRate = 0;
         }
         
         //Collisions on the left of the character
@@ -259,7 +274,8 @@ int main(void) {
             } else if(currentPosition.x > 0){
                 //Moving
                 currentAcceleration.x -= 1.5f;
-                animationState = 1;
+                animationState = floorCollision ? 1 : 2;
+                frameLimit = 3;
             }
         }
         
@@ -279,7 +295,8 @@ int main(void) {
             } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
                 //Moving
                 currentAcceleration.x += 1.5f;
-                animationState = 1;
+                animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
+                frameLimit = 3;
             }
         }
         
@@ -301,6 +318,9 @@ int main(void) {
             }
             //Decreasing character size
             characterSize.y = 42;
+            animationState = 5;
+            frameLimit = 1;
+            frameLoop = 1;
         } else {
             //Detecting when key is just released
             if(IsKeyReleased(KEY_S)){
@@ -373,6 +393,15 @@ int main(void) {
         //Character sprite rectangle
         Vector2 sprite = {currentPosition.x - 22, currentPosition.y - (12 + (IsKeyDown(KEY_S)? + 10 : 0))};
 
+        //Processing character animations
+        animRate++;
+        if (animRate > (60 / (frameLimit * frameLimit)) && !IsKeyDown(KEY_S)) { //Temp
+            frameLoop++;
+            if (animationState == 2) frameLoop = 2;
+            animRate = 0;
+        }
+        if (frameLoop > frameLimit) frameLoop = 0;
+
         //--------------------------------------------------------------------------------------
         //Graphic logic
         BeginDrawing();
@@ -409,6 +438,8 @@ int main(void) {
                     }
                 }
                 //Drawing character
+                DrawTextureRec(characters, {(float)(animationState * tileSize), (float)(frameLoop * tileSize), (float)tileSize, (float)tileSize}, sprite, GOLD);
+                DrawText(TextFormat("%i", frameLoop*tileSize), 200, 300, 20, RED);
             EndMode2D();
         EndDrawing();
     }
