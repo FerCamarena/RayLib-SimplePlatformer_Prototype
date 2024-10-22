@@ -439,7 +439,6 @@ int main(void) {
                 }
                 //Drawing character
                 DrawTextureRec(characters, {(float)(animationState * tileSize), (float)(frameLoop * tileSize), (float)tileSize, (float)tileSize}, sprite, GOLD);
-                DrawText(TextFormat("%i", frameLoop*tileSize), 200, 300, 20, RED);
             EndMode2D();
         EndDrawing();
     }
