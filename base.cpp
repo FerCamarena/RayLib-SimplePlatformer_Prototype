@@ -265,7 +265,7 @@ int main(void) {
         Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
         
         //Moving left
-        if(IsKeyDown(KEY_A)){
+        if(IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)){
             if(leftCollision){
                 //Fixing position due to fast collision
                 currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
@@ -287,7 +287,7 @@ int main(void) {
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
         
         //Moving right
-        if(IsKeyDown(KEY_D)){
+        if(IsKeyDown(KEY_D) && !IsKeyDown(KEY_A)){
             if(rightCollision){
                 //Fixing position due to fast collision
                 currentPosition.x = (tilePointX2.x * tileSize) + tileSize - characterSize.x;
