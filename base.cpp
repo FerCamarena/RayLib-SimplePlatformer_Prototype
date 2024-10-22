@@ -198,6 +198,7 @@ int main(void) {
     int frameLimit = 1;
     int frameLoop = 0;
     int animRate = 20;
+    bool forward = true;
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -277,6 +278,7 @@ int main(void) {
                 animationState = floorCollision ? 1 : 2;
                 frameLimit = 3;
             }
+            forward = false;
         }
         
         //Collisions on the right of the haracter
@@ -298,6 +300,7 @@ int main(void) {
                 animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
                 frameLimit = 3;
             }
+            forward = true;
         }
         
         //Limiting up movement with screen
@@ -401,6 +404,7 @@ int main(void) {
             animRate = 0;
         }
         if (frameLoop > frameLimit) frameLoop = 0;
+        Rectangle characterSprite = {(float)(animationState * tileSize), (float)(frameLoop * (tileSize)), (float)(tileSize * (forward? 1 : -1)), (float)tileSize};
 
         //--------------------------------------------------------------------------------------
         //Graphic logic
@@ -438,7 +442,10 @@ int main(void) {
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, {(float)(animationState * tileSize), (float)(frameLoop * tileSize), (float)tileSize, (float)tileSize}, sprite, GOLD);
+                DrawTextureRec(characters, characterSprite, sprite, GOLD);
+                DrawText(TextFormat("%i", forward), 200, 300, 20, RED);
+                DrawText(TextFormat("%i", animationState), 200, 270, 20, RED);
+                DrawText(TextFormat("%i", (tileSize * (forward? 1 : -1))), 200, 240, 20, RED);
             EndMode2D();
         EndDrawing();
     }
