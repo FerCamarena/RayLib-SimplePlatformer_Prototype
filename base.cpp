@@ -307,14 +307,19 @@ int main(void) {
             forward = true;
         }
         
-        //Limiting up movement with screen
+        //Limiting movement within screen
         if(currentPosition.y < 0){
             //Limiting going over screen
             currentPosition.y = 0;
             currentVelocity.y = 0;
+        } //HERE SHOULD ADD GAME OVER
+        if(currentPosition.x < tileSize) {
+            currentPosition.x = tileSize;
+            currentVelocity.x = 0;
+        } else if(currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize) {
+            currentPosition.x = (tileSize * tilemapSizeX) - tileSize - characterSize.x;
+            currentVelocity.x = 0;
         }
-        if(currentPosition.x < 0) currentPosition.x = 0;
-        if(currentPosition.x + characterSize.x > tileSize * tilemapSizeX) currentPosition.x = tileSize * tilemapSizeX - characterSize.x;
         
         //Crouch
         if(IsKeyDown(KEY_S)){
