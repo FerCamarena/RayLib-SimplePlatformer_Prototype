@@ -414,7 +414,7 @@ int main(void) {
             //Drawing bg2 tilemap
             for(int x = 0; x < tilemapSizeX + 4; x++){
                 for(int y = 0; y < tilemapSizeY + 2; y++){
-                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f) - (tileSize / 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
                     DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
@@ -423,7 +423,7 @@ int main(void) {
             //Drawing bg1 tilemap
             for(int x = 0; x < tilemapSizeX + 8; x++){
                 for(int y = 0; y < tilemapSizeY + 1; y++){
-                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) - (tileSize / 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
+                    Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
                     DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
