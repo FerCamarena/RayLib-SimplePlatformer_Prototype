@@ -346,7 +346,7 @@ int main(void) {
         currentAcceleration.y = 0;
         
         //Calculating camera positions
-        Vector2 cameraLowerFocus = {(mainCamera.offset.x / mainCamera.zoom) + characterMid.x, (mainCamera.offset.y / mainCamera.zoom) + characterMid.y};
+        Vector2 cameraLowerFocus = {(mainCamera.offset.x / mainCamera.zoom) - characterMid.x, (mainCamera.offset.y / mainCamera.zoom) - characterMid.y};
         Vector2 cameraUpperFocus = {(screenWidth - cameraLowerFocus.x) + characterMid.x, (screenHeight - cameraLowerFocus.y) + characterMid.y};
 
         //Offseting parallax with camera
@@ -360,8 +360,8 @@ int main(void) {
         }
 
         //Updating camera position in X axys
-        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + 64 &&
-        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x+ - 64){
+        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + tileSize &&
+        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x - tileSize){
             mainCamera.target.x = currentPosition.x + characterMid.x;
         } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x + tileSize){
             mainCamera.target.x = cameraLowerFocus.x + tileSize;
