@@ -266,17 +266,19 @@ int main(void) {
         
         //Moving left
         if(IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)){
-            if(leftCollision){
+            if(currentPosition.x > tileSize){
+                //Moving
+                currentAcceleration.x -= 1.5f;
+                animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
+                frameLimit = 3;
+            } else
+            //Checking left collision
+            if(leftCollision && currentVelocity.x < 0){
                 //Fixing position due to fast collision
                 currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
                 //Resetting forces when colliding
                 currentVelocity.x = 0;
                 currentAcceleration.x = 0;
-            } else if(currentPosition.x > 0){
-                //Moving
-                currentAcceleration.x -= 1.5f;
-                animationState = floorCollision ? 1 : 2;
-                frameLimit = 3;
             }
             forward = false;
         }
@@ -288,17 +290,19 @@ int main(void) {
         
         //Moving right
         if(IsKeyDown(KEY_D) && !IsKeyDown(KEY_A)){
-            if(rightCollision){
-                //Fixing position due to fast collision
-                currentPosition.x = (tilePointX2.x * tileSize) + tileSize - characterSize.x;
-                //Resetting forces when colliding
-                currentVelocity.x = 0;
-                currentAcceleration.x = 0;
-            } else if(currentPosition.x + characterSize.x < tileSize * tilemapSizeX){
+            if(currentPosition.x + characterSize.x < (tileSize * tilemapSizeX) - tileSize){
                 //Moving
                 currentAcceleration.x += 1.5f;
                 animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
                 frameLimit = 3;
+            } else
+            //Checking right collision
+            if(rightCollision && currentVelocity.x > 0){
+                //Fixing position due to fast collision
+                currentPosition.x = (tilePointX2.x * tileSize) + tileSize;
+                //Resetting forces when colliding
+                currentVelocity.x = 0;
+                currentAcceleration.x = 0;
             }
             forward = true;
         }
