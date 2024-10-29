@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------------
 //Project attributes
 
-//Map variables
+//Map variables 8:4.5 - 16:9 - 24:13.5
 #define tilemapSizeX 25
 #define tilemapSizeY 15
 int tileSize = 64;
@@ -18,7 +18,7 @@ int tileSize = 64;
 //User methods
 
 //Locking for tile position on current tilemap
-Vector2 checkTilePosition(Vector2 checkPosition, int tileSize) {
+Vector2 CheckTilePosition(Vector2 checkPosition, int tileSize) {
     //Calculating position
     Vector2 tilePosition = {(float)((int)(checkPosition.x / tileSize)), (float)((int)(checkPosition.y / tileSize))};
     //Returning position
@@ -26,7 +26,7 @@ Vector2 checkTilePosition(Vector2 checkPosition, int tileSize) {
 }
 
 //Checking if the tilemap position is a collision tile
-int checkTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]) {
+int CheckTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]) {
     //Calculating tile position
     int posX = tilePosition.x;
     int posY = tilePosition.y;
@@ -35,56 +35,56 @@ int checkTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]) {
 }
 
 //Looking for collisions under the character
-bool checkCollisionDown(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
+bool CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointA
-    Vector2 pointA = {characterPosition.x, characterPosition.y + characterSize.y + 1};
+    Vector2 pointA = {entityPosition.x, entityPosition.y + entitySize.y + 1};
     //PointB
-    Vector2 pointB = {characterPosition.x + characterSize.x - 1, characterPosition.y + characterSize.y + 1};
+    Vector2 pointB = {entityPosition.x + entitySize.x - 1, entityPosition.y + entitySize.y + 1};
     //Precalculating
-    Vector2 tilePointA = checkTilePosition(pointA, tileSize);
-    Vector2 tilePointB = checkTilePosition(pointB, tileSize);
+    Vector2 tilePointA = CheckTilePosition(pointA, tileSize);
+    Vector2 tilePointB = CheckTilePosition(pointB, tileSize);
     //Checking types on points
-    if (checkTileType(tilePointA, collisiontilemap) > 0 ||
-    checkTileType(tilePointB, collisiontilemap) > 0) return true;
+    if (CheckTileType(tilePointA, collisiontilemap) > 0 ||
+    CheckTileType(tilePointB, collisiontilemap) > 0) return true;
     else return false;
 }
 
 //Detecting character collinding on its left
-bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
+bool CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
-    Vector2 pointC = {characterPosition.x - 1, characterPosition.y};
+    Vector2 pointC = {entityPosition.x - 1, entityPosition.y};
     //PointD
-    Vector2 pointD = {characterPosition.x - 1, characterPosition.y + (characterSize.y * 0.5f)};
+    Vector2 pointD = {entityPosition.x - 1, entityPosition.y + (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointE = {characterPosition.x - 1, characterPosition.y + characterSize.y - 1};
+    Vector2 pointE = {entityPosition.x - 1, entityPosition.y + entitySize.y - 1};
     //Precalculating
-    Vector2 tilePointC = checkTilePosition(pointC, tileSize);
-    Vector2 tilePointD = checkTilePosition(pointD, tileSize);
-    Vector2 tilePointE = checkTilePosition(pointE, tileSize);
+    Vector2 tilePointC = CheckTilePosition(pointC, tileSize);
+    Vector2 tilePointD = CheckTilePosition(pointD, tileSize);
+    Vector2 tilePointE = CheckTilePosition(pointE, tileSize);
     //Returning on each case
-    if (checkTileType(tilePointC, collisiontilemap) == 1 ||
-    checkTileType(tilePointD, collisiontilemap) == 1 ||
-    checkTileType(tilePointE, collisiontilemap) == 1 ||
+    if (CheckTileType(tilePointC, collisiontilemap) == 1 ||
+    CheckTileType(tilePointD, collisiontilemap) == 1 ||
+    CheckTileType(tilePointE, collisiontilemap) == 1 ||
     pointD.x < tileSize) return true;
     else return false;
 }
 
 //Function for detecting when colliding with a tile with collision in the right side of the player
-bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
+bool CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
-    Vector2 pointF = {characterPosition.x + characterSize.x, characterPosition.y};
+    Vector2 pointF = {entityPosition.x + entitySize.x, entityPosition.y};
     //PointD
-    Vector2 pointG = {characterPosition.x + characterSize.x, characterPosition.y + (characterSize.y * 0.5f)};
+    Vector2 pointG = {entityPosition.x + entitySize.x, entityPosition.y + (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointH = {characterPosition.x + characterSize.x, characterPosition.y + characterSize.y - 1};
+    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y - 1};
     //Precalculating
-    Vector2 tilePointF = checkTilePosition(pointF, tileSize);
-    Vector2 tilePointG = checkTilePosition(pointG, tileSize);
-    Vector2 tilePointH = checkTilePosition(pointH, tileSize);
+    Vector2 tilePointF = CheckTilePosition(pointF, tileSize);
+    Vector2 tilePointG = CheckTilePosition(pointG, tileSize);
+    Vector2 tilePointH = CheckTilePosition(pointH, tileSize);
     //Returning for each case
-    if (checkTileType(tilePointF, collisiontilemap) == 1 ||
-    checkTileType(tilePointG, collisiontilemap) == 1 ||
-    checkTileType(tilePointH, collisiontilemap) == 1 ||
+    if (CheckTileType(tilePointF, collisiontilemap) == 1 ||
+    CheckTileType(tilePointG, collisiontilemap) == 1 ||
+    CheckTileType(tilePointH, collisiontilemap) == 1 ||
     pointG.x > GetScreenWidth() - tileSize) return true;
     else return false;
 }
@@ -233,24 +233,24 @@ int main(void) {
         characterAcceleration.y += 1;
         
         //Collisions under the character
-        bool characterFloorCollision = checkCollisionDown(characterPosition, characterSize, collisionTilemap, tileSize);
+        bool characterFloorCollision = CheckCollisionDown(characterPosition, characterSize, collisionTilemap, tileSize);
         Vector2 characterPointUnder = {characterPosition.x, characterPosition.y + characterSize.y + 1};
-        Vector2 characterTileUnder = checkTilePosition(characterPointUnder, tileSize); 
+        Vector2 characterTileUnder = CheckTilePosition(characterPointUnder, tileSize); 
         
         //Collisions on the left of the character
-        bool characterLeftCollision = checkCollisionLeft(characterPosition, characterSize, collisionTilemap, tileSize);
+        bool characterLeftCollision = CheckCollisionLeft(characterPosition, characterSize, collisionTilemap, tileSize);
         Vector2 characterPointLeft = {characterPosition.x - 1, characterPosition.y + characterSize.y - 1};
-        Vector2 characterTileLeft = checkTilePosition(characterPointLeft, tileSize); 
+        Vector2 characterTileLeft = CheckTilePosition(characterPointLeft, tileSize); 
         
         //Collisions on the right of the character
-        bool characterRightCollision = checkCollisionRight(characterPosition, characterSize, collisionTilemap, tileSize);
+        bool characterRightCollision = CheckCollisionRight(characterPosition, characterSize, collisionTilemap, tileSize);
         Vector2 characterPointRight = {characterPosition.x + characterSize.x, characterPosition.y + characterSize.y - 1};
-        Vector2 characterTileRight = checkTilePosition(characterPointRight, tileSize); 
+        Vector2 characterTileRight = CheckTilePosition(characterPointRight, tileSize); 
         
         //Falling
         if (characterFloorCollision && characterVelocity.y >= 0) {
             //Edge hopping
-            if (checkTileType(characterTileUnder, collisionTilemap) == 1 ||
+            if (CheckTileType(characterTileUnder, collisionTilemap) == 1 ||
             (int)(characterPosition.y + characterSize.y) % tileSize < 24) {
                 //Fixing position to tile position
                 characterPosition.y = (characterTileUnder.y * tileSize) - characterSize.y;
@@ -387,14 +387,14 @@ int main(void) {
         enemyAcceleration.y += 1;
     
         //Collisions under the enemy
-        bool enemyFloorCollision = checkCollisionDown(enemyPosition, enemySize, collisionTilemap, tileSize);
+        bool enemyFloorCollision = CheckCollisionDown(enemyPosition, enemySize, collisionTilemap, tileSize);
         Vector2 enemyPointUnder = {enemyPosition.x, enemyPosition.y + enemySize.y + 1};
-        Vector2 enemyTileUnder = checkTilePosition(enemyPointUnder, tileSize); 
+        Vector2 enemyTileUnder = CheckTilePosition(enemyPointUnder, tileSize); 
         
         //Falling
         if (enemyFloorCollision && enemyVelocity.y >= 0) {
             //Edge hopping
-            if (checkTileType(enemyTileUnder, collisionTilemap) == 1 ||
+            if (CheckTileType(enemyTileUnder, collisionTilemap) == 1 ||
             (int)(enemyPosition.y + enemySize.y) % tileSize < 24) {
                 //Fixing position to tile position
                 enemyPosition.y = (enemyTileUnder.y * tileSize) - enemySize.y;
