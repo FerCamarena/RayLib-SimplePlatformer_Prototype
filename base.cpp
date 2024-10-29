@@ -220,8 +220,18 @@ int main(void) {
         Vector2 pointA = {currentPosition.x, currentPosition.y + characterSize.y + 1};
         Vector2 tilePointA = checkTilePosition(pointA, tileSize); 
         
+        //Collisions on the left of the character
+        bool leftCollision = checkCollisionLeft(currentPosition, characterSize, collisionTilemap, tileSize);
+        Vector2 pointX1 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
+        Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
+        
+        //Collisions on the right of the haracter
+        bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisionTilemap, tileSize);
+        Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
+        Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
+        
         //Falling down
-        if(floorCollision && currentVelocity.y >= 0){
+        if (floorCollision && currentVelocity.y >= 0) {
             //Edge hopping
             if(checkTileType(tilePointA, collisionTilemap) == 1 ||
             (int)(currentPosition.y + characterSize.y) % tileSize < 24) {
@@ -258,12 +268,6 @@ int main(void) {
             frameLoop = 0;
             animRate = 0;
         }
-        
-        //Collisions on the left of the character
-        bool leftCollision = checkCollisionLeft(currentPosition, characterSize, collisionTilemap, tileSize);
-        Vector2 pointX1 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
-        Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
-        
         //Moving left
         if(IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)){
             if(currentPosition.x > tileSize){
@@ -282,12 +286,6 @@ int main(void) {
             }
             forward = false;
         }
-        
-        //Collisions on the right of the haracter
-        bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisionTilemap, tileSize);
-        Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
-        Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
-        
         //Moving right
         if(IsKeyDown(KEY_D) && !IsKeyDown(KEY_A)){
             if(currentPosition.x + characterSize.x < (tileSize * tilemapSizeX) - tileSize){
@@ -320,9 +318,9 @@ int main(void) {
             currentPosition.x = (tileSize * tilemapSizeX) - tileSize - characterSize.x;
             currentVelocity.x = 0;
         }
-        
-        //Crouch
         if(IsKeyDown(KEY_S)){
+    
+        //Slide
             //Detecting when key is just pressed
             if(IsKeyPressed(KEY_S)){
                 //Moving the player once
@@ -355,15 +353,23 @@ int main(void) {
         currentAcceleration.y = 0;
         
         //Calculating camera positions
-        Vector2 cameraLowerFocus = {(mainCamera.offset.x / mainCamera.zoom) - characterMid.x, (mainCamera.offset.y / mainCamera.zoom) - characterMid.y};
-        Vector2 cameraUpperFocus = {(screenWidth - cameraLowerFocus.x) + characterMid.x, (screenHeight - cameraLowerFocus.y) + characterMid.y};
+        Vector2 cameraLowerFocus = {
+            (mainCamera.offset.x / mainCamera.zoom) - characterMid.x,
+            (mainCamera.offset.y / mainCamera.zoom) - characterMid.y
+            };
+        Vector2 cameraUpperFocus = {
+            (screenWidth - cameraLowerFocus.x) + characterMid.x,
+            (screenHeight - cameraLowerFocus.y) + characterMid.y
+            };
 
         //Offseting parallax with camera
-        if (currentPosition.x >= cameraLowerFocus.x && (currentPosition.x + characterSize.x) <= cameraUpperFocus.x) {
+        if (currentPosition.x >= cameraLowerFocus.x &&
+        (currentPosition.x + characterSize.x) <= cameraUpperFocus.x) {
             if(currentVelocity.x > 1) parallaxPositionOffset.x += 0.5f;
             else if(currentVelocity.x < -1) parallaxPositionOffset.x -= 0.5f;
         }
-        if (currentPosition.y >= cameraLowerFocus.y && (currentPosition.y + characterSize.y) <= cameraUpperFocus.y) {
+        if (currentPosition.y >= cameraLowerFocus.y &&
+        (currentPosition.y + characterSize.y) <= cameraUpperFocus.y) {
             if(currentVelocity.y > 1) parallaxPositionOffset.y += 0.5f;
             else if(currentVelocity.y < -1) parallaxPositionOffset.y -= 0.5f;
         }
