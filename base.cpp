@@ -13,7 +13,7 @@ int tileSize = 64;
 //User methods
 
 //Locking for tile position on current tilemap
-Vector2 checkTilePosition(Vector2 checkPosition, int tileSize){
+Vector2 checkTilePosition(Vector2 checkPosition, int tileSize) {
     //Calculating position
     Vector2 tilePosition = {(float)((int)(checkPosition.x / tileSize)), (float)((int)(checkPosition.y / tileSize))};
     //Returning position
@@ -21,7 +21,7 @@ Vector2 checkTilePosition(Vector2 checkPosition, int tileSize){
 }
 
 //Checking if the tilemap position is a collision tile
-int checkTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]){
+int checkTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]) {
     //Calculating tile position
     int posX = tilePosition.x;
     int posY = tilePosition.y;
@@ -30,7 +30,7 @@ int checkTileType(Vector2 tilePosition, int collisiontilemap[][tilemapSizeX]){
 }
 
 //Looking for collisions under the character
-bool checkCollisionDown(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize){
+bool checkCollisionDown(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointA
     Vector2 pointA = {characterPosition.x, characterPosition.y + characterSize.y + 1};
     //PointB
@@ -39,13 +39,13 @@ bool checkCollisionDown(Vector2 characterPosition, Vector2 characterSize, int co
     Vector2 tilePointA = checkTilePosition(pointA, tileSize);
     Vector2 tilePointB = checkTilePosition(pointB, tileSize);
     //Checking types on points
-    if(checkTileType(tilePointA, collisiontilemap) > 0 ||
+    if (checkTileType(tilePointA, collisiontilemap) > 0 ||
     checkTileType(tilePointB, collisiontilemap) > 0) return true;
     else return false;
 }
 
 //Detecting character collinding on its left
-bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize){
+bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
     Vector2 pointC = {characterPosition.x - 1, characterPosition.y};
     //PointD
@@ -57,14 +57,14 @@ bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int co
     Vector2 tilePointD = checkTilePosition(pointD, tileSize);
     Vector2 tilePointE = checkTilePosition(pointE, tileSize);
     //Returning on each case
-    if(checkTileType(tilePointC, collisiontilemap) == 1 ||
+    if (checkTileType(tilePointC, collisiontilemap) == 1 ||
     checkTileType(tilePointD, collisiontilemap) == 1 ||
     checkTileType(tilePointE, collisiontilemap) == 1) return true;
     else return false;
 }
 
 //Function for detecting when colliding with a tile with collision in the right side of the player
-bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize){
+bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
     Vector2 pointF = {characterPosition.x + characterSize.x, characterPosition.y};
     //PointD
@@ -76,7 +76,7 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
     Vector2 tilePointG = checkTilePosition(pointG, tileSize);
     Vector2 tilePointH = checkTilePosition(pointH, tileSize);
     //Returning for each case
-    if(checkTileType(tilePointF, collisiontilemap) == 1 ||
+    if (checkTileType(tilePointF, collisiontilemap) == 1 ||
     checkTileType(tilePointG, collisiontilemap) == 1 ||
     checkTileType(tilePointH, collisiontilemap) == 1) return true;
     else return false;
@@ -104,21 +104,21 @@ int main(void) {
     Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_red_tilemap.png");
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Rectangle tiles[] = {
-        {0, 0, 0, 0},                                      // 00 Empty
-        {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 01 Fill main
-        {0 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 02 Fill random
-        {1 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 03 Floor main
-        {1 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 04 Floor center
-        {2 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},  // 05 Floor left
-        {2 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 06 Floor right
-        {5 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 07 Platf main
-        {5 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},  // 08 Platf center
-        {5 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 09 Platf left
-        {5 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},  // 10 Platf right
-        {6 * (float)tileSize, 4 * (float)tileSize, (float)tileSize, (float)tileSize},  // 11 Edge left
-        {6 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 12 Edge right
-        {2 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},  // 13 Edge left
-        {2 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},  // 14 Edge right
+        {0, 0, 0, 0},                                                                   // 00 Empty
+        {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
+        {0 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 02 Fill random
+        {1 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 03 Floor main
+        {1 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 04 Floor center
+        {2 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},   // 05 Floor left
+        {2 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 06 Floor right
+        {5 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 07 Platf main
+        {5 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 08 Platf center
+        {5 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 09 Platf left
+        {5 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},   // 10 Platf right
+        {6 * (float)tileSize, 4 * (float)tileSize, (float)tileSize, (float)tileSize},   // 11 Edge left
+        {6 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 12 Edge right
+        {2 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 13 Edge left
+        {2 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 14 Edge right
     };
     int bg2Tilemap[tilemapSizeY + 2][tilemapSizeX + 4] = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -172,20 +172,20 @@ int main(void) {
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
     };
     int collisionTilemap[tilemapSizeY][tilemapSizeX] = {
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 2, 2, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
 
     //Character variables
@@ -226,7 +226,7 @@ int main(void) {
         Vector2 pointX1 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX1 = checkTilePosition(pointX1, tileSize); 
         
-        //Collisions on the right of the haracter
+        //Collisions on the right of the character
         bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisionTilemap, tileSize);
         Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
@@ -234,7 +234,7 @@ int main(void) {
         //Falling down
         if (floorCollision && currentVelocity.y >= 0) {
             //Edge hopping
-            if(checkTileType(tilePointA, collisionTilemap) == 1 ||
+            if (checkTileType(tilePointA, collisionTilemap) == 1 ||
             (int)(currentPosition.y + characterSize.y) % tileSize < 24) {
                 //Fixing position to tile position
                 currentPosition.y = (tilePointA.y * tileSize) - characterSize.y;
@@ -242,7 +242,7 @@ int main(void) {
                 currentVelocity.y = 0;
                 currentAcceleration.y = 0;
                 //Preventing falling from screen 
-                if((currentPosition.y + characterSize.y) > screenHeight){
+                if ((currentPosition.y + characterSize.y) > screenHeight) {
                     currentPosition.y = screenHeight - characterSize.y;
                 }
             }
@@ -250,17 +250,15 @@ int main(void) {
         
         //Setting default animation
         if (currentVelocity.y == 0 && floorCollision) {
+            //Restarting animation
             frameLimit = 1;
             animationState = 0;
         } else if (currentVelocity.y < 0 && !floorCollision) {
+            //Restarting animation
             animationState = 2;
             frameLoop = 2;
             frameLimit = 2;
         }
-
-        //Changing direction
-        if (IsKeyPressed(KEY_A)) forward = false;
-        if (IsKeyPressed(KEY_D)) forward = true;
 
         //Forcing movement only when not sliding
         if (!sliding) {
@@ -282,6 +280,7 @@ int main(void) {
                 if (currentPosition.x > tileSize) {
                     //Moving
                     currentAcceleration.x += forward ? 1.5f : -1.5f;
+                    //Setting animation
                     animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
                     frameLimit = 3;
                 }
@@ -289,12 +288,12 @@ int main(void) {
         }
 
         //Limiting movement within screen && applying lateral collisions
-        if(currentPosition.y < 0){
+        if (currentPosition.y < 0) {
             //Limiting going over screen
             currentPosition.y = 0;
             currentVelocity.y = 0;
         } //HERE SHOULD ADD GAME OVER
-        if((currentPosition.x < tileSize ||
+        if ((currentPosition.x <= tileSize ||
         leftCollision) && currentVelocity.x < 0) {
             //Fixing position due to fast collision
             currentPosition.x = (currentPosition.x < tileSize) ? tileSize : (tilePointX1.x * tileSize) + tileSize;
@@ -303,8 +302,8 @@ int main(void) {
             currentAcceleration.x = sliding ? currentAcceleration.x * 0.8f : 0;
             if (sliding) forward = !forward;
                 
-        } else if(currentVelocity.x > 0 && (rightCollision ||
-        currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize)) {
+        } else if (currentVelocity.x > 0 && (rightCollision ||
+        currentPosition.x + characterSize.x > (tileSize * tilemapSizeX) - tileSize)) {
             //Fixing position due to fast collision
             currentPosition.x = (currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize) ? (tileSize * tilemapSizeX) - tileSize - characterSize.x : (tilePointX2.x * tileSize) + tileSize;
             //Resetting forces when colliding
@@ -314,12 +313,13 @@ int main(void) {
         }
     
         //Slide
-        if(IsKeyDown(KEY_S) && floorCollision){
+        if (IsKeyDown(KEY_S) && floorCollision) {
             //Detecting when key is just pressed
-            if(IsKeyPressed(KEY_S)){
+            if (IsKeyPressed(KEY_S)) {
                 //Moving the player once
                 currentPosition.y = currentPosition.y + 10;
             }
+            //Applying state
             sliding = true;
             //Decreasing character size
             characterSize.y = 42;
@@ -328,10 +328,11 @@ int main(void) {
             frameLoop = 1;
         } else if (floorCollision) {
             //Detecting when key is just released
-            if(IsKeyReleased(KEY_S)){
+            if (IsKeyReleased(KEY_S)) {
                 //Moving the player once
                 currentPosition.y = currentPosition.y - 10;
             }
+            //Applying state
             sliding = false;
             //Resetting character size
             characterSize.y = 52;
@@ -361,32 +362,42 @@ int main(void) {
         //Offseting parallax with camera
         if (currentPosition.x >= cameraLowerFocus.x &&
         (currentPosition.x + characterSize.x) <= cameraUpperFocus.x) {
+            //Updating right
             if(currentVelocity.x > 1) parallaxPositionOffset.x += 0.5f;
+            //Updating left
             else if(currentVelocity.x < -1) parallaxPositionOffset.x -= 0.5f;
         }
         if (currentPosition.y >= cameraLowerFocus.y &&
         (currentPosition.y + characterSize.y) <= cameraUpperFocus.y) {
+            //Updating down
             if(currentVelocity.y > 1) parallaxPositionOffset.y += 0.5f;
+            //Updating up
             else if(currentVelocity.y < -1) parallaxPositionOffset.y -= 0.5f;
         }
 
         //Updating camera position in X axys
-        if(currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + tileSize &&
-        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x - tileSize){
+        if (currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + tileSize &&
+        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x - tileSize) {
+            //Moving middle
             mainCamera.target.x = currentPosition.x + characterMid.x;
-        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x + tileSize){
+        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x + tileSize) {
+            //Moving left edge
             mainCamera.target.x = cameraLowerFocus.x + tileSize;
-        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x - tileSize){
+        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x - tileSize) {
+            //Moving left edge
             mainCamera.target.x = cameraUpperFocus.x - tileSize;
         }
 
         //Updating camera position in Y axys
         if(currentPosition.y + characterMid.y + 1 > cameraLowerFocus.y &&
-        currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y){
+        currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y) {
+            //Moving center
             mainCamera.target.y = currentPosition.y + 26 + (sliding? - 10 : 0);
-        } else if (currentPosition.y + characterMid.y <= cameraLowerFocus.y){
+        } else if (currentPosition.y + characterMid.y <= cameraLowerFocus.y) {
+            //Moving top edge
             mainCamera.target.y = cameraLowerFocus.y;
-        } else if (currentPosition.y + characterMid.y >= cameraUpperFocus.y){
+        } else if (currentPosition.y + characterMid.y >= cameraUpperFocus.y) {
+            //Moving lower edge
             mainCamera.target.y = cameraUpperFocus.y;
         }
 
@@ -410,11 +421,14 @@ int main(void) {
         //Processing character animations
         animRate++;
         if (animRate > (60 / (frameLimit * frameLimit)) && !sliding) { //Temp
+            //Updating frames
             frameLoop++;
             if (animationState == 2) frameLoop = 2;
             animRate = 0;
         }
+        //Limiting the animation frames
         if (frameLoop > frameLimit) frameLoop = 0;
+        //Creating character animated sprite
         Rectangle characterSprite = {(float)(animationState * tileSize), (float)(frameLoop * (tileSize)), (float)(tileSize * (forward? 1 : -1)), (float)tileSize};
 
         //--------------------------------------------------------------------------------------
@@ -423,8 +437,8 @@ int main(void) {
             //Clearing the image with background color
             ClearBackground(PURPLE);
             //Drawing bg2 tilemap
-            for(int x = 0; x < tilemapSizeX + 4; x++){
-                for(int y = 0; y < tilemapSizeY + 2; y++){
+            for (int x = 0; x < tilemapSizeX + 4; x++) {
+                for (int y = 0; y < tilemapSizeY + 2; y++) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 0.5f), ((float)y * tileSize) - (parallaxPositionOffset.y * 0.5f)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
@@ -432,8 +446,8 @@ int main(void) {
                 }
             }
             //Drawing bg1 tilemap
-            for(int x = 0; x < tilemapSizeX + 8; x++){
-                for(int y = 0; y < tilemapSizeY + 1; y++){
+            for (int x = 0; x < tilemapSizeX + 8; x++) {
+                for (int y = 0; y < tilemapSizeY + 1; y++) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2), ((float)y * tileSize) - (parallaxPositionOffset.y * 4)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
@@ -444,8 +458,8 @@ int main(void) {
                 //#Displaying the full tilesheet 
                 //#DrawTexture(tilesheet, 0, 0, WHITE);
                 //Drawing base tilemap
-                for(int x = 0; x < tilemapSizeX; x++){
-                    for(int y = 0; y < tilemapSizeY; y++){
+                for (int x = 0; x < tilemapSizeX; x++) {
+                    for (int y = 0; y < tilemapSizeY; y++) {
                         Vector2 tilePosition = {((float)x * tileSize), ((float)y * tileSize)};
                         int tileIndex = baseTilemap[y][x];
                         //Drawing single tile
