@@ -49,7 +49,7 @@ bool CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize, int collisio
     else return false;
 }
 
-//Detecting character collinding on its left
+//Function for detecting when colliding with a tile with collision in the left side of entities
 bool CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
     Vector2 pointC = {entityPosition.x - 1, entityPosition.y};
@@ -69,7 +69,7 @@ bool CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize, int collisio
     else return false;
 }
 
-//Function for detecting when colliding with a tile with collision in the right side of the player
+//Function for detecting when colliding with a tile with collision in the right side of entities
 bool CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointC
     Vector2 pointF = {entityPosition.x + entitySize.x, entityPosition.y};
@@ -86,6 +86,30 @@ bool CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize, int collisi
     CheckTileType(tilePointG, collisiontilemap) == 1 ||
     CheckTileType(tilePointH, collisiontilemap) == 1 ||
     pointG.x > GetScreenWidth() - tileSize) return true;
+    else return false;
+}
+
+//Function for detecting collision with tiles in the left step of entities
+bool CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
+    //PointI
+    Vector2 pointI = {entityPosition.x - 1, entityPosition.y + entitySize.y};
+    //Precalculating
+    Vector2 tilePointI = CheckTilePosition(pointI, tileSize);
+    //Returning on each case
+    if (CheckTileType(tilePointI, collisiontilemap) != 0 ||
+    pointI.x < tileSize) return true;
+    else return false;
+}
+
+//Function for detecting collision with tiles in the right step of entities
+bool CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
+    //PointJ
+    Vector2 pointJ = {entityPosition.x + entitySize.x + 1, entityPosition.y + entitySize.y};
+    //Precalculating
+    Vector2 tilePointJ = CheckTilePosition(pointJ, tileSize);
+    //Returning on each case
+    if (CheckTileType(tilePointJ, collisiontilemap) != 0 ||
+    pointJ.x < tileSize) return true;
     else return false;
 }
 
@@ -200,7 +224,7 @@ int main(void) {
     };
 
     //Character variables
-    Vector2 characterPosition = {850, 400};
+    Vector2 characterPosition = {650, 400};
     Vector2 characterVelocity = {0, 0};
     Vector2 characterAcceleration = {0, 0};
     Vector2 characterSize = {20, 52};
@@ -213,10 +237,10 @@ int main(void) {
     bool characterSlide = false;
 
     //Enemies variables
-    Vector2 enemyPosition = {1250, 400};
+    Vector2 enemyPosition = {800, 400};
     Vector2 enemyVelocity = {0, 0};
     Vector2 enemyAcceleration = {0, 0};
-    Vector2 enemySize = {20, 52};
+    Vector2 enemySize = {32, 52};
     bool enemyFwd = true;
 
     //Parallax variables
@@ -396,6 +420,12 @@ int main(void) {
         
         //Collisions on the right of the enemy
         bool enemyRightCollision = CheckCollisionRight(enemyPosition, enemySize, collisionTilemap, tileSize);
+
+        //Collisions on the left step of the enemy
+        bool enemyLeftStep = CheckCollisionLeftStep(enemyPosition, enemySize, collisionTilemap, tileSize);
+        
+        //Collisions on the right step of the enemy
+        bool enemyRightStep = CheckCollisionRightStep(enemyPosition, enemySize, collisionTilemap, tileSize);
         
         //Falling
         if (enemyFloorCollision && enemyVelocity.y >= 0) {
@@ -415,8 +445,8 @@ int main(void) {
         }
         
         //Changing directions
-        if ((enemyFwd && enemyVelocity.x > 0 && enemyRightCollision) ||
-        (!enemyFwd && enemyVelocity.x < 0 && enemyLeftCollision)) {
+        if ((enemyFwd && enemyVelocity.x > 0 && (enemyRightCollision || !enemyRightStep)) ||
+        (!enemyFwd && enemyVelocity.x < 0 && (enemyLeftCollision || !enemyLeftStep))) {
             //Inverting direction
             enemyFwd = !enemyFwd;
             //Resetting enemy velocity (optional)
