@@ -218,7 +218,7 @@ int main(void) {
         currentAcceleration.y += 1;
 
         //Clamping forces
-        if(currentVelocity.y > 32) currentVelocity.y = 32;
+        if (currentVelocity.y > 32) currentVelocity.y = 32;
         else if (currentVelocity.y < -32) currentVelocity.y = -32;
         
         //Collisions under the character
@@ -371,27 +371,27 @@ int main(void) {
         };
 
         //Updating camera position in X axys
-        if (currentPosition.x + characterMid.x  + 1 > cameraLowerFocus.x + tileSize &&
-        currentPosition.x + characterMid.x - 1 < cameraUpperFocus.x - tileSize) {
+        if (currentPosition.x + characterMid.x > cameraLowerFocus.x + tileSize &&
+        currentPosition.x + characterMid.x < cameraUpperFocus.x - tileSize &&
         !rightCollision && !leftCollision) {
             //Moving middle
             mainCamera.target.x = currentPosition.x + characterMid.x;
             //Updating parallax X axys
+            parallaxPositionOffset.x = mainCamera.target.x / 16;
+        } else if (currentPosition.x + characterMid.x <= cameraLowerFocus.x + tileSize &&
         !rightCollision && !leftCollision) {
             //Moving left edge
             mainCamera.target.x = cameraLowerFocus.x + tileSize;
-        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x - tileSize) {
+        } else if (currentPosition.x + characterMid.x >= cameraUpperFocus.x - tileSize &&
         !rightCollision && !leftCollision) {
             //Moving left edge
             mainCamera.target.x = cameraUpperFocus.x - tileSize;
         }
 
         //Updating camera position in Y axys
-        if(currentPosition.y + characterMid.y + 1 > cameraLowerFocus.y &&
-        currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y) {
+        if (currentPosition.y + characterMid.y > cameraLowerFocus.y &&
         currentPosition.y + characterMid.y < cameraUpperFocus.y) {
             //Moving center
-            mainCamera.target.y = currentPosition.y + 26 + (sliding? - 10 : 0);
             mainCamera.target.y = currentPosition.y + characterMid.y + (sliding ? -5 : 0);
             //Updating parallax Y axys
             parallaxPositionOffset.y = mainCamera.target.y / 16;
@@ -405,9 +405,9 @@ int main(void) {
 
         //Updating camera acceleration
         cameraAcceleration.x = currentVelocity.x * currentVelocity.x / 8;
-        if(currentVelocity.x < 0) cameraAcceleration.x *= -1; 
+        if (currentVelocity.x < 0) cameraAcceleration.x *= -1; 
         cameraAcceleration.y = currentVelocity.y * currentVelocity.y / 64;
-        if(currentVelocity.y < 0) cameraAcceleration.y *= -1;
+        if (currentVelocity.y < 0) cameraAcceleration.y *= -1;
 
         //Reducing camera acceleration
         cameraAcceleration.x *= 0.85f;
