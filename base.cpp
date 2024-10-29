@@ -110,6 +110,7 @@ int main(void) {
     //Tilemap variables
     Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
+    Texture2D enemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -210,6 +211,9 @@ int main(void) {
     int animRate = 20;
     bool forward = true;
     bool sliding = false;
+
+    //Enemies variables
+    Vector2 enemyPosition = {1250, 400};
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -422,21 +426,21 @@ int main(void) {
         mainCamera.target.x += cameraAcceleration.x * 2;
         mainCamera.target.y += cameraAcceleration.y * 2;
 
-        //Character sprite rectangle
-        Vector2 sprite = {currentPosition.x - 22, currentPosition.y - (12 + ((sliding)? + 10 : 0))};
-
-        //Processing character animations
+        //Creating character
         animRate++;
-        if (animRate > (60 / (frameLimit * frameLimit)) && !sliding) { //Temp
+        if (animRate > (60 / (frameLimit * frameLimit)) && !sliding) { //Temp (if added animation struct/class can define its animation speed)
             //Updating frames
             frameLoop++;
             if (animationState == 2) frameLoop = 2;
             animRate = 0;
         }
-        //Limiting the animation frames
         if (frameLoop > frameLimit) frameLoop = 0;
-        //Creating character animated sprite
+        Vector2 characterHitbox = {currentPosition.x - 22, currentPosition.y - (12 + ((sliding)? + 10 : 0))};
         Rectangle characterSprite = {(float)(animationState * tileSize), (float)(frameLoop * (tileSize)), (float)(tileSize * (forward? 1 : -1)), (float)tileSize};
+        
+        //Creating enemy
+        Vector2 enemyHitbox = {enemyPosition.x, enemyPosition.y};
+        Rectangle enemySprite = {(float)0, (float)0, (float)tileSize, (float)tileSize};
 
         //--------------------------------------------------------------------------------------
         //Graphic logic
@@ -449,7 +453,7 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) + (tileSize * 1), ((float)y * tileSize) - (parallaxPositionOffset.y * 2)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, BLACK);
                 }
             }
             //Drawing bg2 tilemap
@@ -458,7 +462,7 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 8) + (tileSize * 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 8)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, GRAY);
                 }
             }
             BeginMode2D(mainCamera);
@@ -474,7 +478,9 @@ int main(void) {
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, characterSprite, sprite, GOLD);
+                DrawTextureRec(characters, characterSprite, characterHitbox, GOLD);
+                //Drawing enemy
+                DrawTextureRec(enemies, enemySprite, enemyHitbox, RED);
             EndMode2D();
         EndDrawing();
     }
