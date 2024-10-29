@@ -1,8 +1,13 @@
 //Libraries
 #include "raylib.h"
 
+//DEV Notes
+//
+//Project made by Fernando C.
+//Base platformer example using Raylib
+
 //--------------------------------------------------------------------------------------
-//User attributes
+//Project attributes
 
 //Map variables
 #define tilemapSizeX 25
@@ -89,11 +94,11 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
 int main(void) {
     //Initialization
     const int screenWidth = (tilemapSizeX * tileSize) - tileSize, screenHeight = (tilemapSizeY * tileSize) - tileSize;
-    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype");
+    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.37-alpha");
     SetTargetFPS(60);
     
     //--------------------------------------------------------------------------------------
-    //User properties
+    //Game properties
 
     //Camera variables
     Camera2D mainCamera;
