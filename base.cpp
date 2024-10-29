@@ -249,7 +249,7 @@ int main(void) {
         
         //Falling
         if (characterFloorCollision && characterVelocity.y >= 0) {
-            //Edge hopping
+            //Edge hopping condition
             if (CheckTileType(characterTileUnder, collisionTilemap) == 1 ||
             (int)(characterPosition.y + characterSize.y) % tileSize < 24) {
                 //Fixing position to tile position
@@ -257,7 +257,7 @@ int main(void) {
                 //Reseting forces
                 characterVelocity.y = 0;
                 characterAcceleration.y = 0;
-                //Preventing falling from screen 
+                //Preventing falling from screen TEMP
                 if ((characterPosition.y + characterSize.y) > screenHeight) {
                     characterPosition.y = screenHeight - characterSize.y;
                 }
@@ -365,11 +365,11 @@ int main(void) {
         else if (characterVelocity.y < -32) characterVelocity.y = -32;
 
         //Calculating physics
-        characterVelocity.y += characterAcceleration.y;
         characterVelocity.x *= characterSlide? 0.95f : 0.8f;
-        characterPosition.y += characterVelocity.y;
+        characterVelocity.y += characterAcceleration.y;
         characterVelocity.x += characterAcceleration.x;
         characterPosition.x += characterVelocity.x;
+        characterPosition.y += characterVelocity.y;
     
         //Clamping forces
         if (characterVelocity.y > 32) characterVelocity.y = 32;
@@ -389,11 +389,17 @@ int main(void) {
         //Collisions under the enemy
         bool enemyFloorCollision = CheckCollisionDown(enemyPosition, enemySize, collisionTilemap, tileSize);
         Vector2 enemyPointUnder = {enemyPosition.x, enemyPosition.y + enemySize.y + 1};
-        Vector2 enemyTileUnder = CheckTilePosition(enemyPointUnder, tileSize); 
+        Vector2 enemyTileUnder = CheckTilePosition(enemyPointUnder, tileSize);
+        
+        //Collisions on the left of the enemy
+        bool enemyLeftCollision = CheckCollisionLeft(enemyPosition, enemySize, collisionTilemap, tileSize);
+        
+        //Collisions on the right of the enemy
+        bool enemyRightCollision = CheckCollisionRight(enemyPosition, enemySize, collisionTilemap, tileSize);
         
         //Falling
         if (enemyFloorCollision && enemyVelocity.y >= 0) {
-            //Edge hopping
+            //Edge hopping condition
             if (CheckTileType(enemyTileUnder, collisionTilemap) == 1 ||
             (int)(enemyPosition.y + enemySize.y) % tileSize < 24) {
                 //Fixing position to tile position
@@ -401,23 +407,35 @@ int main(void) {
                 //Reseting forces
                 enemyVelocity.y = 0;
                 enemyAcceleration.y = 0;
-                //Preventing falling from screen 
+                //Preventing falling from screen TEMP
                 if ((enemyPosition.y + enemySize.y) > screenHeight) {
                     enemyPosition.y = screenHeight - enemySize.y;
                 }
             }
         }
         
+        //Changing directions
+        if ((enemyFwd && enemyVelocity.x > 0 && enemyRightCollision) ||
+        (!enemyFwd && enemyVelocity.x < 0 && enemyLeftCollision)) {
+            //Inverting direction
+            enemyFwd = !enemyFwd;
+            //Resetting enemy velocity (optional)
+            enemyVelocity.x = 0;
+        }
+
+        //Base behaviour
+        enemyAcceleration.x = enemyFwd ? 0.5f : -0.5f;
+
         //Clamping forces
         if (enemyVelocity.y > 32) enemyVelocity.y = 32;
         else if (enemyVelocity.y < -32) enemyVelocity.y = -32;
 
         //Calculating physics
-        enemyVelocity.y += enemyAcceleration.y;
         enemyVelocity.x *= 0.8f;
-        enemyPosition.y += enemyVelocity.y;
+        enemyVelocity.y += enemyAcceleration.y;
         enemyVelocity.x += enemyAcceleration.x;
         enemyPosition.x += enemyVelocity.x;
+        enemyPosition.y += enemyVelocity.y;
 
         //Resetting gravity
         enemyAcceleration.x = 0;
