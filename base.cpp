@@ -278,9 +278,15 @@ int main(void) {
             
             //Lateral movement
             if (IsKeyDown(KEY_A) ||
-            IsKeyDown(KEY_D)){
-                if (currentPosition.x > tileSize) {
-                    //Moving
+            IsKeyDown(KEY_D)) {
+                //Changing direction
+                if (IsKeyDown(KEY_A)) forward = false;
+                if (IsKeyDown(KEY_D)) forward = true;
+
+                //Moving only if there's no collision
+                if ((!leftCollision && IsKeyDown(KEY_A)) ||
+                (!rightCollision && IsKeyDown(KEY_D))) {
+                    //Moving with forces
                     currentAcceleration.x += forward ? 1.5f : -1.5f;
                     //Setting animation
                     animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
