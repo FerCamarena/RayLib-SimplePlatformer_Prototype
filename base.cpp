@@ -59,7 +59,8 @@ bool checkCollisionLeft(Vector2 characterPosition, Vector2 characterSize, int co
     //Returning on each case
     if (checkTileType(tilePointC, collisiontilemap) == 1 ||
     checkTileType(tilePointD, collisiontilemap) == 1 ||
-    checkTileType(tilePointE, collisiontilemap) == 1) return true;
+    checkTileType(tilePointE, collisiontilemap) == 1 ||
+    pointD.x < tileSize) return true;
     else return false;
 }
 
@@ -78,7 +79,8 @@ bool checkCollisionRight(Vector2 characterPosition, Vector2 characterSize, int c
     //Returning for each case
     if (checkTileType(tilePointF, collisiontilemap) == 1 ||
     checkTileType(tilePointG, collisiontilemap) == 1 ||
-    checkTileType(tilePointH, collisiontilemap) == 1) return true;
+    checkTileType(tilePointH, collisiontilemap) == 1 ||
+    pointG.x > GetScreenWidth() - tileSize) return true;
     else return false;
 }
 
@@ -228,7 +230,7 @@ int main(void) {
         
         //Collisions on the right of the character
         bool rightCollision = checkCollisionRight(currentPosition, characterSize, collisionTilemap, tileSize);
-        Vector2 pointX2 = {currentPosition.x - 1, currentPosition.y + characterSize.y - 1};
+        Vector2 pointX2 = {currentPosition.x + characterSize.x, currentPosition.y + characterSize.y - 1};
         Vector2 tilePointX2 = checkTilePosition(pointX2, tileSize); 
         
         //Falling down
@@ -293,19 +295,17 @@ int main(void) {
             currentPosition.y = 0;
             currentVelocity.y = 0;
         } //HERE SHOULD ADD GAME OVER
-        if ((currentPosition.x <= tileSize ||
-        leftCollision) && currentVelocity.x < 0) {
+        if (leftCollision && currentVelocity.x < 0) {
             //Fixing position due to fast collision
-            currentPosition.x = (currentPosition.x < tileSize) ? tileSize : (tilePointX1.x * tileSize) + tileSize;
+            currentPosition.x = (tilePointX1.x * tileSize) + tileSize ;
             //Resetting forces when colliding
             currentVelocity.x = sliding ? -currentVelocity.x : 0;
             currentAcceleration.x = sliding ? currentAcceleration.x * 0.8f : 0;
             if (sliding) forward = !forward;
                 
-        } else if (currentVelocity.x > 0 && (rightCollision ||
-        currentPosition.x + characterSize.x > (tileSize * tilemapSizeX) - tileSize)) {
+        } else if (currentVelocity.x > 0 && rightCollision) {
             //Fixing position due to fast collision
-            currentPosition.x = (currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize) ? (tileSize * tilemapSizeX) - tileSize - characterSize.x : (tilePointX2.x * tileSize) + tileSize;
+            currentPosition.x = (tilePointX2.x * tileSize) - characterSize.x;
             //Resetting forces when colliding
             currentVelocity.x = sliding ? -currentVelocity.x : 0;
             currentAcceleration.x = sliding ? currentAcceleration.x * 0.8f : 0;
