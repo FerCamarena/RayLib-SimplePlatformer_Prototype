@@ -199,6 +199,7 @@ int main(void) {
     int frameLoop = 0;
     int animRate = 20;
     bool forward = true;
+    bool sliding = false;
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -257,93 +258,88 @@ int main(void) {
             frameLimit = 2;
         }
 
-        //Jumping
-        if(IsKeyDown(KEY_W) && currentVelocity.y == 0 &&
-        ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
-        currentPosition.y + characterSize.y >= screenHeight)){
-            //Adding jump force
-            currentAcceleration.y -= 20;
-            animationState = 2;
-            frameLimit = 2;
-            frameLoop = 0;
-            animRate = 0;
-        }
-        //Moving left
-        if(IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)){
-            if(currentPosition.x > tileSize){
-                //Moving
-                currentAcceleration.x -= 1.5f;
-                animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
-                frameLimit = 3;
-            } else
-            //Checking left collision
-            if(leftCollision && currentVelocity.x < 0){
-                //Fixing position due to fast collision
-                currentPosition.x = (tilePointX1.x * tileSize) + tileSize;
-                //Resetting forces when colliding
-                currentVelocity.x = 0;
-                currentAcceleration.x = 0;
+        //Changing direction
+        if (IsKeyPressed(KEY_A)) forward = false;
+        if (IsKeyPressed(KEY_D)) forward = true;
+
+        //Forcing movement only when not sliding
+        if (!sliding) {
+            //Jumping
+            if (IsKeyDown(KEY_W) && currentVelocity.y == 0 &&
+            ((floorCollision && (int)(currentPosition.y + characterSize.y) % tileSize < 4) ||
+            currentPosition.y + characterSize.y >= screenHeight)) {
+                //Adding jump force
+                currentAcceleration.y -= 20;
+                animationState = 2;
+                frameLimit = 2;
+                frameLoop = 0;
+                animRate = 0;
             }
-            forward = false;
-        }
-        //Moving right
-        if(IsKeyDown(KEY_D) && !IsKeyDown(KEY_A)){
-            if(currentPosition.x + characterSize.x < (tileSize * tilemapSizeX) - tileSize){
-                //Moving
-                currentAcceleration.x += 1.5f;
-                animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
-                frameLimit = 3;
-            } else
-            //Checking right collision
-            if(rightCollision && currentVelocity.x > 0){
-                //Fixing position due to fast collision
-                currentPosition.x = (tilePointX2.x * tileSize) + tileSize;
-                //Resetting forces when colliding
-                currentVelocity.x = 0;
-                currentAcceleration.x = 0;
+            
+            //Lateral movement
+            if (IsKeyDown(KEY_A) ||
+            IsKeyDown(KEY_D)){
+                if (currentPosition.x > tileSize) {
+                    //Moving
+                    currentAcceleration.x += forward ? 1.5f : -1.5f;
+                    animationState = currentVelocity.y == 0 && floorCollision ? 1 : 2;
+                    frameLimit = 3;
+                }
             }
-            forward = true;
         }
-        
-        //Limiting movement within screen
+
+        //Limiting movement within screen && applying lateral collisions
         if(currentPosition.y < 0){
             //Limiting going over screen
             currentPosition.y = 0;
             currentVelocity.y = 0;
         } //HERE SHOULD ADD GAME OVER
-        if(currentPosition.x < tileSize) {
-            currentPosition.x = tileSize;
-            currentVelocity.x = 0;
-        } else if(currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize) {
-            currentPosition.x = (tileSize * tilemapSizeX) - tileSize - characterSize.x;
-            currentVelocity.x = 0;
+        if((currentPosition.x < tileSize ||
+        leftCollision) && currentVelocity.x < 0) {
+            //Fixing position due to fast collision
+            currentPosition.x = (currentPosition.x < tileSize) ? tileSize : (tilePointX1.x * tileSize) + tileSize;
+            //Resetting forces when colliding
+            currentVelocity.x = sliding ? -currentVelocity.x : 0;
+            currentAcceleration.x = sliding ? currentAcceleration.x * 0.8f : 0;
+            if (sliding) forward = !forward;
+                
+        } else if(currentVelocity.x > 0 && (rightCollision ||
+        currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize)) {
+            //Fixing position due to fast collision
+            currentPosition.x = (currentPosition.x + characterSize.x - 1 > (tileSize * tilemapSizeX) - tileSize) ? (tileSize * tilemapSizeX) - tileSize - characterSize.x : (tilePointX2.x * tileSize) + tileSize;
+            //Resetting forces when colliding
+            currentVelocity.x = sliding ? -currentVelocity.x : 0;
+            currentAcceleration.x = sliding ? currentAcceleration.x * 0.8f : 0;
+            if (sliding) forward = !forward;
         }
-        if(IsKeyDown(KEY_S)){
     
         //Slide
+        if(IsKeyDown(KEY_S) && floorCollision){
             //Detecting when key is just pressed
             if(IsKeyPressed(KEY_S)){
                 //Moving the player once
                 currentPosition.y = currentPosition.y + 10;
             }
+            sliding = true;
             //Decreasing character size
             characterSize.y = 42;
             animationState = 5;
             frameLimit = 1;
             frameLoop = 1;
-        } else {
+        } else if (floorCollision) {
             //Detecting when key is just released
             if(IsKeyReleased(KEY_S)){
                 //Moving the player once
                 currentPosition.y = currentPosition.y - 10;
             }
+            sliding = false;
             //Resetting character size
             characterSize.y = 52;
         }
         
         //Calculating physics
         currentVelocity.y += currentAcceleration.y;
-        currentVelocity.x *= 0.85f;
+        currentVelocity.x *= sliding? 0.95f : 0.8f;
         currentPosition.y += currentVelocity.y;
         currentVelocity.x += currentAcceleration.x;
         currentPosition.x += currentVelocity.x;
@@ -387,7 +383,7 @@ int main(void) {
         //Updating camera position in Y axys
         if(currentPosition.y + characterMid.y + 1 > cameraLowerFocus.y &&
         currentPosition.y + characterMid.y - 1 < cameraUpperFocus.y){
-            mainCamera.target.y = currentPosition.y + 26 + (IsKeyDown(KEY_S)? - 10 : 0);
+            mainCamera.target.y = currentPosition.y + 26 + (sliding? - 10 : 0);
         } else if (currentPosition.y + characterMid.y <= cameraLowerFocus.y){
             mainCamera.target.y = cameraLowerFocus.y;
         } else if (currentPosition.y + characterMid.y >= cameraUpperFocus.y){
@@ -409,11 +405,11 @@ int main(void) {
         mainCamera.target.y += cameraAcceleration.y * 2;
 
         //Character sprite rectangle
-        Vector2 sprite = {currentPosition.x - 22, currentPosition.y - (12 + (IsKeyDown(KEY_S)? + 10 : 0))};
+        Vector2 sprite = {currentPosition.x - 22, currentPosition.y - (12 + ((sliding)? + 10 : 0))};
 
         //Processing character animations
         animRate++;
-        if (animRate > (60 / (frameLimit * frameLimit)) && !IsKeyDown(KEY_S)) { //Temp
+        if (animRate > (60 / (frameLimit * frameLimit)) && !sliding) { //Temp
             frameLoop++;
             if (animationState == 2) frameLoop = 2;
             animRate = 0;
