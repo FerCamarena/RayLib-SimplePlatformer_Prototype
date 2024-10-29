@@ -108,7 +108,7 @@ int main(void) {
     mainCamera.zoom = 1.5f;
 
     //Tilemap variables
-    Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_red_tilemap.png");
+    Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
