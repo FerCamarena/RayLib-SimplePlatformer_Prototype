@@ -1,22 +1,21 @@
 //Libraries
 #include "raylib.h"
 
-//DEV Notes
+/*-----------------------------------DEV NOTES------------------------------------------*/
 //
 //Project made by Fernando C.
 //Base platformer example using Raylib
+//
+/*--------------------------------------------------------------------------------------*/
 
-//--------------------------------------------------------------------------------------
-//Project attributes
+/*------------------------------Project attributes--------------------------------------*/
 
 //Map variables 8:4.5 - 16:9 - 24:13.5
 #define tilemapSizeX 25
 #define tilemapSizeY 15
 int tileSize = 64;
 
-//--------------------------------------------------------------------------------------
-//User methods
-
+/*---------------------------------User methods-----------------------------------------*/
 //Tilemap
 
 //Locking for tile position on current tilemap
@@ -128,16 +127,14 @@ bool CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection, in
     else return false;
 }
 
-//--------------------------------------------------------------------------------------
-//Main function
+/*-------------------------------Main function------------------------------------------*/
 int main(void) {
     //Initialization
     const int screenWidth = (tilemapSizeX * tileSize) - tileSize, screenHeight = (tilemapSizeY * tileSize) - tileSize;
     InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.55-alpha");
     SetTargetFPS(60);
     
-    //--------------------------------------------------------------------------------------
-    //Game properties
+    /*---------------------------------Game properties--------------------------------------*/
 
     //Camera variables
     Camera2D mainCamera;
@@ -146,11 +143,21 @@ int main(void) {
     mainCamera.rotation = 0;
     mainCamera.zoom = 1.5f;
 
+    //Level variables
+    int bulletCount = 1;
+
+    //Bullet variables
+    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
+    Vector2 bulletPosition = {-64, -64};
+    //float bulletRotation = 0;
+
     //Tilemap variables
-    Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-    Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Texture2D baseEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D sawEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
+    Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
+    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
+    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -269,11 +276,33 @@ int main(void) {
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
 
-    //--------------------------------------------------------------------------------------
-    //Game loop
+    /*-----------------------------------Game loop------------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
+        //=====LEVEL=====
+
+        if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            //Decreasing bullet amount
+            bulletCount--;
+            //Setting bullet start rotation
+            //Vector2 bulletDirection = {GetMousePosition().x - characterPosition.x, GetMousePosition().y - characterPosition.y};
+            //Pending to import RAYMATH
+            //Sending bullet WIP
+        }
+
+        //=====LEVEL=====
+
+        //=====BULLETS=====
+
+        if (bulletCount == 0) {
+            //Move the bullet
+            bulletPosition.x++;
+            //Check collisions with enemies WIP
+        }
+
+        //=====BULLETS=====
+
         //=====CHARACTER=====
         
         //Collisions under the character
@@ -631,6 +660,8 @@ int main(void) {
 
         //=====CAMERA=====
 
+        //=====SPRITES=====
+
         //Creating character
         characterAnimRate++;
         if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
@@ -640,20 +671,43 @@ int main(void) {
             characterAnimRate = 0;
         }
         if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
-        Vector2 characterHitbox = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
+        Vector2 bcharacterPivot = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
         Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
         //Creating baseEnemy
-        Vector2 baseEnemyHitbox = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
+        Vector2 baseEnemyPivot = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
         Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
         
-        //Creating baseEnemy
-        Vector2 sawEnemyHitbox = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         //Creating sawEnemy
+        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
 
-        //--------------------------------------------------------------------------------------
-        //Graphic logic
+        //Creating bulet
+        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.x - (bulletTexture.height / 2)};
+        Rectangle bulletSprite = {(float)0, (float)0, (float)bulletTexture.width, (float)bulletTexture.height};
+        
+        //=====SPRITES=====
+
+        //=====CURSOR=====
+        
+        HideCursor();
+        Vector2 cursorPivot = {
+            (aimFullCursorTexture.width * 0.5f),
+            (aimFullCursorTexture.height * 0.5f)
+        };
+        float cursorScale = screenHeight / ((tileSize / 2) / mainCamera.zoom);
+        Rectangle cursorSprite = {
+            (float)0, (float)0,
+            (float)aimFullCursorTexture.width, (float)aimFullCursorTexture.height
+        };
+        Rectangle cursorScaledSprite = {
+            GetMousePosition().x, GetMousePosition().y,
+            cursorScale, cursorScale
+        };
+
+        //=====CURSOR=====
+
+        /*---------------------------------------Draw phase--------------------------------------*/
         BeginDrawing();
             //Clearing the image with background color
             ClearBackground(PURPLE);
@@ -663,7 +717,7 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) + (tileSize * 1), ((float)y * tileSize) - (parallaxPositionOffset.y * 2)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, BLACK);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, BLACK);
                 }
             }
             //Drawing bg2 tilemap
@@ -672,31 +726,34 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 8) + (tileSize * 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 8)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, GRAY);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, GRAY);
                 }
             }
             BeginMode2D(mainCamera);
-                //#Displaying the full tilesheet 
-                //#DrawTexture(tilesheet, 0, 0, WHITE);
+                //#Displaying the full levelTilesheet 
+                //#DrawTexture(levelTilesheet, 0, 0, WHITE);
                 //Drawing base tilemap
                 for (int x = 0; x < tilemapSizeX; x++) {
                     for (int y = 0; y < tilemapSizeY; y++) {
                         Vector2 tilePosition = {((float)x * tileSize), ((float)y * tileSize)};
                         int tileIndex = baseTilemap[y][x];
                         //Drawing single tile
-                        DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                        DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, WHITE);
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, characterSprite, characterHitbox, GOLD);
-                //Drawing baseEnemy
-                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyHitbox, RED);
-                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyHitbox, RED);
+                DrawTextureRec(charactersTilesheet, characterSprite, bcharacterPivot, GOLD);
+                //Drawing enemies
+                DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
+                DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
+            //Drawing bullets
+            DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
+            //Drawing cursor
+            DrawTexturePro((bulletCount != 0) ? aimFullCursorTexture : aimEmptyCursorTexture, cursorSprite, cursorScaledSprite, cursorPivot, 0.0f, BLUE);
         EndDrawing();
     }
-    //--------------------------------------------------------------------------------------
-    //End
+    /*------------------------------------------End-----------------------------------------*/
     CloseWindow();
     return 0;
 }
