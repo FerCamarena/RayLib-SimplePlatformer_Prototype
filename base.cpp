@@ -146,6 +146,9 @@ int main(void) {
     mainCamera.rotation = 0;
     mainCamera.zoom = 1.5f;
 
+    //Level variables
+    int bulletCount = 1;
+
     //Tilemap variables
     Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
@@ -276,6 +279,16 @@ int main(void) {
     while (!WindowShouldClose()) {
         //Brain logic
         
+        //=====Level logic=====
+
+        if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            //Decreasing bullet amount
+            bulletCount--;
+            //Sending bullet WIP
+        }
+
+        //=====Level logic=====
+
         //=====CHARACTER=====
         
         //Collisions under the character
@@ -708,7 +721,7 @@ int main(void) {
                 DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
             //Drawing cursor
-            DrawTextureRec(aimFullCursor, cursorSprite, cursorPivot, BLUE);
+            DrawTextureRec((bulletCount != 0) ? aimFullCursor : aimEmptyCursor, cursorSprite, cursorPivot, BLUE);
         EndDrawing();
     }
     //--------------------------------------------------------------------------------------
