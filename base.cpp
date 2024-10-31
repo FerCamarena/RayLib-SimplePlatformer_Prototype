@@ -251,12 +251,12 @@ int main(void) {
     bool characterFwd = true;
     bool characterSlide = false;
 
-    //Enemies variables
-    Vector2 enemyPosition = {800, 400};
-    Vector2 enemyVelocity = {0, 0};
-    Vector2 enemyAcceleration = {0, 0};
-    Vector2 enemySize = {32, 52};
-    bool enemyFwd = true;
+    //Base enemies variables
+    Vector2 baseEnemyPosition = {800, 400};
+    Vector2 baseEnemyVelocity = {0, 0};
+    Vector2 baseEnemyAcceleration = {0, 0};
+    Vector2 baseEnemySize = {32, 52};
+    bool baseEnemyFwd = true;
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -267,9 +267,6 @@ int main(void) {
         //Brain logic
         
         //=====CHARACTER=====
-        
-        //Gravity
-        characterAcceleration.y += 1;
         
         //Collisions under the character
         bool characterFloorCollision = CheckCollisionDown(characterPosition, characterSize, collisionTilemap, tileSize);
@@ -286,6 +283,9 @@ int main(void) {
         Vector2 characterPointRight = {characterPosition.x + characterSize.x, characterPosition.y + characterSize.y - 1};
         Vector2 characterTileRight = CheckTilePosition(characterPointRight, tileSize); 
         
+        //Gravity
+        characterAcceleration.y += 1;
+
         //Falling
         if (characterFloorCollision && characterVelocity.y >= 0) {
             //Edge hopping condition
@@ -404,7 +404,6 @@ int main(void) {
         else if (characterVelocity.y < -32) characterVelocity.y = -32;
 
         //Calculating physics
-        characterVelocity.x *= characterSlide? 0.95f : 0.8f;
         characterVelocity.x *= characterSlide ? 0.95f : 0.8f;
         characterVelocity.y += characterAcceleration.y;
         characterVelocity.x += characterAcceleration.x;
@@ -415,7 +414,7 @@ int main(void) {
         if (characterVelocity.y > 32) characterVelocity.y = 32;
         else if (characterVelocity.y < -32) characterVelocity.y = -32;
 
-        //Resetting gravity
+        //Resetting acceleration
         characterAcceleration.x = 0;
         characterAcceleration.y = 0;
         
@@ -425,6 +424,8 @@ int main(void) {
 
         //Gravity
         enemyAcceleration.y += 1;
+
+        //=====BASE ENEMY=====
     
         //Collisions under the enemy
         bool baseEnemyFloorCollision = CheckCollisionDown(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
@@ -476,9 +477,8 @@ int main(void) {
         //Base behaviour
         baseEnemyAcceleration.x = baseEnemyFwd ? 0.5f : -0.5f;
 
-        //Clamping forces
-        if (enemyVelocity.y > 32) enemyVelocity.y = 32;
-        else if (enemyVelocity.y < -32) enemyVelocity.y = -32;
+        //Gravity
+        baseEnemyAcceleration.y += 1;
 
         //Calculating physics
         baseEnemyVelocity.x *= 0.8f;
@@ -487,9 +487,7 @@ int main(void) {
         baseEnemyPosition.x += baseEnemyVelocity.x;
         baseEnemyPosition.y += baseEnemyVelocity.y;
 
-        //Resetting gravity
-        enemyAcceleration.x = 0;
-        enemyAcceleration.y = 0;
+        //Resetting acceleration
         baseEnemyAcceleration.x = 0;
         baseEnemyAcceleration.y = 0;
 
