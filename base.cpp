@@ -285,11 +285,23 @@ int main(void) {
         if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             //Decreasing bullet amount
             bulletCount--;
+            //Setting bullet start rotation
+            //Vector2 bulletDirection = {GetMousePosition().x - characterPosition.x, GetMousePosition().y - characterPosition.y};
+            //Pending to import RAYMATH
             //Sending bullet WIP
         }
 
         //=====LEVEL=====
 
+        //=====BULLETS=====
+
+        if (bulletCount == 0) {
+            //Move the bullet
+            bulletPosition.x++;
+            //Check collisions with enemies WIP
+        }
+
+        //=====BULLETS=====
 
         //=====CHARACTER=====
         
@@ -669,6 +681,10 @@ int main(void) {
         //Creating sawEnemy
         Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
+
+        //Creating bulet
+        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.x - (bulletTexture.height / 2)};
+        Rectangle bulletSprite = {(float)0, (float)0, (float)bulletTexture.width, (float)bulletTexture.height};
         
         //=====SPRITES=====
 
@@ -731,6 +747,8 @@ int main(void) {
                 DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
                 DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
+            //Drawing bullets
+            DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
             //Drawing cursor
             DrawTexturePro((bulletCount != 0) ? aimFullCursorTexture : aimEmptyCursorTexture, cursorSprite, cursorScaledSprite, cursorPivot, 0.0f, BLUE);
         EndDrawing();
