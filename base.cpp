@@ -99,7 +99,7 @@ bool CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize, int coll
     Vector2 tilePointI = CheckTilePosition(pointI, tileSize);
     //Returning on each case
     if (CheckTileType(tilePointI, collisiontilemap) != 0 ||
-    pointI.x < tileSize) return true;
+    pointI.x <= tileSize) return true;
     else return false;
 }
 
@@ -111,7 +111,7 @@ bool CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize, int col
     Vector2 tilePointJ = CheckTilePosition(pointJ, tileSize);
     //Returning on each case
     if (CheckTileType(tilePointJ, collisiontilemap) != 0 ||
-    pointJ.x < tileSize) return true;
+    pointJ.x <= tileSize) return true;
     else return false;
 }
 
@@ -680,7 +680,7 @@ int main(void) {
             characterAnimRate = 0;
         }
         if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
-        Vector2 bcharacterPivot = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
+        Vector2 characterPivot = {characterPosition.x - ((tileSize - characterSize.x)), characterPosition.y - ((tileSize - characterSize.y))};
         Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
         //Creating baseEnemy
