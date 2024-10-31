@@ -1,22 +1,22 @@
 //Libraries
 #include "raylib.h"
+#include "raymath.h"
 
-//DEV Notes
+/*-----------------------------------DEV NOTES------------------------------------------*/
 //
 //Project made by Fernando C.
 //Base platformer example using Raylib
+//
+/*--------------------------------------------------------------------------------------*/
 
-//--------------------------------------------------------------------------------------
-//Project attributes
+/*------------------------------Project attributes--------------------------------------*/
 
 //Map variables 8:4.5 - 16:9 - 24:13.5
 #define tilemapSizeX 25
 #define tilemapSizeY 15
 int tileSize = 64;
 
-//--------------------------------------------------------------------------------------
-//User methods
-
+/*---------------------------------User methods-----------------------------------------*/
 //Tilemap
 
 //Locking for tile position on current tilemap
@@ -99,7 +99,7 @@ bool CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize, int coll
     Vector2 tilePointI = CheckTilePosition(pointI, tileSize);
     //Returning on each case
     if (CheckTileType(tilePointI, collisiontilemap) != 0 ||
-    pointI.x < tileSize) return true;
+    pointI.x <= tileSize) return true;
     else return false;
 }
 
@@ -111,7 +111,7 @@ bool CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize, int col
     Vector2 tilePointJ = CheckTilePosition(pointJ, tileSize);
     //Returning on each case
     if (CheckTileType(tilePointJ, collisiontilemap) != 0 ||
-    pointJ.x < tileSize) return true;
+    pointJ.x <= tileSize) return true;
     else return false;
 }
 
@@ -128,16 +128,14 @@ bool CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection, in
     else return false;
 }
 
-//--------------------------------------------------------------------------------------
-//Main function
+/*-------------------------------Main function------------------------------------------*/
 int main(void) {
     //Initialization
     const int screenWidth = (tilemapSizeX * tileSize) - tileSize, screenHeight = (tilemapSizeY * tileSize) - tileSize;
-    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.55-alpha");
+    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.69-alpha");
     SetTargetFPS(60);
     
-    //--------------------------------------------------------------------------------------
-    //Game properties
+    /*---------------------------------Game properties--------------------------------------*/
 
     //Camera variables
     Camera2D mainCamera;
@@ -146,11 +144,24 @@ int main(void) {
     mainCamera.rotation = 0;
     mainCamera.zoom = 1.5f;
 
+    //Level variables
+    int bulletCount = 1;
+
+    //Bullet variables
+    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
+    Vector2 bulletPosition = {256, 256};
+    Vector2 bulletDirection = {0, 0};
+    float bulletSpeed = 10.0f;
+    bool bulletState = false;
+    //float bulletRotation = 0;
+
     //Tilemap variables
-    Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-    Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Texture2D baseEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D sawEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
+    Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
+    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
+    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -214,7 +225,7 @@ int main(void) {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8,10, 0, 0},
         { 0, 0, 0, 0, 5, 4, 4, 6, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 8,10, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {14, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,13},
         { 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
@@ -231,7 +242,7 @@ int main(void) {
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1},
         { 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -240,9 +251,9 @@ int main(void) {
     };
 
     //Character variables
-    Vector2 characterPosition = {650, 400};
     Vector2 characterVelocity = {0, 0};
     Vector2 characterAcceleration = {0, 0};
+    Vector2 characterPosition = {650, 400};
     Vector2 characterSize = {20, 52};
     Vector2 characterHalf = {(characterSize.x * 0.5f), (characterSize.y * 0.5f)};
     int characterAnimState = 0;
@@ -269,12 +280,47 @@ int main(void) {
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
 
-    //--------------------------------------------------------------------------------------
-    //Game loop
+    /*-----------------------------------Game loop------------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
+        //=====LEVEL=====
+
+        if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            //Decreasing bullet amount
+            bulletCount--;
+            //Positioning bullet
+            bulletPosition = Vector2Add(characterPosition, characterHalf);
+            //Setting bullet start rotation
+            Vector2 bulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), bulletPosition);
+            bulletDirection = Vector2Normalize(bulletVector);
+            bulletDirection = Vector2Scale(bulletDirection, bulletSpeed);
+            //Sending bullet WIP
+        }
+
+        //=====LEVEL=====
+
+        //=====BULLETS=====
+
+        if (bulletCount == 0) {
+            //Move the bullet
+            bulletPosition = Vector2Add(bulletPosition, bulletDirection);
+            //Enabling bullet
+            bulletState = true;
+            //Check collisions with enemies WIP
+        }
+
+        //Creating bullet
+        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.y - (bulletTexture.height / 2)};
+        Rectangle bulletSprite = {0.0f, 0.0f, (float)(bulletState) ? bulletTexture.width : 0.0f, (float)(bulletState) ? bulletTexture.height : 0.0f};
+        
+        //=====BULLETS=====
+
         //=====CHARACTER=====
+        
+        //Creating character sprite
+        Vector2 characterSpritePivot = {characterPosition.x - ((tileSize - characterSize.x) / 2), characterPosition.y - ((tileSize - characterSize.y))};
+        Rectangle characterArea = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
         //Collisions under the character
         bool characterFloorCollision = CheckCollisionDown(characterPosition, characterSize, collisionTilemap, tileSize);
@@ -426,6 +472,16 @@ int main(void) {
         characterAcceleration.x = 0;
         characterAcceleration.y = 0;
         
+        //Animating character
+        characterAnimRate++;
+        if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
+            //Updating frames
+            characterFrameCycle++;
+            if (characterAnimState == 2) characterFrameCycle = 2;
+            characterAnimRate = 0;
+        }
+        if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
+
         //=====CHARACTER=====
 
         //=====SAW ENEMY=====
@@ -500,6 +556,10 @@ int main(void) {
         sawEnemyAcceleration.x = 0;
         sawEnemyAcceleration.y = 0;
 
+        //Creating sawEnemy
+        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
+        Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
+
         //=====SAW ENEMY=====
 
         //=====BASE ENEMY=====
@@ -568,6 +628,10 @@ int main(void) {
         baseEnemyAcceleration.x = 0;
         baseEnemyAcceleration.y = 0;
 
+        //Creating baseEnemy
+        Vector2 baseEnemyPivot = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
+        Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
+        
         //=====ENEMY=====
 
         //=====CAMERA=====
@@ -631,29 +695,30 @@ int main(void) {
 
         //=====CAMERA=====
 
-        //Creating character
-        characterAnimRate++;
-        if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
-            //Updating frames
-            characterFrameCycle++;
-            if (characterAnimState == 2) characterFrameCycle = 2;
-            characterAnimRate = 0;
-        }
-        if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
-        Vector2 characterHitbox = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
-        Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
+        //=====CURSOR=====
         
-        //Creating baseEnemy
-        Vector2 baseEnemyHitbox = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
-        Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
-        
-        //Creating baseEnemy
-        Vector2 sawEnemyHitbox = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
-        //Creating sawEnemy
-        Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
+        HideCursor();
+        float cursorScaleFactor = (tileSize / 2) / mainCamera.zoom;
+        float cursorScale = screenHeight / cursorScaleFactor;
+        Rectangle cursorSprite = {
+            0.0f, 0.0f,
+            (float)aimFullCursorTexture.width, (float)aimFullCursorTexture.height
+        };
+        Rectangle cursorScaledSprite = {
+            GetMousePosition().x, GetMousePosition().y,
+            cursorScale, cursorScale
+        };
+        Vector2 cursorSpritePivot = {
+            (aimFullCursorTexture.width * 0.33f),
+            (aimFullCursorTexture.height * 0.33f)
+        };
 
-        //--------------------------------------------------------------------------------------
-        //Graphic logic
+        //Selecting cursor texture
+        Texture2D cursorTexture = (bulletCount > 0) ? aimFullCursorTexture : aimEmptyCursorTexture;
+
+        //=====CURSOR=====
+
+        /*---------------------------------------Draw phase--------------------------------------*/
         BeginDrawing();
             //Clearing the image with background color
             ClearBackground(PURPLE);
@@ -663,7 +728,7 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) + (tileSize * 1), ((float)y * tileSize) - (parallaxPositionOffset.y * 2)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, BLACK);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, BLACK);
                 }
             }
             //Drawing bg2 tilemap
@@ -672,31 +737,34 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 8) + (tileSize * 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 8)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, GRAY);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, GRAY);
                 }
             }
             BeginMode2D(mainCamera);
-                //#Displaying the full tilesheet 
-                //#DrawTexture(tilesheet, 0, 0, WHITE);
+                //#Displaying the full levelTilesheet 
+                //#DrawTexture(levelTilesheet, 0, 0, WHITE);
                 //Drawing base tilemap
                 for (int x = 0; x < tilemapSizeX; x++) {
                     for (int y = 0; y < tilemapSizeY; y++) {
                         Vector2 tilePosition = {((float)x * tileSize), ((float)y * tileSize)};
                         int tileIndex = baseTilemap[y][x];
                         //Drawing single tile
-                        DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                        DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, WHITE);
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, characterSprite, characterHitbox, GOLD);
-                //Drawing baseEnemy
-                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyHitbox, RED);
-                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyHitbox, RED);
+                DrawTextureRec(charactersTilesheet, characterArea, characterSpritePivot, GOLD);
+                //Drawing enemies
+                DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
+                DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
+                //Drawing bullets
+                DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
             EndMode2D();
+            //Drawing cursor
+            DrawTexturePro(cursorTexture, cursorSprite, cursorScaledSprite, cursorSpritePivot, 0.0f, BLUE);
         EndDrawing();
     }
-    //--------------------------------------------------------------------------------------
-    //End
+    /*------------------------------------------End-----------------------------------------*/
     CloseWindow();
     return 0;
 }
