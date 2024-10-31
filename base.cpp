@@ -133,7 +133,7 @@ bool CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection, in
 int main(void) {
     //Initialization
     const int screenWidth = (tilemapSizeX * tileSize) - tileSize, screenHeight = (tilemapSizeY * tileSize) - tileSize;
-    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.37-alpha");
+    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.55-alpha");
     SetTargetFPS(60);
     
     //--------------------------------------------------------------------------------------
