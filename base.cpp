@@ -149,13 +149,18 @@ int main(void) {
     //Level variables
     int bulletCount = 1;
 
+    //Bullet variables
+    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
+    Vector2 bulletPosition = {-64, -64};
+    //float bulletRotation = 0;
+
     //Tilemap variables
-    Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-    Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Texture2D baseEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D sawEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D aimFullCursor = LoadTexture("./assets/Other/cursor-aim-full.png");
-    Texture2D aimEmptyCursor = LoadTexture("./assets/Other/cursor-aim-empty.png");
+    Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
+    Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
+    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
+    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -279,7 +284,7 @@ int main(void) {
     while (!WindowShouldClose()) {
         //Brain logic
         
-        //=====Level logic=====
+        //=====LEVEL=====
 
         if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             //Decreasing bullet amount
@@ -287,7 +292,8 @@ int main(void) {
             //Sending bullet WIP
         }
 
-        //=====Level logic=====
+        //=====LEVEL=====
+
 
         //=====CHARACTER=====
         
@@ -664,9 +670,8 @@ int main(void) {
         Vector2 baseEnemyPivot = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
         Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
         
-        //Creating baseEnemy
-        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         //Creating sawEnemy
+        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
         
         //=====SPRITES=====
@@ -690,7 +695,7 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 2) + (tileSize * 1), ((float)y * tileSize) - (parallaxPositionOffset.y * 2)};
                     int tileIndex = bg2Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, BLACK);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, BLACK);
                 }
             }
             //Drawing bg2 tilemap
@@ -699,26 +704,26 @@ int main(void) {
                     Vector2 tilePosition = {((float)x * tileSize) - (parallaxPositionOffset.x * 8) + (tileSize * 4), ((float)y * tileSize) - (parallaxPositionOffset.y * 8)};
                     int tileIndex = bg1Tilemap[y][x];
                     //Drawing single tile
-                    DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, GRAY);
+                    DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, GRAY);
                 }
             }
             BeginMode2D(mainCamera);
-                //#Displaying the full tilesheet 
-                //#DrawTexture(tilesheet, 0, 0, WHITE);
+                //#Displaying the full levelTilesheet 
+                //#DrawTexture(levelTilesheet, 0, 0, WHITE);
                 //Drawing base tilemap
                 for (int x = 0; x < tilemapSizeX; x++) {
                     for (int y = 0; y < tilemapSizeY; y++) {
                         Vector2 tilePosition = {((float)x * tileSize), ((float)y * tileSize)};
                         int tileIndex = baseTilemap[y][x];
                         //Drawing single tile
-                        DrawTextureRec(tilesheet, tiles[tileIndex], tilePosition, WHITE);
+                        DrawTextureRec(levelTilesheet, tiles[tileIndex], tilePosition, WHITE);
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, characterSprite, bcharacterPivot, GOLD);
+                DrawTextureRec(charactersTilesheet, characterSprite, bcharacterPivot, GOLD);
                 //Drawing enemies
-                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyPivot, RED);
-                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyPivot, RED);
+                DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
+                DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
             //Drawing cursor
             DrawTextureRec((bulletCount != 0) ? aimFullCursor : aimEmptyCursor, cursorSprite, cursorPivot, BLUE);
