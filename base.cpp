@@ -565,7 +565,7 @@ int main(void) {
             characterAnimRate = 0;
         }
         if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
-        Vector2 characterHitbox = {characterPosition.x - 22, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
+        Vector2 characterHitbox = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
         Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
         //Creating baseEnemy
