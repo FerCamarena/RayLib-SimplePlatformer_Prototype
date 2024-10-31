@@ -1,5 +1,6 @@
 //Libraries
 #include "raylib.h"
+#include "raymath.h"
 
 /*-----------------------------------DEV NOTES------------------------------------------*/
 //
@@ -148,7 +149,9 @@ int main(void) {
 
     //Bullet variables
     Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
-    Vector2 bulletPosition = {-64, -64};
+    Vector2 bulletPosition = {256, 256};
+    Vector2 bulletDirection = {0, 0};
+    bool bulletState = false;
     //float bulletRotation = 0;
 
     //Tilemap variables
@@ -221,7 +224,7 @@ int main(void) {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8,10, 0, 0},
         { 0, 0, 0, 0, 5, 4, 4, 6, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 8,10, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {14, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,13},
         { 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
@@ -238,7 +241,7 @@ int main(void) {
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1},
         { 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -286,8 +289,12 @@ int main(void) {
             //Decreasing bullet amount
             bulletCount--;
             //Setting bullet start rotation
-            //Vector2 bulletDirection = {GetMousePosition().x - characterPosition.x, GetMousePosition().y - characterPosition.y};
-            //Pending to import RAYMATH
+            bulletDirection = Vector2Normalize({
+                GetMousePosition().x - characterPosition.x,
+                GetMousePosition().y - characterPosition.y
+            });
+            //Positioning bullet
+            bulletPosition = Vector2Add(characterPosition, characterHalf);
             //Sending bullet WIP
         }
 
@@ -297,7 +304,9 @@ int main(void) {
 
         if (bulletCount == 0) {
             //Move the bullet
-            bulletPosition.x++;
+            //bulletPosition = Vector2Add(bulletPosition, bulletDirection);
+            //Enabling bullet
+            bulletState = true;
             //Check collisions with enemies WIP
         }
 
@@ -662,7 +671,7 @@ int main(void) {
 
         //=====SPRITES=====
 
-        //Creating character
+        //Animating character
         characterAnimRate++;
         if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
             //Updating frames
@@ -682,9 +691,9 @@ int main(void) {
         Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
 
-        //Creating bulet
-        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.x - (bulletTexture.height / 2)};
-        Rectangle bulletSprite = {(float)0, (float)0, (float)bulletTexture.width, (float)bulletTexture.height};
+        //Creating bullet
+        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.y - (bulletTexture.height / 2)};
+        Rectangle bulletSprite = {0.0f, 0.0f, (float)(bulletState) ? bulletTexture.width : 0.0f, (float)(bulletState) ? bulletTexture.height : 0.0f};
         
         //=====SPRITES=====
 
@@ -742,15 +751,19 @@ int main(void) {
                     }
                 }
                 //Drawing character
-                DrawTextureRec(charactersTilesheet, characterSprite, bcharacterPivot, GOLD);
+                DrawTextureRec(charactersTilesheet, characterSprite, characterPivot, GOLD);
                 //Drawing enemies
                 DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
                 DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
+                //Drawing bullets
+                DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
             EndMode2D();
-            //Drawing bullets
-            DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
             //Drawing cursor
-            DrawTexturePro((bulletCount != 0) ? aimFullCursorTexture : aimEmptyCursorTexture, cursorSprite, cursorScaledSprite, cursorPivot, 0.0f, BLUE);
+            DrawTexturePro(
+                (bulletCount != 0) ? aimFullCursorTexture : aimEmptyCursorTexture,
+                cursorSprite, cursorScaledSprite,
+                cursorPivot, 0.0f, BLUE
+            );
         EndDrawing();
     }
     /*------------------------------------------End-----------------------------------------*/
