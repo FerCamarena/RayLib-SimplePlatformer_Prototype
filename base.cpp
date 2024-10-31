@@ -1,22 +1,21 @@
 //Libraries
 #include "raylib.h"
 
-//DEV Notes
+/*-----------------------------------DEV NOTES------------------------------------------*/
 //
 //Project made by Fernando C.
 //Base platformer example using Raylib
+//
+/*--------------------------------------------------------------------------------------*/
 
-//--------------------------------------------------------------------------------------
-//Project attributes
+/*------------------------------Project attributes--------------------------------------*/
 
 //Map variables 8:4.5 - 16:9 - 24:13.5
 #define tilemapSizeX 25
 #define tilemapSizeY 15
 int tileSize = 64;
 
-//--------------------------------------------------------------------------------------
-//User methods
-
+/*---------------------------------User methods-----------------------------------------*/
 //Tilemap
 
 //Locking for tile position on current tilemap
@@ -128,16 +127,14 @@ bool CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection, in
     else return false;
 }
 
-//--------------------------------------------------------------------------------------
-//Main function
+/*-------------------------------Main function------------------------------------------*/
 int main(void) {
     //Initialization
     const int screenWidth = (tilemapSizeX * tileSize) - tileSize, screenHeight = (tilemapSizeY * tileSize) - tileSize;
     InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.55-alpha");
     SetTargetFPS(60);
     
-    //--------------------------------------------------------------------------------------
-    //Game properties
+    /*---------------------------------Game properties--------------------------------------*/
 
     //Camera variables
     Camera2D mainCamera;
@@ -279,8 +276,7 @@ int main(void) {
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
 
-    //--------------------------------------------------------------------------------------
-    //Game loop
+    /*-----------------------------------Game loop------------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
@@ -679,13 +675,23 @@ int main(void) {
         //=====CURSOR=====
         
         HideCursor();
-        Vector2 cursorPivot = {GetMousePosition().x - (screenHeight / 10), GetMousePosition().y - (screenHeight / 10)};
-        Rectangle cursorSprite = {(float)0, (float)0, (float)64, (float)64};
+        Vector2 cursorPivot = {
+            (aimFullCursorTexture.width * 0.5f),
+            (aimFullCursorTexture.height * 0.5f)
+        };
+        float cursorScale = screenHeight / ((tileSize / 2) / mainCamera.zoom);
+        Rectangle cursorSprite = {
+            (float)0, (float)0,
+            (float)aimFullCursorTexture.width, (float)aimFullCursorTexture.height
+        };
+        Rectangle cursorScaledSprite = {
+            GetMousePosition().x, GetMousePosition().y,
+            cursorScale, cursorScale
+        };
 
         //=====CURSOR=====
 
-        //--------------------------------------------------------------------------------------
-        //Graphic logic
+        /*---------------------------------------Draw phase--------------------------------------*/
         BeginDrawing();
             //Clearing the image with background color
             ClearBackground(PURPLE);
@@ -726,11 +732,10 @@ int main(void) {
                 DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
             //Drawing cursor
-            DrawTextureRec((bulletCount != 0) ? aimFullCursor : aimEmptyCursor, cursorSprite, cursorPivot, BLUE);
+            DrawTexturePro((bulletCount != 0) ? aimFullCursorTexture : aimEmptyCursorTexture, cursorSprite, cursorScaledSprite, cursorPivot, 0.0f, BLUE);
         EndDrawing();
     }
-    //--------------------------------------------------------------------------------------
-    //End
+    /*------------------------------------------End-----------------------------------------*/
     CloseWindow();
     return 0;
 }
