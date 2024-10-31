@@ -17,6 +17,8 @@ int tileSize = 64;
 //--------------------------------------------------------------------------------------
 //User methods
 
+//Tilemap
+
 //Locking for tile position on current tilemap
 Vector2 CheckTilePosition(Vector2 checkPosition, int tileSize) {
     //Calculating position
@@ -39,7 +41,7 @@ bool CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize, int collisio
     //PointA
     Vector2 pointA = {entityPosition.x, entityPosition.y + entitySize.y + 1};
     //PointB
-    Vector2 pointB = {entityPosition.x + entitySize.x - 1, entityPosition.y + entitySize.y + 1};
+    Vector2 pointB = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y + 1};
     //Precalculating
     Vector2 tilePointA = CheckTilePosition(pointA, tileSize);
     Vector2 tilePointB = CheckTilePosition(pointB, tileSize);
@@ -65,7 +67,7 @@ bool CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize, int collisio
     if (CheckTileType(tilePointC, collisiontilemap) == 1 ||
     CheckTileType(tilePointD, collisiontilemap) == 1 ||
     CheckTileType(tilePointE, collisiontilemap) == 1 ||
-    pointD.x < tileSize) return true;
+    pointD.x <= tileSize) return true;
     else return false;
 }
 
@@ -85,14 +87,14 @@ bool CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize, int collisi
     if (CheckTileType(tilePointF, collisiontilemap) == 1 ||
     CheckTileType(tilePointG, collisiontilemap) == 1 ||
     CheckTileType(tilePointH, collisiontilemap) == 1 ||
-    pointG.x > GetScreenWidth() - tileSize) return true;
+    pointG.x >= GetScreenWidth() - tileSize) return true;
     else return false;
 }
 
 //Function for detecting collision with tiles in the left step of entities
 bool CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointI
-    Vector2 pointI = {entityPosition.x - 1, entityPosition.y + entitySize.y};
+    Vector2 pointI = {entityPosition.x - 1, entityPosition.y + entitySize.y + 1};
     //Precalculating
     Vector2 tilePointI = CheckTilePosition(pointI, tileSize);
     //Returning on each case
@@ -104,12 +106,25 @@ bool CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize, int coll
 //Function for detecting collision with tiles in the right step of entities
 bool CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize, int collisiontilemap[][tilemapSizeX], int tileSize) {
     //PointJ
-    Vector2 pointJ = {entityPosition.x + entitySize.x + 1, entityPosition.y + entitySize.y};
+    Vector2 pointJ = {entityPosition.x + entitySize.x + 1, entityPosition.y + entitySize.y + 1};
     //Precalculating
     Vector2 tilePointJ = CheckTilePosition(pointJ, tileSize);
     //Returning on each case
     if (CheckTileType(tilePointJ, collisiontilemap) != 0 ||
     pointJ.x < tileSize) return true;
+    else return false;
+}
+
+//Function to detect tile limits with different entity directions
+bool CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection, int collisiontilemap[][tilemapSizeX], int tileSize) {
+    //PointJ
+    Vector2 pointJ = {entityPosition.x + collisionDirection.x, entityPosition.y + collisionDirection.y};
+    //Precalculating
+    Vector2 tilePointJ = CheckTilePosition(pointJ, tileSize);
+    //Returning on each case
+    if (CheckTileType(tilePointJ, collisiontilemap) == 1 ||
+    (pointJ.x < tileSize && collisionDirection.x < 0) ||
+    (pointJ.x > GetScreenWidth() - tileSize && collisionDirection.x > 0)) return true;
     else return false;
 }
 
