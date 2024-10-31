@@ -149,7 +149,8 @@ int main(void) {
     //Tilemap variables
     Texture2D tilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Texture2D enemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D baseEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D sawEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -211,7 +212,7 @@ int main(void) {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 9,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8,10, 0, 0},
-        { 0, 0, 0, 0, 9, 8, 8,10, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 5, 4, 4, 6, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 8,10, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {14, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,13},
@@ -228,7 +229,7 @@ int main(void) {
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1},
-        { 1, 0, 0, 0, 2, 2, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        { 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -257,6 +258,13 @@ int main(void) {
     Vector2 baseEnemyAcceleration = {0, 0};
     Vector2 baseEnemySize = {32, 52};
     bool baseEnemyFwd = true;
+
+    //Saw enemies variables
+    Vector2 sawEnemyPosition = {264, 340};
+    Vector2 sawEnemyVelocity = {0, 0};
+    Vector2 sawEnemyAcceleration = {0, 0};
+    Vector2 sawEnemyDirection = {0, 0};
+    bool sawEnemyPlaced = false;
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -420,10 +428,11 @@ int main(void) {
         
         //=====CHARACTER=====
 
-        //=====ENEMY=====
+        //=====SAW ENEMY=====
 
         //Gravity
         enemyAcceleration.y += 1;
+        //=====SAW ENEMY=====
 
         //=====BASE ENEMY=====
     
@@ -569,6 +578,11 @@ int main(void) {
         //Creating baseEnemy
         Vector2 baseEnemyHitbox = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
         Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
+        
+        //Creating baseEnemy
+        Vector2 sawEnemyHitbox = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
+        //Creating sawEnemy
+        Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
 
         //--------------------------------------------------------------------------------------
         //Graphic logic
@@ -607,8 +621,9 @@ int main(void) {
                 }
                 //Drawing character
                 DrawTextureRec(characters, characterSprite, characterHitbox, GOLD);
-                //Drawing enemy
-                DrawTextureRec(enemies, enemySprite, enemyHitbox, RED);
+                //Drawing baseEnemy
+                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyHitbox, RED);
+                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyHitbox, RED);
             EndMode2D();
         EndDrawing();
     }
