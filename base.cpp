@@ -430,8 +430,76 @@ int main(void) {
 
         //=====SAW ENEMY=====
 
-        //Gravity
-        enemyAcceleration.y += 1;
+        //Collisions under the enemy
+        bool sawEnemyFloorCollision = CheckCollisionDown(sawEnemyPosition, {0, 0}, collisionTilemap, tileSize);
+        Vector2 sawEnemyPointUnder = {sawEnemyPosition.x, sawEnemyPosition.y + 1};
+        Vector2 sawEnemyTileUnder = CheckTilePosition(sawEnemyPointUnder, tileSize);
+
+        bool UpperRight = CheckCollisionCustom(sawEnemyPosition, {1, -1}, collisionTilemap, tileSize); // upper right
+        bool LowerRight = CheckCollisionCustom(sawEnemyPosition, {1, 1}, collisionTilemap, tileSize); // lower right
+        bool UpperLeft = CheckCollisionCustom(sawEnemyPosition, {-1, -1}, collisionTilemap, tileSize); // upper left
+        bool LowerLeft = CheckCollisionCustom(sawEnemyPosition, {-1, 1}, collisionTilemap, tileSize); // lower left
+
+        //Clamping forces
+        if (sawEnemyVelocity.y > 32) sawEnemyVelocity.y = 32;
+        else if (sawEnemyVelocity.y < -32) sawEnemyVelocity.y = -32;
+              
+        //Base behaviour
+        if (sawEnemyPlaced) {
+            //Changing directions
+            if ((UpperLeft && LowerLeft) || (!LowerRight && !LowerLeft && UpperLeft && !UpperRight)) {
+                //move up
+                sawEnemyDirection = {0, -1};
+            } else if ((LowerLeft && LowerRight) || (!LowerRight && LowerLeft && !UpperLeft && !UpperRight)) {
+                //move left
+                sawEnemyDirection = {-1, 0};
+            } else if ((UpperRight && LowerRight) || (LowerRight && !LowerLeft && !UpperLeft && !UpperRight)) {
+                //move down
+                sawEnemyDirection = {0, 1};
+            } else if ((UpperLeft && UpperRight) || (!LowerRight && !LowerLeft && !UpperLeft && UpperRight)) {
+                //move right
+                sawEnemyDirection = {1, 0};
+            } else {
+                sawEnemyVelocity = {0, 0};
+                sawEnemyDirection = {0, 0};
+                sawEnemyPlaced = false;
+            }
+            sawEnemyPosition.x += sawEnemyDirection.x;
+            sawEnemyPosition.y += sawEnemyDirection.y;
+        } else {
+            //Gravity
+            sawEnemyAcceleration.y += 1;
+            //Falling
+            if (sawEnemyFloorCollision && sawEnemyVelocity.y >= 0) {
+                //Edge hopping condition
+                if (CheckTileType(sawEnemyTileUnder, collisionTilemap) != 0 ||
+                (int)(sawEnemyPosition.y) % tileSize < 24) {
+                    //Sleeping gravity after falling
+                    sawEnemyPlaced = true;
+                    //Fixing position to tile position
+                    sawEnemyPosition.y = (sawEnemyTileUnder.y * tileSize);
+                    //Reseting forces
+                    sawEnemyVelocity.y = 0;
+                    sawEnemyAcceleration.y = 0;
+                    //Preventing falling from screen TEMP
+                    if ((sawEnemyPosition.y) > screenHeight) {
+                        sawEnemyPosition.y = screenHeight;
+                    }
+                }
+            }
+        }
+
+        //Calculating physics
+        sawEnemyVelocity.x *= 0.8f;
+        sawEnemyVelocity.x += sawEnemyAcceleration.x;
+        sawEnemyVelocity.y += sawEnemyAcceleration.y;
+        sawEnemyPosition.x += sawEnemyVelocity.x;
+        sawEnemyPosition.y += sawEnemyVelocity.y;
+
+        //Resetting acceleration
+        sawEnemyAcceleration.x = 0;
+        sawEnemyAcceleration.y = 0;
+
         //=====SAW ENEMY=====
 
         //=====BASE ENEMY=====
