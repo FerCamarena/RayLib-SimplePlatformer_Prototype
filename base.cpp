@@ -644,15 +644,15 @@ int main(void) {
             characterAnimRate = 0;
         }
         if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
-        Vector2 characterHitbox = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
+        Vector2 bcharacterPivot = {characterPosition.x - 16, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
         Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
         //Creating baseEnemy
-        Vector2 baseEnemyHitbox = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
+        Vector2 baseEnemyPivot = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
         Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
         
         //Creating baseEnemy
-        Vector2 sawEnemyHitbox = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
+        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         //Creating sawEnemy
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
         
@@ -702,10 +702,10 @@ int main(void) {
                     }
                 }
                 //Drawing character
-                DrawTextureRec(characters, characterSprite, characterHitbox, GOLD);
-                //Drawing baseEnemy
-                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyHitbox, RED);
-                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyHitbox, RED);
+                DrawTextureRec(characters, characterSprite, bcharacterPivot, GOLD);
+                //Drawing enemies
+                DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyPivot, RED);
+                DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyPivot, RED);
             EndMode2D();
             //Drawing cursor
             DrawTextureRec(aimFullCursor, cursorSprite, cursorPivot, BLUE);
