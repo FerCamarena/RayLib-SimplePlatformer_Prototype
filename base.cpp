@@ -151,6 +151,8 @@ int main(void) {
     Texture2D characters = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Texture2D baseEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Texture2D sawEnemies = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D aimFullCursor = LoadTexture("./assets/Other/cursor-aim-full.png");
+    Texture2D aimEmptyCursor = LoadTexture("./assets/Other/cursor-aim-empty.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -631,6 +633,8 @@ int main(void) {
 
         //=====CAMERA=====
 
+        //=====SPRITES=====
+
         //Creating character
         characterAnimRate++;
         if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
@@ -651,6 +655,16 @@ int main(void) {
         Vector2 sawEnemyHitbox = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
         //Creating sawEnemy
         Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
+        
+        //=====SPRITES=====
+
+        //=====CURSOR=====
+        
+        HideCursor();
+        Vector2 cursorPivot = {GetMousePosition().x - (screenHeight / 10), GetMousePosition().y - (screenHeight / 10)};
+        Rectangle cursorSprite = {(float)0, (float)0, (float)64, (float)64};
+
+        //=====CURSOR=====
 
         //--------------------------------------------------------------------------------------
         //Graphic logic
@@ -693,6 +707,8 @@ int main(void) {
                 DrawTextureRec(baseEnemies, baseEnemySprite, baseEnemyHitbox, RED);
                 DrawTextureRec(sawEnemies, sawEnemySprite, sawEnemyHitbox, RED);
             EndMode2D();
+            //Drawing cursor
+            DrawTextureRec(aimFullCursor, cursorSprite, cursorPivot, BLUE);
         EndDrawing();
     }
     //--------------------------------------------------------------------------------------
