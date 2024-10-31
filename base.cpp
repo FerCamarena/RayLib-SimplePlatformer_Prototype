@@ -396,7 +396,7 @@ int main(void) {
             //Increasing character size
             characterSize.y = 52;
         }
-        //Updating character center
+        //Updating character center point
         characterHalf.y = characterSize.y / 2;
         
         //Clamping forces
@@ -405,6 +405,7 @@ int main(void) {
 
         //Calculating physics
         characterVelocity.x *= characterSlide? 0.95f : 0.8f;
+        characterVelocity.x *= characterSlide ? 0.95f : 0.8f;
         characterVelocity.y += characterAcceleration.y;
         characterVelocity.x += characterAcceleration.x;
         characterPosition.x += characterVelocity.x;
@@ -426,65 +427,71 @@ int main(void) {
         enemyAcceleration.y += 1;
     
         //Collisions under the enemy
-        bool enemyFloorCollision = CheckCollisionDown(enemyPosition, enemySize, collisionTilemap, tileSize);
-        Vector2 enemyPointUnder = {enemyPosition.x, enemyPosition.y + enemySize.y + 1};
-        Vector2 enemyTileUnder = CheckTilePosition(enemyPointUnder, tileSize);
+        bool baseEnemyFloorCollision = CheckCollisionDown(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
+        Vector2 baseEnemyPointUnder = {baseEnemyPosition.x, baseEnemyPosition.y + baseEnemySize.y + 1};
+        Vector2 baseEnemyTileUnder = CheckTilePosition(baseEnemyPointUnder, tileSize);
         
-        //Collisions on the left of the enemy
-        bool enemyLeftCollision = CheckCollisionLeft(enemyPosition, enemySize, collisionTilemap, tileSize);
+        //Collisions on the left of the baseEnemy
+        bool baseEnemyLeftCollision = CheckCollisionLeft(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
         
-        //Collisions on the right of the enemy
-        bool enemyRightCollision = CheckCollisionRight(enemyPosition, enemySize, collisionTilemap, tileSize);
+        //Collisions on the right of the baseEnemy
+        bool baseEnemyRightCollision = CheckCollisionRight(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
 
-        //Collisions on the left step of the enemy
-        bool enemyLeftStep = CheckCollisionLeftStep(enemyPosition, enemySize, collisionTilemap, tileSize);
+        //Collisions on the left step of the baseEnemy
+        bool baseEnemyLeftStep = CheckCollisionLeftStep(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
         
-        //Collisions on the right step of the enemy
-        bool enemyRightStep = CheckCollisionRightStep(enemyPosition, enemySize, collisionTilemap, tileSize);
+        //Collisions on the right step of the baseEnemy
+        bool baseEnemyRightStep = CheckCollisionRightStep(baseEnemyPosition, baseEnemySize, collisionTilemap, tileSize);
         
+        //Clamping forces
+        if (baseEnemyVelocity.y > 32) baseEnemyVelocity.y = 32;
+        else if (baseEnemyVelocity.y < -32) baseEnemyVelocity.y = -32;
+
         //Falling
-        if (enemyFloorCollision && enemyVelocity.y >= 0) {
+        if (baseEnemyFloorCollision && baseEnemyVelocity.y >= 0) {
             //Edge hopping condition
-            if (CheckTileType(enemyTileUnder, collisionTilemap) == 1 ||
-            (int)(enemyPosition.y + enemySize.y) % tileSize < 24) {
+            if (CheckTileType(baseEnemyTileUnder, collisionTilemap) == 1 ||
+            (int)(baseEnemyPosition.y + baseEnemySize.y) % tileSize < 24) {
                 //Fixing position to tile position
-                enemyPosition.y = (enemyTileUnder.y * tileSize) - enemySize.y;
+                baseEnemyPosition.y = (baseEnemyTileUnder.y * tileSize) - baseEnemySize.y;
                 //Reseting forces
-                enemyVelocity.y = 0;
-                enemyAcceleration.y = 0;
+                baseEnemyVelocity.y = 0;
+                baseEnemyAcceleration.y = 0;
                 //Preventing falling from screen TEMP
-                if ((enemyPosition.y + enemySize.y) > screenHeight) {
-                    enemyPosition.y = screenHeight - enemySize.y;
+                if ((baseEnemyPosition.y + baseEnemySize.y) > screenHeight) {
+                    baseEnemyPosition.y = screenHeight - baseEnemySize.y;
                 }
             }
         }
         
         //Changing directions
-        if ((enemyFwd && enemyVelocity.x > 0 && (enemyRightCollision || !enemyRightStep)) ||
-        (!enemyFwd && enemyVelocity.x < 0 && (enemyLeftCollision || !enemyLeftStep))) {
+        if ((baseEnemyFwd && baseEnemyVelocity.x > 0 && (baseEnemyRightCollision || !baseEnemyRightStep)) ||
+        (!baseEnemyFwd && baseEnemyVelocity.x < 0 && (baseEnemyLeftCollision || !baseEnemyLeftStep))) {
             //Inverting direction
-            enemyFwd = !enemyFwd;
-            //Resetting enemy velocity (optional)
-            enemyVelocity.x = 0;
+            baseEnemyFwd = !baseEnemyFwd;
+            //Resetting baseEnemy velocity (optional)
+            baseEnemyVelocity.x = 0;
         }
 
         //Base behaviour
-        enemyAcceleration.x = enemyFwd ? 0.5f : -0.5f;
+        baseEnemyAcceleration.x = baseEnemyFwd ? 0.5f : -0.5f;
 
         //Clamping forces
         if (enemyVelocity.y > 32) enemyVelocity.y = 32;
         else if (enemyVelocity.y < -32) enemyVelocity.y = -32;
 
         //Calculating physics
-        enemyVelocity.x *= 0.8f;
-        enemyVelocity.y += enemyAcceleration.y;
-        enemyVelocity.x += enemyAcceleration.x;
-        enemyPosition.x += enemyVelocity.x;
-        enemyPosition.y += enemyVelocity.y;
+        baseEnemyVelocity.x *= 0.8f;
+        baseEnemyVelocity.y += baseEnemyAcceleration.y;
+        baseEnemyVelocity.x += baseEnemyAcceleration.x;
+        baseEnemyPosition.x += baseEnemyVelocity.x;
+        baseEnemyPosition.y += baseEnemyVelocity.y;
 
         //Resetting gravity
         enemyAcceleration.x = 0;
         enemyAcceleration.y = 0;
+        baseEnemyAcceleration.x = 0;
+        baseEnemyAcceleration.y = 0;
 
         //=====ENEMY=====
 
@@ -561,9 +568,9 @@ int main(void) {
         Vector2 characterHitbox = {characterPosition.x - 22, characterPosition.y - (12 + ((characterSlide)? + 10 : 0))};
         Rectangle characterSprite = {(float)(characterAnimState * tileSize), (float)(characterFrameCycle * (tileSize)), (float)(tileSize * (characterFwd ? 1 : -1)), (float)tileSize};
         
-        //Creating enemy
-        Vector2 enemyHitbox = {enemyPosition.x - 22, enemyPosition.y - 12};
-        Rectangle enemySprite = {(float)0, (float)0, (float)(tileSize * (enemyFwd ? 1 : -1)), (float)tileSize};
+        //Creating baseEnemy
+        Vector2 baseEnemyHitbox = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
+        Rectangle baseEnemySprite = {(float)0, (float)0, (float)(tileSize * (baseEnemyFwd ? 1 : -1)), (float)tileSize};
 
         //--------------------------------------------------------------------------------------
         //Graphic logic
