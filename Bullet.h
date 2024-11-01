@@ -6,28 +6,27 @@
 class Bullet {
     //Attributes
     public:
-        //Variable to store current bullet state
-        bool enabled = false;
-        //Variable for graphic rendering
+        //Variables for graphic rendering
         Texture2D texture;
-        Rectangle size = {0, 0};
+        Rectangle area = {0, 0};
         Vector2 position = {0, 0};
         Vector2 areaPivot = {0, 0};
-        //Variable for movement logic
+        float rotation = 0.0f;
+        //Variables for movement logic
         Vector2 direction = {0, 0};
         float speed = 10.0f;
-        //Variable for storing graphic effects
-        float rotation = 0.0f;
+        //Variables to store current state
+        bool enabled = true;
         
     private:
 
     //Methods
     public:
-        //Class constructor to create a bullet instance
-        Bullet(Texture2D, Vector2, Vector2, float, bool);
-        //Method for process all bullet logic
+        //Class constructor to create an instance
+        Bullet(Texture2D, Vector2, Vector2, float);
+        //Method for process all logic
         void Update();
-        //Method for process all bullet graphics
+        //Method for process all graphics
         void Draw() const;
 
     private:

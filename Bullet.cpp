@@ -3,13 +3,12 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _direction, float _speed, bool _enabled) {
+Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _direction, float _speed) {
     //Storing received values as attributes
     texture = _texture;
     position = _position;
     direction = _direction;
     speed = _speed;
-    enabled = _enabled;
 
     //Calling a starter function
     this->Initialize();
@@ -17,24 +16,27 @@ Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _direction, float 
 
 //Method called once for initialize default values
 void Bullet::Initialize() {
-    //Setting up default area pivot
-    this->areaPivot = {
-        this->position.x - (texture.width / 2),
-        this->position.y - (this->texture.height / 2)
-    };
 }
 
 //Method for process all graphics
 void Bullet::Update() {
+    //Defining area pivot
+    this->areaPivot = {
+        this->position.x - (texture.width / 2),
+        this->position.y - (this->texture.height / 2)
+    };
     //Check if enabled
     if (this->enabled) {
-        //Check if already has a size
-        if (this->size.x == 0.0f && this->size.y == 0.0f) {
+        //Check if already has a area size
+        if (this->area.width == 0 && this->area.height == 0) {
             //Scaling area to max texture size
-            Rectangle fullSize = {0.0f, 0.0f, (float)this->texture.width, (float)this->texture.height};
-            this->size = fullSize;
+            Rectangle fullSizeArea = {
+                0.0f, 0.0f,
+                (float)this->texture.width, (float)this->texture.height
+            };
+            this->area = fullSizeArea;
         //Keep a null area size
-        } else this->size = {0.0f, 0.0f, 0.0f, 0.0f};
+        } else this->area = {0.0f, 0.0f, 0.0f, 0.0f};
         //Moving through a scaled direction
         Vector2 scaledDirection = Vector2Scale(this->direction, this->speed);
         this->position = Vector2Add(this->position, scaledDirection);
@@ -43,5 +45,6 @@ void Bullet::Update() {
 
 //Method for process all logic
 void Bullet::Draw() const {
-    DrawTexture(texture, position.x, position.y, YELLOW);
+    //Drawing sprite
+    DrawTextureRec(texture, area, areaPivot, YELLOW);
 }

@@ -4,7 +4,7 @@
 #include <vector>
 
 //User libraries
-#include "bullet.h"
+#include "Bullet.h"
 
 /*-----------------------------------DEV NOTES------------------------------------------*/
 //
@@ -297,8 +297,10 @@ int main(void) {
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
-            //Storing bullet
-            bulletsList.push_back(Bullet(bulletTexture, newBulletPosition, newBulletDirection, 10.0f, true));
+            //Creating new bullet instance
+            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, newBulletDirection, 10.0f);
+            //Storing new bullet
+            bulletsList.push_back(newBullet);
         }
 
         //=====LEVEL=====
