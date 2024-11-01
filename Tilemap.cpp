@@ -61,29 +61,33 @@ void Tilemap::Update() {
 
 }
 
-//Method for process all logic
+//Method for process all logicº
 void Tilemap::DrawBackground() const {
     //Drawing bg1 tilemap
-    for (int i = 0; i < this->background.size(); i++) {
-        if (this->background[i].size() >= 2) {
+    for (int y = 0; y < (int)this->background.size(); y++) {
+        for (int x = 0; x < (int)this->background[y].size(); x++) {
             Vector2 tilePosition = {
-                ((float)this->background[i][0] * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 1),
-                ((float)this->background[i][1] * this->tileSize) - (this->parallaxOffset.y * 2)
+                ((float)x * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 1),
+                ((float)y * this->tileSize) - (this->parallaxOffset.y * 2)
             };
+            //Getting the correct tile
+            int tileIndex = background[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[i], tilePosition, BLACK);
+            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, BLACK);
         }
     }
     //Drawing bg2 tilemap
-    for (int i = 0; i < this->horizon.size(); i++) {
-        if (this->horizon[i].size() >= 2) {
+    for (int y = 0; y < (int)this->horizon.size(); y++) {
+        for (int x = 0; x < (int)this->horizon[y].size(); x++) {
             //Calculating each tile position
             Vector2 tilePosition = {
-                ((float)this->horizon[i][0] * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 4),
-                ((float)this->horizon[i][1] * this->tileSize) - (this->parallaxOffset.y * 8)
+                ((float)x * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 4),
+                ((float)y * this->tileSize) - (this->parallaxOffset.y * 8)
             };
+            //Getting the correct tile
+            int tileIndex = horizon[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[i], tilePosition, GRAY);
+            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, GRAY);
         }
     }
 }
@@ -91,15 +95,17 @@ void Tilemap::DrawBackground() const {
 //Method for process all logic
 void Tilemap::Draw() const {
     //Drawing base tilemap
-    for (int i = 0; i < this->drawn.size(); i++) {
-        if (this->drawn[i].size() >= 2) {
+    for (int y = 0; y < (int)this->drawn.size(); y++) {
+        for (int x = 0; x < (int)this->drawn[y].size(); x++) {
             //Calculating each tile position
             Vector2 tilePosition = {
-                ((float)this->drawn[i][0] * this->tileSize),
-                ((float)this->drawn[i][1] * this->tileSize)
+                ((float)x * this->tileSize),
+                ((float)y * this->tileSize)
             };
+            //Getting the correct tile
+            int tileIndex = drawn[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[i], tilePosition, WHITE);
+            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, WHITE);
         }
     }
 }
