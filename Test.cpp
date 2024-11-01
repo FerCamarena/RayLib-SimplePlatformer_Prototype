@@ -660,15 +660,15 @@ int main(void) {
             //Moving middle
             mainCamera.target.x = characterPosition.x + characterHalf.x;
             //Updating parallax X axys
-            parallaxPositionOffset.x = mainCamera.target.x / 16;
+            parallaxPositionOffset.x = (int)(mainCamera.target.x / 16);
         } else if (characterPosition.x + characterHalf.x <= cameraLowerFocus.x + tileSize &&
         !characterRightCollision && !characterLeftCollision) {
             //Moving left edge
-            mainCamera.target.x = cameraLowerFocus.x + tileSize;
+            mainCamera.target.x = (int)(cameraLowerFocus.x + tileSize);
         } else if (characterPosition.x + characterHalf.x >= cameraUpperFocus.x - tileSize &&
         !characterRightCollision && !characterLeftCollision) {
             //Moving left edge
-            mainCamera.target.x = cameraUpperFocus.x - tileSize;
+            mainCamera.target.x = (int)(cameraUpperFocus.x - tileSize);
         }
 
         //Updating camera position in Y axys
@@ -677,13 +677,13 @@ int main(void) {
             //Moving center
             mainCamera.target.y = characterPosition.y + characterHalf.y + (characterSlide ? -5 : 0);
             //Updating parallax Y axys
-            parallaxPositionOffset.y = mainCamera.target.y / 16;
+            parallaxPositionOffset.y = (int)(mainCamera.target.y / 16);
         } else if (characterPosition.y + characterHalf.y <= cameraLowerFocus.y) {
             //Moving top edge
-            mainCamera.target.y = cameraLowerFocus.y;
+            mainCamera.target.y = (int)cameraLowerFocus.y;
         } else if (characterPosition.y + characterHalf.y >= cameraUpperFocus.y) {
             //Moving lower edge
-            mainCamera.target.y = cameraUpperFocus.y;
+            mainCamera.target.y = (int)cameraUpperFocus.y;
         }
 
         //Updating camera acceleration
