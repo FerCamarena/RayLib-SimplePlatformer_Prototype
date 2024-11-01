@@ -2,6 +2,9 @@
 #include "raylib.h"
 #include "raymath.h"
 
+//User libraries
+#include "bullet.h"
+
 /*-----------------------------------DEV NOTES------------------------------------------*/
 //
 //Project made by Fernando C.
