@@ -1,4 +1,3 @@
-@ -1,773 +0,0 @@
 //Libraries
 #include "raylib.h"
 #include "raymath.h"
@@ -154,19 +153,10 @@ int main(void) {
 
     //Bullets variables
     Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
-    Vector2 bulletPosition = {256, 256};
-    Vector2 bulletDirection = {0, 0};
-    float bulletSpeed = 10.0f;
-    bool bulletState = false;
-    //float bulletRotation = 0;
+    std::vector<Bullet> bulletsList; 
 
     //Tilemap variables
     Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-    Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
-    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
     Rectangle tiles[] = {
         {0, 0, 0, 0},                                                                   // 00 Empty
         {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
@@ -256,6 +246,7 @@ int main(void) {
     };
 
     //Character variables
+    Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Vector2 characterVelocity = {0, 0};
     Vector2 characterAcceleration = {0, 0};
     Vector2 characterPosition = {650, 400};
@@ -269,6 +260,8 @@ int main(void) {
     bool characterSlide = false;
 
     //Base enemies variables
+    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Vector2 baseEnemyPosition = {800, 400};
     Vector2 baseEnemyVelocity = {0, 0};
     Vector2 baseEnemyAcceleration = {0, 0};
@@ -285,41 +278,39 @@ int main(void) {
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
 
+    //Cursor variables
+    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
+    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
+
     /*-----------------------------------Game loop------------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
         //=====LEVEL=====
 
-        if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            //Decreasing bullet amount
-            //Positioning bullet
-            bulletPosition = Vector2Add(characterPosition, characterHalf);
-            //Setting bullet start rotation
-            Vector2 bulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), bulletPosition);
-            bulletDirection = Vector2Normalize(bulletVector);
-            bulletDirection = Vector2Scale(bulletDirection, bulletSpeed);
-            //Sending bullet WIP
         //Detecting click to create a bullet when has ammo
+        if (ammoLeft > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            //Decreasing ammo
             ammoLeft--;
+            //Storing position
+            Vector2 newBulletPosition = Vector2Add(characterPosition, characterHalf);
+            //Storing direction
+            Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
+            Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
+            //Storing bullet
+            bulletsList.push_back(Bullet(bulletTexture, newBulletPosition, newBulletDirection, 10.0f, true));
         }
 
         //=====LEVEL=====
 
         //=====BULLETS=====
-
-        if (bulletCount == 0) {
-            //Move the bullet
-            bulletPosition = Vector2Add(bulletPosition, bulletDirection);
-            //Enabling bullet
-            bulletState = true;
-            //Check collisions with enemies WIP
+    
+        //Updating each bullet spawned
+        for (auto& bullet : bulletsList) {
+            //Make each bullet update itself
+            bullet.Update();
         }
 
-        //Creating bullet
-        Vector2 bulletPivot = {bulletPosition.x - (bulletTexture.width / 2), bulletPosition.y - (bulletTexture.height / 2)};
-        Rectangle bulletSprite = {0.0f, 0.0f, (float)(bulletState) ? bulletTexture.width : 0.0f, (float)(bulletState) ? bulletTexture.height : 0.0f};
-        
         //=====BULLETS=====
 
         //=====CHARACTER=====
@@ -564,7 +555,7 @@ int main(void) {
 
         //Creating sawEnemy
         Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
-        Rectangle sawEnemySprite = {(float)13*64, (float)0, (float)tileSize, (float)tileSize};
+        Rectangle sawEnemySprite = {(float)13*64, 0.0f, (float)tileSize, (float)tileSize};
 
         //=====SAW ENEMY=====
 
@@ -720,7 +711,7 @@ int main(void) {
         };
 
         //Selecting cursor texture
-        Texture2D cursorTexture = (bulletCount > 0) ? aimFullCursorTexture : aimEmptyCursorTexture;
+        Texture2D cursorTexture = (ammoLeft > 0) ? aimFullCursorTexture : aimEmptyCursorTexture;
 
         //=====CURSOR=====
 
@@ -764,7 +755,9 @@ int main(void) {
                 DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
                 DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
                 //Drawing bullets
-                DrawTextureRec(bulletTexture, bulletSprite, bulletPivot, BLUE);
+                for (const auto& bullet : bulletsList) {
+                    bullet.Draw();
+                }
             EndMode2D();
             //Drawing cursor
             DrawTexturePro(cursorTexture, cursorSprite, cursorScaledSprite, cursorSpritePivot, 0.0f, BLUE);
