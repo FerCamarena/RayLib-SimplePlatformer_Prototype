@@ -5,10 +5,10 @@
 //Class constructor to create an instance
 Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _direction, float _speed) {
     //Storing received values as attributes
-    texture = _texture;
-    position = _position;
-    direction = _direction;
-    speed = _speed;
+    this->texture = _texture;
+    this->position = _position;
+    this->direction = _direction;
+    this->speed = _speed;
 
     //Calling a starter function
     this->Initialize();
@@ -16,6 +16,7 @@ Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _direction, float 
 
 //Method called once for initialize default values
 void Bullet::Initialize() {
+
 }
 
 //Method for process all graphics
