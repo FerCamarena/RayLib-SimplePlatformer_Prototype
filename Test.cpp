@@ -2,6 +2,7 @@
 //Libraries
 #include "raylib.h"
 #include "raymath.h"
+#include <vector>
 
 //User libraries
 #include "bullet.h"
@@ -149,9 +150,9 @@ int main(void) {
     mainCamera.zoom = 1.5f;
 
     //Level variables
-    int bulletCount = 1;
+    int ammoLeft = 3;
 
-    //Bullet variables
+    //Bullets variables
     Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
     Vector2 bulletPosition = {256, 256};
     Vector2 bulletDirection = {0, 0};
@@ -292,7 +293,6 @@ int main(void) {
 
         if (bulletCount > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             //Decreasing bullet amount
-            bulletCount--;
             //Positioning bullet
             bulletPosition = Vector2Add(characterPosition, characterHalf);
             //Setting bullet start rotation
@@ -300,6 +300,8 @@ int main(void) {
             bulletDirection = Vector2Normalize(bulletVector);
             bulletDirection = Vector2Scale(bulletDirection, bulletSpeed);
             //Sending bullet WIP
+        //Detecting click to create a bullet when has ammo
+            ammoLeft--;
         }
 
         //=====LEVEL=====
