@@ -2,50 +2,50 @@
 #include "Tilemap.h"
 
 //Class constructors to create an instance (with overloads)
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], std::vector<std::vector<int>> _background, std::vector<std::vector<int>> _horizon,  std::vector<std::vector<int>> _drawn,  std::vector<std::vector<int>> _hitbox, int _tileSize) {
+Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
     //Storing received values as attributes
     this->texture = _texture;
     this->tiles[15] = _tiles[15];
-    this->background = _background;
-    this->horizon = _horizon;
-    this->drawn = _drawn;
-    this->hitbox = _hitbox;
+
+
+
+
     this->tileSize = _tileSize;
 
     //Calling a starter function
     this->Initialize();
 };
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], std::vector<std::vector<int>> _background, std::vector<std::vector<int>> _horizon,  std::vector<std::vector<int>> _drawn,  std::vector<std::vector<int>> _hitbox) {
+Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15]) {
     //Storing received values as attributes
     this->texture = _texture;
     this->tiles[15] = _tiles[15];
-    this->background = _background;
-    this->horizon = _horizon;
-    this->drawn = _drawn;
-    this->hitbox = _hitbox;
+
+
+
+
 
     //Calling a starter function
     this->Initialize();
 };
-Tilemap::Tilemap(Texture2D _texture, std::vector<std::vector<int>> _background, std::vector<std::vector<int>> _horizon,  std::vector<std::vector<int>> _drawn,  std::vector<std::vector<int>> _hitbox, int _tileSize) {
+Tilemap::Tilemap(Texture2D _texture, int _tileSize) {
     //Storing received values as attributes
     this->texture = _texture;
-    this->background = _background;
-    this->horizon = _horizon;
-    this->drawn = _drawn;
-    this->hitbox = _hitbox;
+
+
+
+
     this->tileSize = _tileSize;
 
     //Calling a starter function
     this->Initialize();
 };
-Tilemap::Tilemap(Texture2D _texture, std::vector<std::vector<int>> _background, std::vector<std::vector<int>> _horizon,  std::vector<std::vector<int>> _drawn,  std::vector<std::vector<int>> _hitbox) {
+Tilemap::Tilemap(Texture2D _texture) {
     //Storing received values as attributes
     this->texture = _texture;
-    this->background = _background;
-    this->horizon = _horizon;
-    this->drawn = _drawn;
-    this->hitbox = _hitbox;
+
+
+
+
 
     //Calling a starter function
     this->Initialize();
@@ -56,12 +56,12 @@ void Tilemap::Initialize() {
 
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Tilemap::Update() {
 
 }
 
-//Method for process all logicº
+//Method for process all logic
 void Tilemap::DrawBackground() const {
     //Drawing bg1 tilemap
     for (int y = 0; y < (int)this->background.size(); y++) {
@@ -111,7 +111,7 @@ void Tilemap::Draw() const {
 }
 
 //Method for getting tile position in world position
-Vector2 Tilemap::CheckTilePosition(Vector2 checkPosition) {
+Vector2 Tilemap::CheckTilePosition(Vector2 checkPosition) const {
     //Calculating position
     Vector2 tilePosition = {(float)((int)(checkPosition.x / this->tileSize)), (float)((int)(checkPosition.y / this->tileSize))};
     //Returning position
@@ -119,7 +119,7 @@ Vector2 Tilemap::CheckTilePosition(Vector2 checkPosition) {
 }
 
 //Method for checking tile type in tile position
-int Tilemap::CheckTileType(Vector2 tilePosition) {
+int Tilemap::CheckTileType(Vector2 tilePosition) const {
     //Calculating tile position
     int posX = tilePosition.x;
     int posY = tilePosition.y;
@@ -128,7 +128,7 @@ int Tilemap::CheckTileType(Vector2 tilePosition) {
 }
 
 //Looking for collisions under the character
-bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) {
+bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) const {
     //PointA
     Vector2 pointA = {entityPosition.x, entityPosition.y + entitySize.y + 1};
     //PointB
@@ -143,7 +143,7 @@ bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) {
 }
 
 //Function for detecting when colliding with a tile with collision in the left side of entities
-bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) {
+bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) const {
     //PointC
     Vector2 pointC = {entityPosition.x - 1, entityPosition.y};
     //PointD
@@ -163,7 +163,7 @@ bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) {
 }
 
 //Function for detecting when colliding with a tile with collision in the right side of entities
-bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) {
+bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) const {
     //PointC
     Vector2 pointF = {entityPosition.x + entitySize.x, entityPosition.y};
     //PointD
@@ -183,7 +183,7 @@ bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) {
 }
 
 //Function for detecting collision with tiles in the left step of entities
-bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize) {
+bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointI
     Vector2 pointI = {entityPosition.x - 1, entityPosition.y + entitySize.y + 1};
     //Precalculating
@@ -195,7 +195,7 @@ bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize)
 }
 
 //Function for detecting collision with tiles in the right step of entities
-bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize) {
+bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointJ
     Vector2 pointJ = {entityPosition.x + entitySize.x + 1, entityPosition.y + entitySize.y + 1};
     //Precalculating
@@ -207,7 +207,7 @@ bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize
 }
 
 //Function to detect tile limits with different entity directions
-bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection) {
+bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection) const {
     //PointJ
     Vector2 pointJ = {entityPosition.x + collisionDirection.x, entityPosition.y + collisionDirection.y};
     //Precalculating

@@ -7,23 +7,24 @@
 class Tilemap {
     //Attributes
     public:
+        int tileSize = 64;
         Texture2D texture = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
         Rectangle tiles[15] = {
             {0, 0, 0, 0},                                                                   // 00 Empty
-            {0 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 01 Fill main
-            {0 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 02 Fill random
-            {1 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 03 Floor main
-            {1 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 04 Floor center
-            {2 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},   // 05 Floor left
-            {2 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 06 Floor right
-            {5 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 07 Platf main
-            {5 * (float)tileSize, 0 * (float)tileSize, (float)tileSize, (float)tileSize},   // 08 Platf center
-            {5 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 09 Platf left
-            {5 * (float)tileSize, 1 * (float)tileSize, (float)tileSize, (float)tileSize},   // 10 Platf right
-            {6 * (float)tileSize, 4 * (float)tileSize, (float)tileSize, (float)tileSize},   // 11 Edge left
-            {6 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 12 Edge right
-            {2 * (float)tileSize, 3 * (float)tileSize, (float)tileSize, (float)tileSize},   // 13 Edge left
-            {2 * (float)tileSize, 2 * (float)tileSize, (float)tileSize, (float)tileSize},   // 14 Edge right
+            {0 * (float)64, 3 * (float)64, (float)64, (float)64},   // 01 Fill main
+            {0 * (float)64, 2 * (float)64, (float)64, (float)64},   // 02 Fill random
+            {1 * (float)64, 3 * (float)64, (float)64, (float)64},   // 03 Floor main
+            {1 * (float)64, 0 * (float)64, (float)64, (float)64},   // 04 Floor center
+            {2 * (float)64, 1 * (float)64, (float)64, (float)64},   // 05 Floor left
+            {2 * (float)64, 0 * (float)64, (float)64, (float)64},   // 06 Floor right
+            {5 * (float)64, 3 * (float)64, (float)64, (float)64},   // 07 Platf main
+            {5 * (float)64, 0 * (float)64, (float)64, (float)64},   // 08 Platf center
+            {5 * (float)64, 2 * (float)64, (float)64, (float)64},   // 09 Platf left
+            {5 * (float)64, 1 * (float)64, (float)64, (float)64},   // 10 Platf right
+            {6 * (float)64, 4 * (float)64, (float)64, (float)64},   // 11 Edge left
+            {6 * (float)64, 3 * (float)64, (float)64, (float)64},   // 12 Edge right
+            {2 * (float)64, 3 * (float)64, (float)64, (float)64},   // 13 Edge left
+            {2 * (float)64, 2 * (float)64, (float)64, (float)64},   // 14 Edge right
         };
         std::vector<std::vector<int>> background = {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -96,32 +97,32 @@ class Tilemap {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
         Vector2 parallaxOffset = {0, 0};
-        int tileSize = 64;
+
     
     private:
 
     //Methods
     public:
         //Class constructor to create an instance
-        Tilemap(Texture2D, Rectangle[15], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, int);
-        Tilemap(Texture2D, Rectangle[15], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>);
-        Tilemap(Texture2D, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, int);
-        Tilemap(Texture2D, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>);
+        Tilemap(Texture2D, Rectangle[15], int);
+        Tilemap(Texture2D, Rectangle[15]);
+        Tilemap(Texture2D, int);
+        Tilemap(Texture2D);
         //Method for process all logic
         void Update();
         //Method for process all graphics
         void Draw() const;
         void DrawBackground() const;
         //Methods called for internal calculations
-        Vector2 CheckTilePosition(Vector2);
-        int CheckTileType(Vector2);
+        Vector2 CheckTilePosition(Vector2) const;
+        int CheckTileType(Vector2) const;
         //Methods for solving external collision calls
-        bool CheckCollisionLeft(Vector2, Vector2);
-        bool CheckCollisionDown(Vector2, Vector2);
-        bool CheckCollisionRight(Vector2, Vector2);
-        bool CheckCollisionCustom(Vector2, Vector2);
-        bool CheckCollisionRightStep(Vector2, Vector2);
-        bool CheckCollisionLeftStep(Vector2, Vector2);
+        bool CheckCollisionLeft(Vector2, Vector2) const;
+        bool CheckCollisionDown(Vector2, Vector2) const;
+        bool CheckCollisionRight(Vector2, Vector2) const;
+        bool CheckCollisionCustom(Vector2, Vector2) const;
+        bool CheckCollisionRightStep(Vector2, Vector2) const;
+        bool CheckCollisionLeftStep(Vector2, Vector2) const;
 
     private:
         //Method called once for initialize default values
