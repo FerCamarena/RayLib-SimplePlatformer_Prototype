@@ -103,8 +103,8 @@ class Tilemap {
     //Methods
     public:
         //Class constructor to create an instance
-        Tilemap(Texture2D, Rectangle[], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, int);
-        Tilemap(Texture2D, Rectangle[], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>);
+        Tilemap(Texture2D, Rectangle[15], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, int);
+        Tilemap(Texture2D, Rectangle[15], std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>);
         Tilemap(Texture2D, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, int);
         Tilemap(Texture2D, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>, std::vector<std::vector<int>>);
         //Method for process all logic
@@ -112,6 +112,16 @@ class Tilemap {
         //Method for process all graphics
         void Draw() const;
         void DrawBackground() const;
+        //Methods called for internal calculations
+        Vector2 CheckTilePosition(Vector2);
+        int CheckTileType(Vector2);
+        //Methods for solving external collision calls
+        bool CheckCollisionLeft(Vector2, Vector2);
+        bool CheckCollisionDown(Vector2, Vector2);
+        bool CheckCollisionRight(Vector2, Vector2);
+        bool CheckCollisionCustom(Vector2, Vector2);
+        bool CheckCollisionRightStep(Vector2, Vector2);
+        bool CheckCollisionLeftStep(Vector2, Vector2);
 
     private:
         //Method called once for initialize default values
