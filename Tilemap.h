@@ -7,7 +7,6 @@
 class Tilemap {
     //Attributes
     public:
-        int tileSize = 64;
         Texture2D texture = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
         Rectangle tiles[15] = {
             {0, 0, 0, 0},                                                                   // 00 Empty
@@ -95,10 +94,10 @@ class Tilemap {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    };
+        };
         Vector2 parallaxOffset = {0, 0};
+        int tileSize = 64;
 
-    
     private:
 
     //Methods

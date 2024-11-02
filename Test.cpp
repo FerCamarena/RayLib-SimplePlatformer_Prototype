@@ -4,8 +4,9 @@
 #include <vector>
 
 //User libraries
-#include "Bullet.h"
 #include "Tilemap.h"
+#include "Bullet.h"
+#include "Saw.h"
 
 /*-----------------------------------DEV NOTES------------------------------------------*/
 //
@@ -61,7 +62,6 @@ int main(void) {
 
     //Base enemies variables
     Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Vector2 baseEnemyPosition = {800, 400};
     Vector2 baseEnemyVelocity = {0, 0};
     Vector2 baseEnemyAcceleration = {0, 0};
@@ -69,11 +69,8 @@ int main(void) {
     bool baseEnemyFwd = true;
 
     //Saw enemies variables
-    Vector2 sawEnemyPosition = {264, 340};
-    Vector2 sawEnemyVelocity = {0, 0};
-    Vector2 sawEnemyAcceleration = {0, 0};
-    Vector2 sawEnemyDirection = {0, 0};
-    bool sawEnemyPlaced = false;
+    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Saw sawEnemy = Saw(sawEnemiesTilesheet, {264, 340}, {0, 0}, map); 
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -106,6 +103,8 @@ int main(void) {
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }
+
+        //=====LEVEL=====
 
         //=====LEVEL=====
 
@@ -289,79 +288,8 @@ int main(void) {
 
         //=====SAW ENEMY=====
 
-        //Collisions under the enemy
-        bool sawEnemyFloorCollision = map.CheckCollisionDown(sawEnemyPosition, {0, 0});
-        Vector2 sawEnemyPointUnder = {sawEnemyPosition.x, sawEnemyPosition.y + 1};
-        Vector2 sawEnemyTileUnder = map.CheckTilePosition(sawEnemyPointUnder);
-
-        bool UpperRight = map.CheckCollisionCustom(sawEnemyPosition, {1, -1}); // upper right
-        bool LowerRight = map.CheckCollisionCustom(sawEnemyPosition, {1, 1}); // lower right
-        bool UpperLeft = map.CheckCollisionCustom(sawEnemyPosition, {-1, -1}); // upper left
-        bool LowerLeft = map.CheckCollisionCustom(sawEnemyPosition, {-1, 1}); // lower left
-
-        //Clamping forces
-        if (sawEnemyVelocity.y > 32) sawEnemyVelocity.y = 32;
-        else if (sawEnemyVelocity.y < -32) sawEnemyVelocity.y = -32;
-              
-        //Base behaviour
-        if (sawEnemyPlaced) {
-            //Changing directions
-            if ((UpperLeft && LowerLeft) || (!LowerRight && !LowerLeft && UpperLeft && !UpperRight)) {
-                //move up
-                sawEnemyDirection = {0, -1};
-            } else if ((LowerLeft && LowerRight) || (!LowerRight && LowerLeft && !UpperLeft && !UpperRight)) {
-                //move left
-                sawEnemyDirection = {-1, 0};
-            } else if ((UpperRight && LowerRight) || (LowerRight && !LowerLeft && !UpperLeft && !UpperRight)) {
-                //move down
-                sawEnemyDirection = {0, 1};
-            } else if ((UpperLeft && UpperRight) || (!LowerRight && !LowerLeft && !UpperLeft && UpperRight)) {
-                //move right
-                sawEnemyDirection = {1, 0};
-            } else {
-                sawEnemyVelocity = {0, 0};
-                sawEnemyDirection = {0, 0};
-                sawEnemyPlaced = false;
-            }
-            sawEnemyPosition.x += sawEnemyDirection.x;
-            sawEnemyPosition.y += sawEnemyDirection.y;
-        } else {
-            //Gravity
-            sawEnemyAcceleration.y += 1;
-            //Falling
-            if (sawEnemyFloorCollision && sawEnemyVelocity.y >= 0) {
-                //Edge hopping condition
-                if (map.CheckTileType(sawEnemyTileUnder) != 0 ||
-                (int)(sawEnemyPosition.y) % 64 < 24) {
-                    //Sleeping gravity after falling
-                    sawEnemyPlaced = true;
-                    //Fixing position to tile position
-                    sawEnemyPosition.y = (sawEnemyTileUnder.y * 64);
-                    //Reseting forces
-                    sawEnemyVelocity.y = 0;
-                    sawEnemyAcceleration.y = 0;
-                    //Preventing falling from screen TEMP
-                    if ((sawEnemyPosition.y) > screenHeight) {
-                        sawEnemyPosition.y = screenHeight;
-                    }
-                }
-            }
-        }
-
-        //Calculating physics
-        sawEnemyVelocity.x *= 0.8f;
-        sawEnemyVelocity.x += sawEnemyAcceleration.x;
-        sawEnemyVelocity.y += sawEnemyAcceleration.y;
-        sawEnemyPosition.x += sawEnemyVelocity.x;
-        sawEnemyPosition.y += sawEnemyVelocity.y;
-
-        //Resetting acceleration
-        sawEnemyAcceleration.x = 0;
-        sawEnemyAcceleration.y = 0;
-
-        //Creating sawEnemy
-        Vector2 sawEnemyPivot = {sawEnemyPosition.x - 32, sawEnemyPosition.y - 32};
-        Rectangle sawEnemySprite = {(float)13*64, 0.0f, (float)64, (float)64};
+        //Updating saw enemy
+        sawEnemy.Update();
 
         //=====SAW ENEMY=====
 
@@ -437,7 +365,7 @@ int main(void) {
         
         //=====ENEMY=====
 
-        //=====CAMERA=====
+        //======VIEW======
 
         //Calculating camera positions
         Vector2 cameraLowerFocus = {
@@ -496,7 +424,7 @@ int main(void) {
         mainCamera.target.x += cameraAcceleration.x * 2;
         mainCamera.target.y += cameraAcceleration.y * 2;
 
-        //=====CAMERA=====
+        //======VIEW======
 
         //=====CURSOR=====
         
@@ -534,14 +462,16 @@ int main(void) {
                 map.Draw();
                 //Drawing character
                 DrawTextureRec(charactersTilesheet, characterArea, characterSpritePivot, GOLD);
-                //Drawing enemies
+                //Drawing base enemy
                 DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
-                DrawTextureRec(sawEnemiesTilesheet, sawEnemySprite, sawEnemyPivot, RED);
+                //Drawing saw enemy
+                sawEnemy.Draw();
                 //Drawing bullets
                 for (const auto& bullet : bulletsList) {
                     bullet.Draw();
                 }
             EndMode2D();
+            //DEBUG
             //Drawing cursor
             DrawTexturePro(cursorTexture, cursorSprite, cursorScaledSprite, cursorSpritePivot, 0.0f, BLUE);
         EndDrawing();

@@ -19,7 +19,7 @@ void Bullet::Initialize() {
 
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Bullet::Update() {
     //Defining area pivot
     this->areaPivot = {
@@ -44,7 +44,7 @@ void Bullet::Update() {
     }
 }
 
-//Method for process all logic
+//Method for process all graphics
 void Bullet::Draw() const {
     //Drawing sprite
     DrawTextureRec(texture, area, areaPivot, YELLOW);
