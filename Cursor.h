@@ -1,34 +1,30 @@
 //Libraries
 #pragma once
 #include "raylib.h"
-#include "Tilemap.h"
+#include <vector>
 
 /*-----------------------------------Main class-----------------------------------------*/
-class Saw {
+class Cursor {
     //Attributes
     public:
+        //Variables for environment references
+        const float& scale;
+        const int& ammo;
         //Variables for graphic rendering
-        Texture2D texture = LoadTexture("./assets/Entities/spritesheet_enemies.png");;
-        Rectangle area = {0.0f, 0.0f, 64.0f, 64.0f};
+        std::vector<Texture2D> textures;
+        Rectangle sprite = {0.0f, 0.0f, 64.0f, 64.0f};
+        Rectangle area = {0.0f, 0.0f, 16.0f, 16.0f};
         Vector2 position = {0.0f, 0.0f};
         Vector2 areaPivot = {0.0f, 0.0f};
         float rotation = 0.0f;
-        //Variables for movement logic
-        Vector2 velocity = {0.0f, 0.0f};
-        Vector2 acceleration = {0.0f, 0.0f};
-        Vector2 direction = {0.0f, 0.0f};
-        //Variables to store current states
-        bool alive = true;
-        bool stuck = false;
-        //Variables for environment reference
-        const Tilemap& level;
+        int state = 0;
         
     private:
 
     //Methods
     public:
         //Class constructor to create an instance
-        Saw(Texture2D, Vector2, Vector2, Tilemap&);
+        Cursor(std::vector<Texture2D>, float&, int&);
         //Method for process all logic
         void Update();
         //Method for process all graphics

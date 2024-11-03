@@ -8,16 +8,16 @@ class Muggle {
     //Attributes
     public:
         //Variables for graphic rendering
-        Texture2D texture;
+        Texture2D texture = LoadTexture("./assets/Entities/spritesheet_enemies.png");
         Rectangle area = {0.0f, 0.0f, 64.0f, 64.0f};
-        Vector2 position = {800, 400};
-        Vector2 size = {32, 52};
-        Vector2 areaPivot = {0, 0};
+        Vector2 position = {800.0f, 400.0f};
+        Vector2 size = {32.0f, 52.0f};
+        Vector2 areaPivot = {0.0f, 0.0f};
         float rotation = 0.0f;
         //Variables for movement logic
-        Vector2 velocity = {0, 0};
-        Vector2 acceleration = {0, 0};
-        Vector2 direction = {0, 0};
+        Vector2 velocity = {0.0f, 0.0f};
+        Vector2 acceleration = {0.0f, 0.0f};
+        Vector2 direction = {0.0f, 0.0f};
         //Variables to store current states
         bool alive = true;
         bool onward = true;

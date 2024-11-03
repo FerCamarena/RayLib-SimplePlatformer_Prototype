@@ -8,12 +8,12 @@ class Bullet {
     public:
         //Variables for graphic rendering
         Texture2D texture;
-        Rectangle area = {0, 0};
-        Vector2 position = {0, 0};
-        Vector2 areaPivot = {0, 0};
+        Rectangle area = {0.0f, 0.0f};
+        Vector2 position = {0.0f, 0.0f};
+        Vector2 areaPivot = {0.0f, 0.0f};
         float rotation = 0.0f;
         //Variables for movement logic
-        Vector2 direction = {0, 0};
+        Vector2 direction = {0.0f, 0.0f};
         float speed = 10.0f;
         //Variables to store current state
         bool enabled = true;

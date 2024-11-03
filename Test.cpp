@@ -9,6 +9,7 @@
 #include "Bullet.h"
 #include "Saw.h"
 #include "Muggle.h"
+#include "Cursor.h"
 
 /*-------------------------------------DEV NOTES----------------------------------------*/
 //
@@ -34,7 +35,7 @@ int main(void) {
     Camera2D mainCamera;
     Vector2 cameraAcceleration = {0,0};
     mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
-    mainCamera.rotation = 0;
+    mainCamera.rotation = 0.0f;
     mainCamera.zoom = 1.5f;
 
     //Level variables
@@ -50,28 +51,34 @@ int main(void) {
     
     //Character variables
     Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Character player = Character(charactersTilesheet, {650, 400}, {20, 52}, map);
+    Character player = Character(charactersTilesheet, {650.0f, 400.0f}, {20.0f, 52.0f}, map);
 
-    //Base enemies variables
+    //Muggle enemies variables
     Texture2D muggleEnemyTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Muggle muggleEnemy = Muggle(muggleEnemyTilesheet, {800, 400}, {32, 52}, map);
+    Muggle muggleEnemy = Muggle(muggleEnemyTilesheet, {800.0f, 400.0f}, {32.0f, 52.0f}, map);
 
     //Saw enemies variables
     Texture2D sawEnemyTilemap = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Saw sawEnemy = Saw(sawEnemyTilemap, {264, 340}, {0, 0}, map); 
+    Saw sawEnemy = Saw(sawEnemyTilemap, {264.0f, 340.0f}, {0.0f, 0.0f}, map); 
 
     //Parallax variables
-    Vector2 parallaxPositionOffset = {0, 32};
+    Vector2 parallaxPositionOffset = {0.0f, 32.0f};
 
     //Cursor variables
-    Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
-    Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
+    std::vector<Texture2D> cursorTextures = {
+        LoadTexture("./assets/Other/cursor-aim-empty.png"),
+        LoadTexture("./assets/Other/cursor-aim-full.png")
+    };
+    Cursor cursor = Cursor(cursorTextures, mainCamera.zoom, ammoLeft);
 
     /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
         //=====LEVEL=====
+        
+        //Hiding cursor by default
+        HideCursor();
 
         //Updating tilemap values
         map.parallaxOffset = parallaxPositionOffset;
@@ -138,14 +145,14 @@ int main(void) {
         };
 
         //Updating camera position in X axys
-        if (player.position.x + player.half.x > cameraLowerFocus.x + map.tileSize &&
-        player.position.x + player.half.x < cameraUpperFocus.x - map.tileSize) {
+        if (player.position.x + player.half.x >= cameraLowerFocus.x + map.tileSize &&
+        player.position.x + player.half.x <= cameraUpperFocus.x - map.tileSize) {
             //Moving middle
             mainCamera.target.x = player.position.x + player.half.x;
-        } else if (player.position.x + player.half.x <= cameraLowerFocus.x + map.tileSize) {
+        } else if (player.position.x + player.half.x < cameraLowerFocus.x + map.tileSize) {
             //Moving left edge
             mainCamera.target.x = cameraLowerFocus.x + map.tileSize;
-        } else if (player.position.x + player.half.x >= cameraUpperFocus.x - map.tileSize) {
+        } else if (player.position.x + player.half.x > cameraUpperFocus.x - map.tileSize) {
             //Moving left edge
             mainCamera.target.x = cameraUpperFocus.x - map.tileSize;
         }
@@ -184,24 +191,7 @@ int main(void) {
 
         //=====CURSOR=====
         
-        HideCursor();
-        float cursorScaleFactor = (map.tileSize / 2) / mainCamera.zoom;
-        float cursorScale = screenHeight / cursorScaleFactor;
-        Rectangle cursorSprite = {
-            0.0f, 0.0f,
-            (float)aimFullCursorTexture.width, (float)aimFullCursorTexture.height
-        };
-        Rectangle cursorScaledSprite = {
-            GetMousePosition().x, GetMousePosition().y,
-            cursorScale, cursorScale
-        };
-        Vector2 cursorSpritePivot = {
-            (aimFullCursorTexture.width * 0.33f),
-            (aimFullCursorTexture.height * 0.33f)
-        };
-
-        //Selecting cursor texture
-        Texture2D cursorTexture = (ammoLeft > 0) ? aimFullCursorTexture : aimEmptyCursorTexture;
+        cursor.Update();
 
         //=====CURSOR=====
 
@@ -229,8 +219,9 @@ int main(void) {
                 }
             EndMode2D();
             //DEBUG
+
             //Drawing cursor
-            DrawTexturePro(cursorTexture, cursorSprite, cursorScaledSprite, cursorSpritePivot, 0.0f, BLUE);
+            cursor.Draw();
         EndDrawing();
     }
     /*----------------------------------------End-------------------------------------------*/
