@@ -4,14 +4,15 @@
 #include "Tilemap.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
-class Muggle {
+class Character {
     //Attributes
     public:
         //Variables for graphic rendering
-        Texture2D texture;
+        Texture2D texture = LoadTexture("./assets/Entities/spritesheet_characters.png");
         Rectangle area = {0.0f, 0.0f, 64.0f, 64.0f};
-        Vector2 position = {800, 400};
-        Vector2 size = {32, 52};
+        Vector2 position = {650, 400};
+        Vector2 size = {20, 52};
+        Vector2 half = {(this->size.x * 0.5f), (this->size.y * 0.5f)};
         Vector2 areaPivot = {0, 0};
         float rotation = 0.0f;
         //Variables for movement logic
@@ -20,16 +21,23 @@ class Muggle {
         Vector2 direction = {0, 0};
         //Variables to store current states
         bool alive = true;
-        bool onward = true;
+        bool onward = false;
+        bool sliding = false;
         //Variables for environment reference
         const Tilemap& level;
+        //Variables for controlling animatons
+        int textureSize = 64;
+        int animationState = 0;
+        int animationRate = 20;
+        int frameLimit = 1;
+        int frameCount = 0;
         
     private:
 
     //Methods
     public:
         //Class constructor to create an instance
-        Muggle(Texture2D, Vector2, Vector2, Tilemap&);
+        Character(Texture2D, Vector2, Vector2, Tilemap&);
         //Method for process all logic
         void Update();
         //Method for process all graphics

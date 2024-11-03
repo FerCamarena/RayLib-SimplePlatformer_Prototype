@@ -5,6 +5,7 @@
 
 //User libraries
 #include "Tilemap.h"
+#include "Character.h"
 #include "Bullet.h"
 #include "Saw.h"
 #include "Muggle.h"
@@ -49,17 +50,7 @@ int main(void) {
     
     //Character variables
     Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Vector2 characterVelocity = {0, 0};
-    Vector2 characterAcceleration = {0, 0};
-    Vector2 characterPosition = {650, 400};
-    Vector2 characterSize = {20, 52};
-    Vector2 characterHalf = {(characterSize.x * 0.5f), (characterSize.y * 0.5f)};
-    int characterAnimState = 0;
-    int characterFrameLimit = 1;
-    int characterFrameCycle = 0;
-    int characterAnimRate = 20;
-    bool characterFwd = true;
-    bool characterSlide = false;
+    Character player = Character(charactersTilesheet, {650, 400}, {20, 52}, map);
 
     //Base enemies variables
     Texture2D muggleEnemyTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
@@ -91,7 +82,7 @@ int main(void) {
             //Decreasing ammo
             ammoLeft--;
             //Storing position
-            Vector2 newBulletPosition = Vector2Add(characterPosition, characterHalf);
+            Vector2 newBulletPosition = Vector2Add(player.position, player.half);
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
@@ -100,8 +91,6 @@ int main(void) {
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }
-
-        //=====LEVEL=====
 
         //=====LEVEL=====
 
@@ -116,170 +105,9 @@ int main(void) {
         //=====BULLETS=====
 
         //=====CHARACTER=====
-        
-        //Creating character sprite
-        Vector2 characterSpritePivot = {characterPosition.x - ((64 - characterSize.x) / 2), characterPosition.y - ((64 - characterSize.y))};
-        Rectangle characterArea = {(float)(characterAnimState * 64), (float)(characterFrameCycle * (64)), (float)(64 * (characterFwd ? 1 : -1)), (float)64};
-        
-        //Collisions under the character
-        bool characterFloorCollision = map.CheckCollisionDown(characterPosition, characterSize);
-        Vector2 characterPointUnder = {characterPosition.x, characterPosition.y + characterSize.y + 1};
-        Vector2 characterTileUnder = map.CheckTilePosition(characterPointUnder); 
-        
-        //Collisions on the left of the character
-        bool characterLeftCollision = map.CheckCollisionLeft(characterPosition, characterSize);
-        Vector2 characterPointLeft = {characterPosition.x - 1, characterPosition.y + characterSize.y - 1};
-        Vector2 characterTileLeft = map.CheckTilePosition(characterPointLeft); 
-        
-        //Collisions on the right of the character
-        bool characterRightCollision = map.CheckCollisionRight(characterPosition, characterSize);
-        Vector2 characterPointRight = {characterPosition.x + characterSize.x, characterPosition.y + characterSize.y - 1};
-        Vector2 characterTileRight = map.CheckTilePosition(characterPointRight); 
-        
-        //Gravity
-        characterAcceleration.y += 1;
 
-        //Falling
-        if (characterFloorCollision && characterVelocity.y >= 0) {
-            //Edge hopping condition
-            if (map.CheckTileType(characterTileUnder) == 1 ||
-            (int)(characterPosition.y + characterSize.y) % 64 < 24) {
-                //Fixing position to tile position
-                characterPosition.y = (characterTileUnder.y * 64) - characterSize.y;
-                //Reseting forces
-                characterVelocity.y = 0;
-                characterAcceleration.y = 0;
-                //Preventing falling from screen TEMP
-                if ((characterPosition.y + characterSize.y) > screenHeight) {
-                    characterPosition.y = screenHeight - characterSize.y;
-                }
-            }
-        }
-        
-        //Setting default animation
-        if (characterVelocity.y == 0 && characterFloorCollision) {
-            //Restarting animation
-            characterFrameLimit = 1;
-            characterAnimState = 0;
-        } else if (characterVelocity.y < 0 && !characterFloorCollision) {
-            //Restarting animation
-            characterAnimState = 2;
-            characterFrameCycle = 2;
-            characterFrameLimit = 2;
-        }
-
-        //Forcing movement only when not characterSlide
-        if (!characterSlide) {
-            //Jumping
-            if (IsKeyDown(KEY_W) && characterVelocity.y == 0 &&
-            ((characterFloorCollision && (int)(characterPosition.y + characterSize.y) % 64 < 4) ||
-            characterPosition.y + characterSize.y >= screenHeight)) {
-                //Adding jump force
-                characterAcceleration.y -= 20;
-                characterAnimState = 2;
-                characterFrameLimit = 2;
-                characterFrameCycle = 0;
-                characterAnimRate = 0;
-            }
-            
-            //Lateral movement
-            if (IsKeyDown(KEY_A) ||
-            IsKeyDown(KEY_D)) {
-                //Changing direction
-                if (IsKeyDown(KEY_A)) characterFwd = false;
-                if (IsKeyDown(KEY_D)) characterFwd = true;
-
-                //Moving only if there's no collision
-                if ((!characterLeftCollision && IsKeyDown(KEY_A)) ||
-                (!characterRightCollision && IsKeyDown(KEY_D))) {
-                    //Moving with forces
-                    characterAcceleration.x += characterFwd ? 1.5f : -1.5f;
-                    //Setting animation
-                    characterAnimState = characterVelocity.y == 0 && characterFloorCollision ? 1 : 2;
-                    characterFrameLimit = 3;
-                }
-            }
-        }
-
-        //Limiting movement within screen && applying lateral collisions
-        if (characterPosition.y < 0) {
-            //Limiting going over screen
-            characterPosition.y = 0;
-            characterVelocity.y = 0;
-        } //HERE SHOULD ADD GAME OVER
-        if (characterLeftCollision && characterVelocity.x < 0) {
-            //Fixing position due to fast collision
-            characterPosition.x = (characterTileLeft.x * 64) + 64 ;
-            //Resetting forces when colliding
-            characterVelocity.x = characterSlide ? -characterVelocity.x : 0;
-            characterAcceleration.x = characterSlide ? characterAcceleration.x * 0.8f : 0;
-            if (characterSlide) characterFwd = !characterFwd;
-                
-        } else if (characterVelocity.x > 0 && characterRightCollision) {
-            //Fixing position due to fast collision
-            characterPosition.x = (characterTileRight.x * 64) - characterSize.x;
-            //Resetting forces when colliding
-            characterVelocity.x = characterSlide ? -characterVelocity.x : 0;
-            characterAcceleration.x = characterSlide ? characterAcceleration.x * 0.8f : 0;
-            if (characterSlide) characterFwd = !characterFwd;
-        }
-    
-        //Slide
-        if (IsKeyDown(KEY_S) && characterFloorCollision) {
-            //Detecting when key is just pressed
-            if (IsKeyPressed(KEY_S)) {
-                //Moving the character once
-                characterPosition.y = characterPosition.y + 10;
-            }
-            //Decreasing character size
-            characterSize.y = 42;
-            //Applying state
-            characterSlide = true;
-            characterAnimState = 5;
-            characterFrameLimit = 1;
-            characterFrameCycle = 1;
-        } else if (characterFloorCollision) {
-            //Detecting when key is just released
-            if (IsKeyReleased(KEY_S)) {
-                //Moving the character once
-                characterPosition.y = characterPosition.y - 10;
-            }
-            //Applying state
-            characterSlide = false;
-            //Increasing character size
-            characterSize.y = 52;
-        }
-        //Updating character center point
-        characterHalf.y = characterSize.y / 2;
-        
-        //Clamping forces
-        if (characterVelocity.y > 32) characterVelocity.y = 32;
-        else if (characterVelocity.y < -32) characterVelocity.y = -32;
-
-        //Calculating physics
-        characterVelocity.x *= characterSlide ? 0.95f : 0.8f;
-        characterVelocity.y += characterAcceleration.y;
-        characterVelocity.x += characterAcceleration.x;
-        characterPosition.x += characterVelocity.x;
-        characterPosition.y += characterVelocity.y;
-    
-        //Clamping forces
-        if (characterVelocity.y > 32) characterVelocity.y = 32;
-        else if (characterVelocity.y < -32) characterVelocity.y = -32;
-
-        //Resetting acceleration
-        characterAcceleration.x = 0;
-        characterAcceleration.y = 0;
-        
-        //Animating character
-        characterAnimRate++;
-        if (characterAnimRate > (60 / (characterFrameLimit * characterFrameLimit)) && !characterSlide) { //Temp (if added animation struct/class can define its animation speed)
-            //Updating frames
-            characterFrameCycle++;
-            if (characterAnimState == 2) characterFrameCycle = 2;
-            characterAnimRate = 0;
-        }
-        if (characterFrameCycle > characterFrameLimit) characterFrameCycle = 0;
+        //Updating character
+        player.Update();
 
         //=====CHARACTER=====
 
@@ -339,10 +167,10 @@ int main(void) {
         parallaxPositionOffset.y = (int)(mainCamera.target.y / 16);
 
         //Updating camera acceleration
-        cameraAcceleration.x = characterVelocity.x * characterVelocity.x / 8;
-        if (characterVelocity.x < 0) cameraAcceleration.x *= -1; 
-        cameraAcceleration.y = characterVelocity.y * characterVelocity.y / 64;
-        if (characterVelocity.y < 0) cameraAcceleration.y *= -1;
+        cameraAcceleration.x = player.velocity.x * player.velocity.x / 8;
+        if (player.velocity.x < 0) cameraAcceleration.x *= -1; 
+        cameraAcceleration.y = player.velocity.y * player.velocity.y / 64;
+        if (player.velocity.y < 0) cameraAcceleration.y *= -1;
 
         //Reducing camera acceleration
         cameraAcceleration.x *= 0.85f;
@@ -357,7 +185,7 @@ int main(void) {
         //=====CURSOR=====
         
         HideCursor();
-        float cursorScaleFactor = (64 / 2) / mainCamera.zoom;
+        float cursorScaleFactor = (map.tileSize / 2) / mainCamera.zoom;
         float cursorScale = screenHeight / cursorScaleFactor;
         Rectangle cursorSprite = {
             0.0f, 0.0f,
@@ -389,7 +217,7 @@ int main(void) {
                 //Drawing base tilemap
                 map.Draw();
                 //Drawing character
-                DrawTextureRec(charactersTilesheet, characterArea, characterSpritePivot, GOLD);
+                player.Draw();
                 //Drawing base enemy
                 muggleEnemy.Draw();
                 //Drawing saw enemy
