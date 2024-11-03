@@ -7,23 +7,25 @@
 class Tilemap {
     //Attributes
     public:
+        //Variables for graphic rendering
         Texture2D texture = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
+        int tileSize = 64;
         Rectangle tiles[15] = {
-            {0, 0, 0, 0},                                                                   // 00 Empty
-            {0 * (float)64, 3 * (float)64, (float)64, (float)64},   // 01 Fill main
-            {0 * (float)64, 2 * (float)64, (float)64, (float)64},   // 02 Fill random
-            {1 * (float)64, 3 * (float)64, (float)64, (float)64},   // 03 Floor main
-            {1 * (float)64, 0 * (float)64, (float)64, (float)64},   // 04 Floor center
-            {2 * (float)64, 1 * (float)64, (float)64, (float)64},   // 05 Floor left
-            {2 * (float)64, 0 * (float)64, (float)64, (float)64},   // 06 Floor right
-            {5 * (float)64, 3 * (float)64, (float)64, (float)64},   // 07 Platf main
-            {5 * (float)64, 0 * (float)64, (float)64, (float)64},   // 08 Platf center
-            {5 * (float)64, 2 * (float)64, (float)64, (float)64},   // 09 Platf left
-            {5 * (float)64, 1 * (float)64, (float)64, (float)64},   // 10 Platf right
-            {6 * (float)64, 4 * (float)64, (float)64, (float)64},   // 11 Edge left
-            {6 * (float)64, 3 * (float)64, (float)64, (float)64},   // 12 Edge right
-            {2 * (float)64, 3 * (float)64, (float)64, (float)64},   // 13 Edge left
-            {2 * (float)64, 2 * (float)64, (float)64, (float)64},   // 14 Edge right
+            {0, 0, 0, 0},                                                                                           // 00 Empty
+            {0 * (float)this->tileSize, 3 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 01 Fill main
+            {0 * (float)this->tileSize, 2 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 02 Fill random
+            {1 * (float)this->tileSize, 3 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 03 Floor main
+            {1 * (float)this->tileSize, 0 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 04 Floor center
+            {2 * (float)this->tileSize, 1 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 05 Floor left
+            {2 * (float)this->tileSize, 0 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 06 Floor right
+            {5 * (float)this->tileSize, 3 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 07 Platf main
+            {5 * (float)this->tileSize, 0 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 08 Platf center
+            {5 * (float)this->tileSize, 2 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 09 Platf left
+            {5 * (float)this->tileSize, 1 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 10 Platf right
+            {6 * (float)this->tileSize, 4 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 11 Edge left
+            {6 * (float)this->tileSize, 3 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 12 Edge right
+            {2 * (float)this->tileSize, 3 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 13 Edge left
+            {2 * (float)this->tileSize, 2 * (float)this->tileSize, (float)this->tileSize, (float)this->tileSize},   // 14 Edge right
         };
         std::vector<std::vector<int>> background = {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -96,7 +98,6 @@ class Tilemap {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         };
         Vector2 parallaxOffset = {0, 0};
-        int tileSize = 64;
 
     private:
 

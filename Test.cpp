@@ -301,46 +301,42 @@ int main(void) {
 
         //Calculating camera positions
         Vector2 cameraLowerFocus = {
-            (mainCamera.offset.x / mainCamera.zoom) - characterHalf.x,
-            (mainCamera.offset.y / mainCamera.zoom) - characterHalf.y
+            (mainCamera.offset.x / mainCamera.zoom) - player.half.x,
+            (mainCamera.offset.y / mainCamera.zoom) - player.half.y + (player.sliding ? -5 : 0)
             };
         Vector2 cameraUpperFocus = {
-            (screenWidth - cameraLowerFocus.x) + characterHalf.x,
-            (screenHeight - cameraLowerFocus.y) + characterHalf.y
+            (screenWidth - cameraLowerFocus.x),
+            (screenHeight - cameraLowerFocus.y)
         };
 
         //Updating camera position in X axys
-        if (characterPosition.x + characterHalf.x > cameraLowerFocus.x + 64 &&
-        characterPosition.x + characterHalf.x < cameraUpperFocus.x - 64 &&
-        !characterRightCollision && !characterLeftCollision) {
+        if (player.position.x + player.half.x > cameraLowerFocus.x + map.tileSize &&
+        player.position.x + player.half.x < cameraUpperFocus.x - map.tileSize) {
             //Moving middle
-            mainCamera.target.x = characterPosition.x + characterHalf.x;
-            //Updating parallax X axys
-            parallaxPositionOffset.x = (int)(mainCamera.target.x / 16);
-        } else if (characterPosition.x + characterHalf.x <= cameraLowerFocus.x + 64 &&
-        !characterRightCollision && !characterLeftCollision) {
+            mainCamera.target.x = player.position.x + player.half.x;
+        } else if (player.position.x + player.half.x <= cameraLowerFocus.x + map.tileSize) {
             //Moving left edge
-            mainCamera.target.x = (int)(cameraLowerFocus.x + 64);
-        } else if (characterPosition.x + characterHalf.x >= cameraUpperFocus.x - 64 &&
-        !characterRightCollision && !characterLeftCollision) {
+            mainCamera.target.x = cameraLowerFocus.x + map.tileSize;
+        } else if (player.position.x + player.half.x >= cameraUpperFocus.x - map.tileSize) {
             //Moving left edge
-            mainCamera.target.x = (int)(cameraUpperFocus.x - 64);
+            mainCamera.target.x = cameraUpperFocus.x - map.tileSize;
         }
 
         //Updating camera position in Y axys
-        if (characterPosition.y + characterHalf.y > cameraLowerFocus.y &&
-        characterPosition.y + characterHalf.y < cameraUpperFocus.y) {
+        if (player.position.y + player.half.y > cameraLowerFocus.y &&
+        player.position.y + player.half.y < cameraUpperFocus.y) {
             //Moving center
-            mainCamera.target.y = characterPosition.y + characterHalf.y + (characterSlide ? -5 : 0);
-            //Updating parallax Y axys
-            parallaxPositionOffset.y = (int)(mainCamera.target.y / 16);
-        } else if (characterPosition.y + characterHalf.y <= cameraLowerFocus.y) {
+            mainCamera.target.y = player.position.y + player.half.y + (player.sliding ? -5 : 0);
+        } else if (player.position.y + player.half.y <= cameraLowerFocus.y) {
             //Moving top edge
-            mainCamera.target.y = (int)cameraLowerFocus.y;
-        } else if (characterPosition.y + characterHalf.y >= cameraUpperFocus.y) {
+            mainCamera.target.y = cameraLowerFocus.y;
+        } else if (player.position.y + player.half.y >= cameraUpperFocus.y) {
             //Moving lower edge
-            mainCamera.target.y = (int)cameraUpperFocus.y;
+            mainCamera.target.y = cameraUpperFocus.y;
         }
+        //Updating parallax
+        parallaxPositionOffset.x = (int)(mainCamera.target.x / 16);
+        parallaxPositionOffset.y = (int)(mainCamera.target.y / 16);
 
         //Updating camera acceleration
         cameraAcceleration.x = characterVelocity.x * characterVelocity.x / 8;
