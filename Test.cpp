@@ -7,19 +7,20 @@
 #include "Tilemap.h"
 #include "Bullet.h"
 #include "Saw.h"
+#include "Muggle.h"
 
-/*-----------------------------------DEV NOTES------------------------------------------*/
+/*-------------------------------------DEV NOTES----------------------------------------*/
 //
 //Project made by Fernando C.
 //Base platformer example using Raylib
 //
 /*--------------------------------------------------------------------------------------*/
 
-/*-----------------------------Project attributes---------------------------------------*/
+/*--------------------------------Project attributes------------------------------------*/
 
-/*-------------------------------User functions-----------------------------------------*/
+/*---------------------------------Custom functions-------------------------------------*/
 
-/*-------------------------------Main function------------------------------------------*/
+/*-----------------------------------Main function--------------------------------------*/
 int main(void) {
     //Initialization
     const int screenWidth = 1280, screenHeight = 720;
@@ -61,16 +62,12 @@ int main(void) {
     bool characterSlide = false;
 
     //Base enemies variables
-    Texture2D baseEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Vector2 baseEnemyPosition = {800, 400};
-    Vector2 baseEnemyVelocity = {0, 0};
-    Vector2 baseEnemyAcceleration = {0, 0};
-    Vector2 baseEnemySize = {32, 52};
-    bool baseEnemyFwd = true;
+    Texture2D muggleEnemyTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Muggle muggleEnemy = Muggle(muggleEnemyTilesheet, {800, 400}, {32, 52}, map);
 
     //Saw enemies variables
-    Texture2D sawEnemiesTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Saw sawEnemy = Saw(sawEnemiesTilesheet, {264, 340}, {0, 0}, map); 
+    Texture2D sawEnemyTilemap = LoadTexture("./assets/Entities/spritesheet_enemies.png");
+    Saw sawEnemy = Saw(sawEnemyTilemap, {264, 340}, {0, 0}, map); 
 
     //Parallax variables
     Vector2 parallaxPositionOffset = {0, 32};
@@ -79,7 +76,7 @@ int main(void) {
     Texture2D aimFullCursorTexture = LoadTexture("./assets/Other/cursor-aim-full.png");
     Texture2D aimEmptyCursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
 
-    /*-----------------------------------Game loop------------------------------------------*/
+    /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
@@ -293,77 +290,12 @@ int main(void) {
 
         //=====SAW ENEMY=====
 
-        //=====BASE ENEMY=====
+        //=====DUMB ENEMY=====
+
+        //Updating muggle enemy
+        muggleEnemy.Update();
     
-        //Collisions under the enemy
-        bool baseEnemyFloorCollision = map.CheckCollisionDown(baseEnemyPosition, baseEnemySize);
-        Vector2 baseEnemyPointUnder = {baseEnemyPosition.x, baseEnemyPosition.y + baseEnemySize.y + 1};
-        Vector2 baseEnemyTileUnder = map.CheckTilePosition(baseEnemyPointUnder);
-        
-        //Collisions on the left of the baseEnemy
-        bool baseEnemyLeftCollision = map.CheckCollisionLeft(baseEnemyPosition, baseEnemySize);
-        
-        //Collisions on the right of the baseEnemy
-        bool baseEnemyRightCollision = map.CheckCollisionRight(baseEnemyPosition, baseEnemySize);
-
-        //Collisions on the left step of the baseEnemy
-        bool baseEnemyLeftStep = map.CheckCollisionLeftStep(baseEnemyPosition, baseEnemySize);
-        
-        //Collisions on the right step of the baseEnemy
-        bool baseEnemyRightStep = map.CheckCollisionRightStep(baseEnemyPosition, baseEnemySize);
-        
-        //Clamping forces
-        if (baseEnemyVelocity.y > 32) baseEnemyVelocity.y = 32;
-        else if (baseEnemyVelocity.y < -32) baseEnemyVelocity.y = -32;
-
-        //Falling
-        if (baseEnemyFloorCollision && baseEnemyVelocity.y >= 0) {
-            //Edge hopping condition
-            if (map.CheckTileType(baseEnemyTileUnder) == 1 ||
-            (int)(baseEnemyPosition.y + baseEnemySize.y) % 64 < 24) {
-                //Fixing position to tile position
-                baseEnemyPosition.y = (baseEnemyTileUnder.y * 64) - baseEnemySize.y;
-                //Reseting forces
-                baseEnemyVelocity.y = 0;
-                baseEnemyAcceleration.y = 0;
-                //Preventing falling from screen TEMP
-                if ((baseEnemyPosition.y + baseEnemySize.y) > screenHeight) {
-                    baseEnemyPosition.y = screenHeight - baseEnemySize.y;
-                }
-            }
-        }
-        
-        //Changing directions
-        if ((baseEnemyFwd && baseEnemyVelocity.x > 0 && (baseEnemyRightCollision || !baseEnemyRightStep)) ||
-        (!baseEnemyFwd && baseEnemyVelocity.x < 0 && (baseEnemyLeftCollision || !baseEnemyLeftStep))) {
-            //Inverting direction
-            baseEnemyFwd = !baseEnemyFwd;
-            //Resetting baseEnemy velocity (optional)
-            baseEnemyVelocity.x = 0;
-        }
-
-        //Base behaviour
-        baseEnemyAcceleration.x = baseEnemyFwd ? 0.5f : -0.5f;
-
-        //Gravity
-        baseEnemyAcceleration.y += 1;
-
-        //Calculating physics
-        baseEnemyVelocity.x *= 0.8f;
-        baseEnemyVelocity.y += baseEnemyAcceleration.y;
-        baseEnemyVelocity.x += baseEnemyAcceleration.x;
-        baseEnemyPosition.x += baseEnemyVelocity.x;
-        baseEnemyPosition.y += baseEnemyVelocity.y;
-
-        //Resetting acceleration
-        baseEnemyAcceleration.x = 0;
-        baseEnemyAcceleration.y = 0;
-
-        //Creating baseEnemy
-        Vector2 baseEnemyPivot = {baseEnemyPosition.x - 16, baseEnemyPosition.y - 12};
-        Rectangle baseEnemySprite = {(float)0, (float)0, (float)(64 * (baseEnemyFwd ? 1 : -1)), (float)64};
-        
-        //=====ENEMY=====
+        //=====DUMB ENEMY=====
 
         //======VIEW======
 
@@ -449,7 +381,7 @@ int main(void) {
 
         //=====CURSOR=====
 
-        /*---------------------------------------Draw phase--------------------------------------*/
+        /*-------------------------------------Draw phase---------------------------------------*/
         BeginDrawing();
             //Clearing the image with background color
             ClearBackground(PURPLE);
@@ -463,11 +395,12 @@ int main(void) {
                 //Drawing character
                 DrawTextureRec(charactersTilesheet, characterArea, characterSpritePivot, GOLD);
                 //Drawing base enemy
-                DrawTextureRec(baseEnemiesTilesheet, baseEnemySprite, baseEnemyPivot, RED);
+                muggleEnemy.Draw();
                 //Drawing saw enemy
                 sawEnemy.Draw();
                 //Drawing bullets
-                for (const auto& bullet : bulletsList) {
+                for (const Bullet& bullet : bulletsList) {
+                    //Calling draw method for each bullet
                     bullet.Draw();
                 }
             EndMode2D();
@@ -476,7 +409,7 @@ int main(void) {
             DrawTexturePro(cursorTexture, cursorSprite, cursorScaledSprite, cursorSpritePivot, 0.0f, BLUE);
         EndDrawing();
     }
-    /*------------------------------------------End-----------------------------------------*/
+    /*----------------------------------------End-------------------------------------------*/
     CloseWindow();
     return 0;
 }

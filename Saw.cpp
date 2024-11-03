@@ -25,6 +25,7 @@ void Saw::Update() {
     Vector2 pointUnder = {this->position.x, this->position.y + 1};
     Vector2 tileUnder = this->level.CheckTilePosition(pointUnder);
 
+    //Checking direction collisions
     bool UpperRight = this->level.CheckCollisionCustom(this->position, {1, -1}); // upper right
     bool LowerRight = this->level.CheckCollisionCustom(this->position, {1, 1}); // lower right
     bool UpperLeft = this->level.CheckCollisionCustom(this->position, {-1, -1}); // upper left
