@@ -4,12 +4,13 @@
 #include <vector>
 
 //User libraries
+#include "Cursor.h"
 #include "Tilemap.h"
 #include "Character.h"
+#include "View.h"
 #include "Bullet.h"
 #include "Saw.h"
 #include "Muggle.h"
-#include "Cursor.h"
 
 /*-------------------------------------DEV NOTES----------------------------------------*/
 //
@@ -25,25 +26,14 @@
 /*-----------------------------------Main function--------------------------------------*/
 int main(void) {
     //Initialization
-    const int screenWidth = 1280, screenHeight = 720;
-    InitWindow(screenWidth, screenHeight, "Base platformer - Prototype - Fernando C. - v0.0.69-alpha");
+    const Vector2 screenSize = {1280.0f, 720.0f};
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.69-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
 
-    //Camera variables
-    Camera2D mainCamera;
-    Vector2 cameraAcceleration = {0,0};
-    mainCamera.offset = (Vector2){(float)screenWidth * 0.5f, (float)screenHeight * 0.5f};
-    mainCamera.rotation = 0.0f;
-    mainCamera.zoom = 1.5f;
-
     //Level variables
     int ammoLeft = 3;
-
-    //Bullets variables
-    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
-    std::vector<Bullet> bulletsList; 
 
     //Tilemap variables
     Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
@@ -53,6 +43,17 @@ int main(void) {
     Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
     Character player = Character(charactersTilesheet, {650.0f, 400.0f}, {20.0f, 52.0f}, map);
 
+    //View variables
+    Camera2D mainCamera;
+    mainCamera.offset = {screenSize.x * 0.5f, screenSize.y * 0.5f};
+    mainCamera.rotation = 0.0f;
+    mainCamera.zoom = 1.5f;
+    View view = View(screenSize, mainCamera, player);
+
+    //Bullets variables
+    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
+    std::vector<Bullet> bulletsList; 
+
     //Muggle enemies variables
     Texture2D muggleEnemyTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Muggle muggleEnemy = Muggle(muggleEnemyTilesheet, {800.0f, 400.0f}, {32.0f, 52.0f}, map);
@@ -60,9 +61,6 @@ int main(void) {
     //Saw enemies variables
     Texture2D sawEnemyTilemap = LoadTexture("./assets/Entities/spritesheet_enemies.png");
     Saw sawEnemy = Saw(sawEnemyTilemap, {264.0f, 340.0f}, {0.0f, 0.0f}, map); 
-
-    //Parallax variables
-    Vector2 parallaxPositionOffset = {0.0f, 32.0f};
 
     //Cursor variables
     std::vector<Texture2D> cursorTextures = {
@@ -81,7 +79,7 @@ int main(void) {
         HideCursor();
 
         //Updating tilemap values
-        map.parallaxOffset = parallaxPositionOffset;
+        map.parallaxOffset = view.positionOffset;
         map.Update();
 
         //Detecting click to create a bullet when has ammo
@@ -134,58 +132,7 @@ int main(void) {
 
         //======VIEW======
 
-        //Calculating camera positions
-        Vector2 cameraLowerFocus = {
-            (mainCamera.offset.x / mainCamera.zoom) - player.half.x,
-            (mainCamera.offset.y / mainCamera.zoom) - player.half.y + (player.sliding ? -5 : 0)
-            };
-        Vector2 cameraUpperFocus = {
-            (screenWidth - cameraLowerFocus.x),
-            (screenHeight - cameraLowerFocus.y)
-        };
-
-        //Updating camera position in X axys
-        if (player.position.x + player.half.x >= cameraLowerFocus.x + map.tileSize &&
-        player.position.x + player.half.x <= cameraUpperFocus.x - map.tileSize) {
-            //Moving middle
-            mainCamera.target.x = player.position.x + player.half.x;
-        } else if (player.position.x + player.half.x < cameraLowerFocus.x + map.tileSize) {
-            //Moving left edge
-            mainCamera.target.x = cameraLowerFocus.x + map.tileSize;
-        } else if (player.position.x + player.half.x > cameraUpperFocus.x - map.tileSize) {
-            //Moving left edge
-            mainCamera.target.x = cameraUpperFocus.x - map.tileSize;
-        }
-
-        //Updating camera position in Y axys
-        if (player.position.y + player.half.y > cameraLowerFocus.y &&
-        player.position.y + player.half.y < cameraUpperFocus.y) {
-            //Moving center
-            mainCamera.target.y = player.position.y + player.half.y + (player.sliding ? -5 : 0);
-        } else if (player.position.y + player.half.y <= cameraLowerFocus.y) {
-            //Moving top edge
-            mainCamera.target.y = cameraLowerFocus.y;
-        } else if (player.position.y + player.half.y >= cameraUpperFocus.y) {
-            //Moving lower edge
-            mainCamera.target.y = cameraUpperFocus.y;
-        }
-        //Updating parallax
-        parallaxPositionOffset.x = (int)(mainCamera.target.x / 16);
-        parallaxPositionOffset.y = (int)(mainCamera.target.y / 16);
-
-        //Updating camera acceleration
-        cameraAcceleration.x = player.velocity.x * player.velocity.x / 8;
-        if (player.velocity.x < 0) cameraAcceleration.x *= -1; 
-        cameraAcceleration.y = player.velocity.y * player.velocity.y / 64;
-        if (player.velocity.y < 0) cameraAcceleration.y *= -1;
-
-        //Reducing camera acceleration
-        cameraAcceleration.x *= 0.85f;
-        cameraAcceleration.y *= 0.85f;
-
-        //Setting camera target with accelerations
-        mainCamera.target.x += cameraAcceleration.x * 2;
-        mainCamera.target.y += cameraAcceleration.y * 2;
+        view.Update();
 
         //======VIEW======
 
