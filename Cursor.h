@@ -1,10 +1,11 @@
 //Libraries
 #pragma once
-#include "raylib.h"
 #include <vector>
+#include "raylib.h"
+#include "Sprite.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
-class Cursor {
+class Cursor : public Sprite {
     //Attributes
     public:
         //Variables for environment references
@@ -12,11 +13,6 @@ class Cursor {
         const int& ammo;
         //Variables for graphic rendering
         std::vector<Texture2D> textures;
-        Rectangle sprite = {0.0f, 0.0f, 64.0f, 64.0f};
-        Rectangle area = {0.0f, 0.0f, 16.0f, 16.0f};
-        Vector2 position = {0.0f, 0.0f};
-        Vector2 areaPivot = {0.0f, 0.0f};
-        float rotation = 0.0f;
         int state = 0;
         
     private:
@@ -24,14 +20,12 @@ class Cursor {
     //Methods
     public:
         //Class constructor to create an instance
-        Cursor(std::vector<Texture2D>, float&, int&);
+        Cursor(Texture2D, Vector2, Vector2, std::vector<Texture2D>, float&, int&);
         //Method for process all logic
         void Update();
         //Method for process all graphics
         void Draw() const;
 
     private:
-        //Method called once for initialize default values
-        void Initialize();
 
 };

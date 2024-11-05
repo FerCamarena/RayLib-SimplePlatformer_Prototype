@@ -63,11 +63,12 @@ int main(void) {
     Saw sawEnemy = Saw(sawEnemyTilemap, {264.0f, 340.0f}, {0.0f, 0.0f}, map); 
 
     //Cursor variables
+    Texture2D cursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
     std::vector<Texture2D> cursorTextures = {
         LoadTexture("./assets/Other/cursor-aim-empty.png"),
         LoadTexture("./assets/Other/cursor-aim-full.png")
     };
-    Cursor cursor = Cursor(cursorTextures, mainCamera.zoom, ammoLeft);
+    Cursor cursor = Cursor(cursorTexture, {0, 0}, {0, 0}, cursorTextures, mainCamera.zoom, ammoLeft);
 
     /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
@@ -92,7 +93,7 @@ int main(void) {
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
             //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, newBulletDirection, 10.0f);
+            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {0, 0}, newBulletDirection, 10.0f);
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }

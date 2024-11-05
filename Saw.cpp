@@ -3,20 +3,7 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _direction, Tilemap& _level) : level(_level) {
-    //Storing received values as attributes
-    this->texture = _texture;
-    this->position = _position;
-    this->direction = _direction;
-
-    //Calling a starter function
-    this->Initialize();
-}
-
-//Method called once for initialize default values
-void Saw::Initialize() {
-
-}
+Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _direction, Tilemap& _level) : Entity(_texture, _position, _direction, _level) {}
 
 //Method for process all graphics
 void Saw::Update() {

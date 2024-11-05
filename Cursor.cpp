@@ -3,27 +3,20 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Cursor::Cursor(std::vector<Texture2D> _textures, float& _scale, int& _ammo) : scale(_scale), ammo(_ammo) {
+Cursor::Cursor(Texture2D _texture, Vector2 _position, Vector2 _size, std::vector<Texture2D> _textures, float& _scale, int& _ammo) : Sprite(_texture, _position, _size), scale(_scale), ammo(_ammo) {
     //Storing received values as attributes
     this->textures = _textures;
-
-    //Calling a starter function
-    this->Initialize();
-}
-
-//Method called once for initialize default values
-void Cursor::Initialize() {
 
 }
 
 //Method for process all graphics
 void Cursor::Update() {
     //Cursor scaling calculation
-    this->area = {
+    this->scaledArea = {
         0.0f, 0.0f,
         (float)this->textures[0].width, (float)this->textures[0].height
     };
-    this->sprite = {
+    this->spriteArea = {
         GetMousePosition().x, GetMousePosition().y,
         this->textures[0].width * (this->scale / 2), this->textures[0].height * (this->scale / 2)
     };
@@ -39,5 +32,5 @@ void Cursor::Update() {
 //Method for process all graphics
 void Cursor::Draw() const {
     //Drawing sprite
-    DrawTexturePro(this->textures[this->state], this->area, this->sprite, this->areaPivot, this->rotation, BLUE);
+    DrawTexturePro(this->textures[this->state], this->scaledArea, this->spriteArea, this->areaPivot, this->rotation, BLUE);
 }

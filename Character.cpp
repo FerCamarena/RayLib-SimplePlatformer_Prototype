@@ -3,26 +3,13 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Character::Character(Texture2D _texture, Vector2 _position, Vector2 _direction, Tilemap& _level) : level(_level) {
-    //Storing received values as attributes
-    this->texture = _texture;
-    this->position = _position;
-    this->direction = _direction;
-
-    //Calling a starter function
-    this->Initialize();
-}
-
-//Method called once for initialize default values
-void Character::Initialize() {
-
-}
+Character::Character(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {}
 
 //Method for process all graphics
 void Character::Update() {
     //Creating character sprite
-    areaPivot = {this->position.x - ((this->textureSize - this->size.x) / 2), this->position.y - ((this->textureSize - this->size.y))};
-    area = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
+    this->areaPivot = {this->position.x - ((this->textureSize - this->size.x) / 2), this->position.y - ((this->textureSize - this->size.y))};
+    this->area = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
     
     //Collisions under the character
     bool floorCollision = this->level.CheckCollisionDown(this->position, this->size);

@@ -125,7 +125,5 @@ class Tilemap {
         bool CheckCollisionLeftStep(Vector2, Vector2) const;
 
     private:
-        //Method called once for initialize default values
-        void Initialize();
 
 };

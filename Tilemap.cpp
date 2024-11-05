@@ -7,38 +7,22 @@ Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
     this->texture = _texture;
     this->tiles[15] = _tiles[15];
     this->tileSize = _tileSize;
-
-    //Calling a starter function
-    this->Initialize();
 };
 Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15]) {
     //Storing received values as attributes
     this->texture = _texture;
     this->tiles[15] = _tiles[15];
-
-    //Calling a starter function
-    this->Initialize();
 };
 Tilemap::Tilemap(Texture2D _texture, int _tileSize) {
     //Storing received values as attributes
     this->texture = _texture;
     this->tileSize = _tileSize;
-
-    //Calling a starter function
-    this->Initialize();
 };
 Tilemap::Tilemap(Texture2D _texture) {
     //Storing received values as attributes
     this->texture = _texture;
-
-    //Calling a starter function
-    this->Initialize();
 };
 
-//Method called once for initialize default values
-void Tilemap::Initialize() {
-
-}
 
 //Method for process all logic
 void Tilemap::Update() {
