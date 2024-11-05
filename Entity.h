@@ -28,6 +28,10 @@ class Entity : public Sprite {
     //Methods
     public:
         Entity(Texture2D, Vector2, Vector2, Tilemap&);
+        //Method for process all logic
+        virtual void Update() override = 0;
+        //Method for process all graphics
+        virtual void Draw() const override = 0;
 
     private:
 

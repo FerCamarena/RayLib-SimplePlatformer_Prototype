@@ -22,9 +22,9 @@ class Cursor : public Sprite {
         //Class constructor to create an instance
         Cursor(Texture2D, Vector2, Vector2, std::vector<Texture2D>, float&, int&);
         //Method for process all logic
-        void Update();
+        void Update() override;
         //Method for process all graphics
-        void Draw() const;
+        void Draw() const override;
 
     private:
 
