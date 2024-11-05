@@ -27,7 +27,7 @@
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.69-alpha");
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.89-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
