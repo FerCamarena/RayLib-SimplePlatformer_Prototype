@@ -21,6 +21,7 @@ class Sprite {
     public:
         //Class constructors to create an instance
         Sprite(Texture2D, Vector2, Vector2);
+        //Class virtual destructor
         virtual ~Sprite() = default;
         //Method for process all logic
         virtual void Update() = 0;

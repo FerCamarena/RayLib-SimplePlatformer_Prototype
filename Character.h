@@ -22,6 +22,8 @@ class Character : public Entity {
     public:
         //Class constructor to create an instance
         Character(Texture2D, Vector2, Vector2, Tilemap&);
+        //Class virtual destructor
+        virtual ~Character() = default;
         //Method for process all logic
         void Update() override;
 

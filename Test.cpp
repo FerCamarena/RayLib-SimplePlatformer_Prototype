@@ -95,9 +95,16 @@ int main(void) {
         //Brain logic
         
         //=====LEVEL=====
-        
-        //Hiding cursor by default
-        HideCursor();
+
+        //Iterating for collisions with each enemy
+        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+            //Checking collision with individual enemies
+            if (CheckCollisionRecs(player.hitbox, (*it)->hitbox)) {
+                //Change to game over scene
+                break;
+            //Continue checking
+            } else ++it;
+        }
 
         //Updating tilemap values
         level.parallaxOffset = view.positionOffset;

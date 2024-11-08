@@ -33,6 +33,8 @@ class Entity : public Sprite {
     public:
         //Class constructors to create an instance
         Entity(Texture2D, Vector2, Vector2, Tilemap&);
+        //Class virtual destructor
+        virtual ~Entity() = default;
         //Method for process all logic
         virtual void Update() override;
         //Method for process all graphics

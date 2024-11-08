@@ -19,6 +19,8 @@ class Saw : public Entity {
         //Class constructors to create an instance
         Saw(Texture2D, Vector2, Vector2, Tilemap&);
         Saw(Vector2, Vector2, Tilemap&);
+        //Class virtual destructor
+        virtual ~Saw() = default;
         //Method for process all logic
         void Update() override;
 
