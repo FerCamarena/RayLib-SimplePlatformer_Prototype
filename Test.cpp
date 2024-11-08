@@ -37,11 +37,11 @@ int main(void) {
 
     //Tilemap variables
     Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-    Tilemap map = Tilemap(levelTilesheet);
-    
+    Tilemap level = Tilemap(levelTilesheet);
+
     //Character variables
     Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");
-    Character player = Character(charactersTilesheet, {650.0f, 400.0f}, {20.0f, 52.0f}, map);
+    Character player = Character(charactersTilesheet, {650.0f, 400.0f}, {20.0f, 52.0f}, level);
 
     //View variables
     Camera2D mainCamera;
@@ -80,8 +80,8 @@ int main(void) {
         HideCursor();
 
         //Updating tilemap values
-        map.parallaxOffset = view.positionOffset;
-        map.Update();
+        level.parallaxOffset = view.positionOffset;
+        level.Update();
 
         //Detecting click to create a bullet when has ammo
         if (ammoLeft > 0 && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -117,7 +117,7 @@ int main(void) {
 
         //=====CHARACTER=====
 
-        //=====SAW ENEMY=====
+        //=====ENEMIES=====
 
         //Updating saw enemy
         sawEnemy.Update();
@@ -148,12 +148,12 @@ int main(void) {
             //Clearing the image with background color
             ClearBackground(PURPLE);
             //Drawing level
-            map.DrawBackground();
+            level.DrawBackground();
             BeginMode2D(mainCamera);
                 //#Displaying the full levelTilesheet 
                 //#DrawTexture(levelTilesheet, 0, 0, WHITE);
                 //Drawing base tilemap
-                map.Draw();
+                level.Draw();
                 //Drawing character
                 player.Draw();
                 //Drawing base enemy
@@ -167,7 +167,6 @@ int main(void) {
                 }
             EndMode2D();
             //DEBUG
-
             //Drawing cursor
             cursor.Draw();
         EndDrawing();
