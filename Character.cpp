@@ -7,22 +7,21 @@ Character::Character(Texture2D _texture, Vector2 _position, Vector2 _size, Tilem
 
 //Method for process all graphics
 void Character::Update() {
-    //Creating character sprite
-    this->areaPivot = {this->position.x - ((this->textureSize - this->size.x) / 2), this->position.y - ((this->textureSize - this->size.y))};
-    this->area = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
+    //Creating custom character sprite
+    this->sprite = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
     
     //Collisions under the character
     bool floorCollision = this->level.CheckCollisionDown(this->position, this->size);
-    Vector2 pointUnder = {this->position.x, this->position.y + this->size.y + 1};
+    Vector2 pointUnder = {this->position.x, this->position.y + 1};
     Vector2 tileUnder = this->level.CheckTilePosition(pointUnder); 
     
     //Collisions on the left of the character
     bool leftCollision = this->level.CheckCollisionLeft(this->position, this->size);
-    Vector2 pointLeft = {this->position.x - 1, this->position.y + this->size.y - 1};
+    Vector2 pointLeft = {this->position.x - (size.x / 2), this->position.y - 1};
     
     //Collisions on the right of the character
     bool rightCollision = this->level.CheckCollisionRight(this->position, this->size);
-    Vector2 pointRight = {this->position.x + this->size.x, this->position.y + this->size.y - 1};
+    Vector2 pointRight = {this->position.x + (size.x / 2), this->position.y - 1};
     
     //Gravity
     this->acceleration.y += 1;
@@ -31,9 +30,9 @@ void Character::Update() {
     if (floorCollision && this->velocity.y >= 0) {
         //Edge hopping condition
         if (this->level.CheckTileType(tileUnder) == 1 ||
-        (int)(this->position.y + this->size.y) % this->level.tileSize < 24) {
+        (int)(this->position.y + 1) % this->level.tileSize < 24) {
             //Fixing position to tile position
-            this->position.y = (tileUnder.y * this->level.tileSize) - this->size.y;
+            this->position.y = (tileUnder.y * this->level.tileSize) - 1;
             //Reseting forces
             this->velocity.y = 0;
             this->acceleration.y = 0;
@@ -63,7 +62,7 @@ void Character::Update() {
     if (!this->sliding) {
         //Jumping
         if (IsKeyDown(KEY_W) && this->velocity.y == 0 &&
-        ((floorCollision && (int)(this->position.y + this->size.y) % this->textureSize < 4)/* ||
+        ((floorCollision && (int)(this->position.y + 1) % this->textureSize < 4)/* ||
         this->position.y + this->size.y >= screenHeight*/)) {
             //Adding jump force
             this->acceleration.y -= 20;
@@ -100,14 +99,14 @@ void Character::Update() {
     } //HERE SHOULD ADD GAME OVER
     if (leftCollision && this->velocity.x < 0) {
         //Fixing position due to fast collision
-        this->position.x = pointLeft.x + 1;
+        this->position.x = pointLeft.x + (size.x / 2) + 1;
         //Resetting forces when colliding
         this->velocity.x = this->sliding ? -this->velocity.x : 0;
         //this->acceleration.x = this->sliding ? this->acceleration.x * 0.8f : 0;
         if (this->sliding) this->onward = !this->onward;
     } else if (this->velocity.x > 0 && rightCollision) {
         //Fixing position due to fast collision
-        this->position.x = pointRight.x - this->size.x - 1;
+        this->position.x = pointRight.x - (size.x / 2) - 1;
         //Resetting forces when colliding
         this->velocity.x = this->sliding ? -this->velocity.x : 0;
         //this->acceleration.x = this->sliding ? this->acceleration.x * 0.8f : 0;

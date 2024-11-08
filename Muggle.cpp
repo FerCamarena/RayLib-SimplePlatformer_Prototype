@@ -10,7 +10,7 @@ Muggle::Muggle(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadT
 void Muggle::Update() {
     //Collisions under the enemy
     bool floorCollision = this->level.CheckCollisionDown(this->position, this->size);
-    Vector2 pointUnder = {this->position.x, this->position.y + this->size.y + 1};
+    Vector2 pointUnder = {this->position.x, this->position.y + 1};
     Vector2 tileUnder = this->level.CheckTilePosition(pointUnder);
     
     //Checking direction collisions
@@ -18,14 +18,6 @@ void Muggle::Update() {
     bool rightCollision = this->level.CheckCollisionRight(this->position, this->size);
     bool leftStep = this->level.CheckCollisionLeftStep(this->position, this->size);
     bool rightStep = this->level.CheckCollisionRightStep(this->position, this->size);
-    
-    //Defining area pivot
-    this->areaPivot = {
-        this->position.x - 16,
-        this->position.y - 12};
-
-    //Defining sprite area
-    this->area = {0.0f, 0.0f, (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
 
     //Clamping forces
     if (this->velocity.y > 32) this->velocity.y = 32;
@@ -35,9 +27,9 @@ void Muggle::Update() {
     if (floorCollision && this->velocity.y >= 0) {
         //Edge hopping condition
         if (this->level.CheckTileType(tileUnder) != 0 ||
-        (int)(this->position.y + this->size.y) % level.tileSize < 24) {
+        (int)(this->position.y) + 1 % level.tileSize < 24) {
             //Fixing position to tile position
-            this->position.y = (tileUnder.y * this->textureSize) - this->size.y;
+            this->position.y = (tileUnder.y * this->textureSize) - 1;
             //Reseting forces
             this->velocity.y = 0;
             this->acceleration.y = 0;

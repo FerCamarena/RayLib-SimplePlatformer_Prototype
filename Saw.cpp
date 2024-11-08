@@ -3,11 +3,21 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {}
-Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture("./assets/Entities/spritesheet_enemy_saw.png"), _position, _size, _level) {}
+Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {
+    this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
+}
+Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture("./assets/Entities/spritesheet_enemy_saw.png"), _position, _size, _level) {
+    this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
+}
 
 //Method for process all graphics
 void Saw::Update() {
+    //Updating entity hitbox
+    this->hitbox = {
+        this->position.x - (this->size.x / 2), this->position.y - (this->size.y / 2),
+        (float)this->size.x, (float)this->size.y
+    };
+
     //Collisions under the enemy
     bool floorCollision = this->level.CheckCollisionDown(this->position, {0, 0});
     Vector2 pointUnder = {this->position.x, this->position.y + 1};
@@ -18,16 +28,6 @@ void Saw::Update() {
     bool LowerRight = this->level.CheckCollisionCustom(this->position, {1, 1}); // lower right
     bool UpperLeft = this->level.CheckCollisionCustom(this->position, {-1, -1}); // upper left
     bool LowerLeft = this->level.CheckCollisionCustom(this->position, {-1, 1}); // lower left
-
-    //Defining area pivot
-    this->areaPivot = {
-        this->position.x - 32,
-        this->position.y - 32
-    };
-
-    //Defining sprite area
-    area = {0.0f, 0.0f, (float)64, (float)64};
-    
     //Clamping forces
     if (this->velocity.y > 32) this->velocity.y = 32;
     else if (this->velocity.y < -32) this->velocity.y = -32;
@@ -61,11 +61,11 @@ void Saw::Update() {
         if (floorCollision && this->velocity.y >= 0) {
             //Edge hopping condition
             if (this->level.CheckTileType(tileUnder) != 0 ||
-            (int)(this->position.y) % this->level.tileSize < 24) {
+            (int)(this->position.y + 1) % this->level.tileSize < 24) {
                 //Sleeping gravity after falling
                 this->stuck = true;
                 //Fixing position to tile position
-                this->position.y = (tileUnder.y * this->textureSize) - this->size.y;
+                this->position.y = (tileUnder.y * this->textureSize) - 1;
                 //Reseting forces
                 this->velocity.y = 0;
                 this->acceleration.y = 0;

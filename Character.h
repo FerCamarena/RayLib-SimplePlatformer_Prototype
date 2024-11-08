@@ -9,10 +9,6 @@ class Character : public Entity {
     //Attributes
     public:
         //Variables for graphic rendering
-        Rectangle area = {
-            0.0f, 0.0f,
-            (float)texture.width, (float)texture.height
-        };
         Vector2 half = {
             (this->size.x * 0.5f),
             (this->size.y * 0.5f)
