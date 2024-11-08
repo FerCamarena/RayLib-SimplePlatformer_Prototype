@@ -12,17 +12,17 @@ Cursor::Cursor(Texture2D _texture, Vector2 _position, Vector2 _size, std::vector
 //Method for process all graphics
 void Cursor::Update() {
     //Cursor scaling calculation
-    this->scaledArea = {
+    this->area = {
         0.0f, 0.0f,
         (float)this->textures[0].width, (float)this->textures[0].height
     };
-    this->spriteArea = {
+    this->sprite = {
         GetMousePosition().x, GetMousePosition().y,
         this->textures[0].width * (this->scale / 2), this->textures[0].height * (this->scale / 2)
     };
-    this->areaPivot = {
-        (this->textures[0].width * 0.5f),
-        (this->textures[0].height * 0.5f)
+    this->pivot = {
+        (this->textures[0].width * (0.5f * this->scale) * 0.5f),
+        (this->textures[0].height * (0.5f * this->scale) * 0.5f)
     };
 
     //Selecting cursor texture
@@ -32,5 +32,5 @@ void Cursor::Update() {
 //Method for process all graphics
 void Cursor::Draw() const {
     //Drawing sprite
-    DrawTexturePro(this->textures[this->state], this->scaledArea, this->spriteArea, this->areaPivot, this->rotation, BLUE);
+    DrawTexturePro(this->textures[this->state], this->area, this->sprite, this->pivot, this->rotation, BLUE);
 }
