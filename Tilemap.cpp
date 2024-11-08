@@ -117,7 +117,7 @@ bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) con
     //PointD
     Vector2 pointD = {entityPosition.x - 1, entityPosition.y + (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointE = {entityPosition.x - 1, entityPosition.y + entitySize.y - 1};
+    Vector2 pointE = {entityPosition.x - 1, entityPosition.y + entitySize.y - 2};
     //Precalculating
     Vector2 tilePointC = CheckTilePosition(pointC);
     Vector2 tilePointD = CheckTilePosition(pointD);
@@ -137,7 +137,7 @@ bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) co
     //PointD
     Vector2 pointG = {entityPosition.x + entitySize.x, entityPosition.y + (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y - 1};
+    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y - 2};
     //Precalculating
     Vector2 tilePointF = CheckTilePosition(pointF);
     Vector2 tilePointG = CheckTilePosition(pointG);
