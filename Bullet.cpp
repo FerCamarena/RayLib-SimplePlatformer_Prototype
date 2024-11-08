@@ -35,15 +35,15 @@ void Bullet::Update() {
 //Method for process all graphics
 void Bullet::Draw() const {
     //Drawing sprite
-    DrawTextureRec(this->texture, this->area, Vector2Subtract(this->position, Vector2Scale(this->size, 0.5f)), YELLOW);
+    DrawTextureRec(this->texture, this->area, Vector2Subtract(this->position, (Vector2){(float)this->texture.width / 2, (float)this->texture.height / 2}), YELLOW);
     //Drawing hitbox
-    //DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
+    DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
 }
 
 void Bullet::UpdateDisplay() {
     //Updating entity hitbox
     this->hitbox = {
-        this->position.x - (this->size.x / 2), this->position.y - this->size.y,
-        (float)this->texture.width / 2, (float)this->texture.height / 2
+        this->position.x - this->size.x / 2, this->position.y - this->size.y / 2,
+        this->size.x, this->size.y
     };
 }

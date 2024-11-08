@@ -145,7 +145,7 @@ int main(void) {
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
             //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {4, 4}, newBulletDirection, 10.0f);
+            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {12, 12}, newBulletDirection, 10.0f);
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }
