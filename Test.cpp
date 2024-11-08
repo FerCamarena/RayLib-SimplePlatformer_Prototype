@@ -24,7 +24,10 @@
 
 /*---------------------------------Custom functions-------------------------------------*/
 
-void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
+void InitializeLevel(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
+    //Hiding cursor by default
+    HideCursor();
+
     //Spawning all enemies
     for (int y = 0; y < (int)level.spawns.size(); y++) {
         for (int x = 0; x < (int)level.spawns[y].size(); x++) {
@@ -32,10 +35,10 @@ void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList)
                 case 0:
                     continue;
                 case 1:
-                    enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 52.0f}, level)));
+                    enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
                 case 2:
-                    enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {0.0f, 0.0f}, level)));
+                    enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
             }
         }
@@ -46,7 +49,7 @@ void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList)
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.89-alpha");
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.97-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
@@ -85,16 +88,45 @@ int main(void) {
     Cursor cursor = Cursor(cursorTexture, {0, 0}, {0, 0}, cursorTextures, mainCamera.zoom, ammoLeft);
 
     //Calling function to populate level
-    Initialize(level, enemyList);
+    InitializeLevel(level, enemyList);
 
     /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
         //=====LEVEL=====
-        
-        //Hiding cursor by default
-        HideCursor();
+
+        //Detecting ENEMY-PLAYER collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
+            //Checking collision with individual enemies
+            if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
+                //Change to game over scene
+                break;
+            //Continue checking
+            } else ++enemy;
+        }
+        //Detecting ENEMY-BULLET collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
+            //Value to manage better the list iteration
+            bool enemyRemoved = false;
+
+            //Iterating for each bullet
+            for (auto bullet = bulletsList.begin(); bullet != bulletsList.end(); ) {
+                //Checking collision with individual enemies
+                if (CheckCollisionRecs((*enemy)->hitbox, bullet->hitbox)) {
+                    //Removing both
+                    bullet = bulletsList.erase(bullet);
+                    enemy = enemyList.erase(enemy);
+                    //Marking as collided
+                    enemyRemoved = true;
+                    break;
+                    //Possible ammo reload
+                    //ammoLeft++;
+                } else ++bullet;
+            }
+            //Continuing when not colliding
+            if (!enemyRemoved) ++enemy;
+        }
 
         //Updating tilemap values
         level.parallaxOffset = view.positionOffset;
@@ -105,17 +137,18 @@ int main(void) {
             //Decreasing ammo
             ammoLeft--;
             //Storing position
-            Vector2 newBulletPosition = Vector2Add(player.position, player.half);
+            Vector2 newBulletPosition = (Vector2){
+                player.position.x - (bulletTexture.width / 2),
+                player.position.y - player.half.y - (bulletTexture.width / 2)
+            };
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
             //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {0, 0}, newBulletDirection, 10.0f);
+            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {12, 12}, newBulletDirection, 10.0f);
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }
-
-        //=====LEVEL=====
 
         //=====BULLETS=====
     
@@ -125,14 +158,10 @@ int main(void) {
             bullet.Update();
         }
 
-        //=====BULLETS=====
-
         //=====CHARACTER=====
 
         //Updating character
         player.Update();
-
-        //=====CHARACTER=====
 
         //=====ENEMIES=====
 
@@ -142,19 +171,13 @@ int main(void) {
             enemy->Update();
         }
 
-        //=====ENEMIES=====
-
         //======VIEW======
 
         view.Update();
 
-        //======VIEW======
-
         //=====CURSOR=====
         
         cursor.Update();
-
-        //=====CURSOR=====
 
         /*-------------------------------------Draw phase---------------------------------------*/
         BeginDrawing();
@@ -179,10 +202,12 @@ int main(void) {
                     //Calling draw method for each bullet
                     bullet.Draw();
                 }
+                //DEBUG
             EndMode2D();
             //DEBUG
             //Drawing cursor
             cursor.Draw();
+            
         EndDrawing();
     }
     /*----------------------------------------End-------------------------------------------*/
