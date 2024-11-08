@@ -24,7 +24,10 @@
 
 /*---------------------------------Custom functions-------------------------------------*/
 
-void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
+void InitializeLevel(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
+    //Hiding cursor by default
+    HideCursor();
+
     //Spawning all enemies
     for (int y = 0; y < (int)level.spawns.size(); y++) {
         for (int x = 0; x < (int)level.spawns[y].size(); x++) {
@@ -32,10 +35,10 @@ void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList)
                 case 0:
                     continue;
                 case 1:
-                    enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 52.0f}, level)));
+                    enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
                 case 2:
-                    enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {0.0f, 0.0f}, level)));
+                    enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
             }
         }
@@ -46,7 +49,7 @@ void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList)
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.89-alpha");
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.97-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
@@ -85,16 +88,23 @@ int main(void) {
     Cursor cursor = Cursor(cursorTexture, {0, 0}, {0, 0}, cursorTextures, mainCamera.zoom, ammoLeft);
 
     //Calling function to populate level
-    Initialize(level, enemyList);
+    InitializeLevel(level, enemyList);
 
     /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
         //Brain logic
         
         //=====LEVEL=====
-        
-        //Hiding cursor by default
-        HideCursor();
+
+        //Iterating for collisions with each enemy
+        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+            //Checking collision with individual enemies
+            if (CheckCollisionRecs(player.hitbox, (*it)->hitbox)) {
+                //Change to game over scene
+                break;
+            //Continue checking
+            } else ++it;
+        }
 
         //Updating tilemap values
         level.parallaxOffset = view.positionOffset;
@@ -115,8 +125,6 @@ int main(void) {
             bulletsList.push_back(newBullet);
         }
 
-        //=====LEVEL=====
-
         //=====BULLETS=====
     
         //Updating each bullet spawned
@@ -125,14 +133,10 @@ int main(void) {
             bullet.Update();
         }
 
-        //=====BULLETS=====
-
         //=====CHARACTER=====
 
         //Updating character
         player.Update();
-
-        //=====CHARACTER=====
 
         //=====ENEMIES=====
 
@@ -142,19 +146,13 @@ int main(void) {
             enemy->Update();
         }
 
-        //=====ENEMIES=====
-
         //======VIEW======
 
         view.Update();
 
-        //======VIEW======
-
         //=====CURSOR=====
         
         cursor.Update();
-
-        //=====CURSOR=====
 
         /*-------------------------------------Draw phase---------------------------------------*/
         BeginDrawing();

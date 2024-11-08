@@ -98,9 +98,9 @@ int Tilemap::CheckTileType(Vector2 tilePosition) const {
 //Looking for collisions under the character
 bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) const {
     //PointA
-    Vector2 pointA = {entityPosition.x, entityPosition.y + entitySize.y + 1};
+    Vector2 pointA = {entityPosition.x - (entitySize.x / 2), entityPosition.y + 1};
     //PointB
-    Vector2 pointB = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y + 1};
+    Vector2 pointB = {entityPosition.x + (entitySize.x / 2), entityPosition.y + 1};
     //Precalculating
     Vector2 tilePointA = CheckTilePosition(pointA);
     Vector2 tilePointB = CheckTilePosition(pointB);
@@ -113,11 +113,11 @@ bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) con
 //Function for detecting when colliding with a tile with collision in the left side of entities
 bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) const {
     //PointC
-    Vector2 pointC = {entityPosition.x - 1, entityPosition.y};
+    Vector2 pointC = {entityPosition.x - 1, entityPosition.y - 1};
     //PointD
-    Vector2 pointD = {entityPosition.x - 1, entityPosition.y + (entitySize.y * 0.5f)};
+    Vector2 pointD = {entityPosition.x - 1, entityPosition.y - (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointE = {entityPosition.x - 1, entityPosition.y + entitySize.y - 2};
+    Vector2 pointE = {entityPosition.x - 1, entityPosition.y - entitySize.y};
     //Precalculating
     Vector2 tilePointC = CheckTilePosition(pointC);
     Vector2 tilePointD = CheckTilePosition(pointD);
@@ -133,11 +133,11 @@ bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) con
 //Function for detecting when colliding with a tile with collision in the right side of entities
 bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) const {
     //PointC
-    Vector2 pointF = {entityPosition.x + entitySize.x, entityPosition.y};
+    Vector2 pointF = {entityPosition.x + entitySize.x, entityPosition.y - 1};
     //PointD
-    Vector2 pointG = {entityPosition.x + entitySize.x, entityPosition.y + (entitySize.y * 0.5f)};
+    Vector2 pointG = {entityPosition.x + entitySize.x, entityPosition.y - (entitySize.y * 0.5f)};
     //PointE
-    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y + entitySize.y - 2};
+    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y - entitySize.y};
     //Precalculating
     Vector2 tilePointF = CheckTilePosition(pointF);
     Vector2 tilePointG = CheckTilePosition(pointG);
@@ -153,7 +153,7 @@ bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) co
 //Function for detecting collision with tiles in the left step of entities
 bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointI
-    Vector2 pointI = {entityPosition.x - 1, entityPosition.y + entitySize.y + 1};
+    Vector2 pointI = {entityPosition.x - (entitySize.x / 2) - 1, entityPosition.y + 1};
     //Precalculating
     Vector2 tilePointI = CheckTilePosition(pointI);
     //Returning on each case
@@ -165,7 +165,7 @@ bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize)
 //Function for detecting collision with tiles in the right step of entities
 bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointJ
-    Vector2 pointJ = {entityPosition.x + entitySize.x + 1, entityPosition.y + entitySize.y + 1};
+    Vector2 pointJ = {entityPosition.x + (entitySize.x / 2) + 1, entityPosition.y + 1};
     //Precalculating
     Vector2 tilePointJ = CheckTilePosition(pointJ);
     //Returning on each case
