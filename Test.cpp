@@ -115,12 +115,15 @@ int main(void) {
             //Decreasing ammo
             ammoLeft--;
             //Storing position
-            Vector2 newBulletPosition = Vector2Add(player.position, player.half);
+            Vector2 newBulletPosition = (Vector2){
+                player.position.x - (bulletTexture.width / 2),
+                player.position.y - player.half.y - (bulletTexture.width / 2)
+            };
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
             //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {0, 0}, newBulletDirection, 10.0f);
+            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {4, 4}, newBulletDirection, 10.0f);
             //Storing new bullet
             bulletsList.push_back(newBullet);
         }
@@ -177,10 +180,12 @@ int main(void) {
                     //Calling draw method for each bullet
                     bullet.Draw();
                 }
+                //DEBUG
             EndMode2D();
             //DEBUG
             //Drawing cursor
             cursor.Draw();
+            
         EndDrawing();
     }
     /*----------------------------------------End-------------------------------------------*/

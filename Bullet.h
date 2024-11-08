@@ -21,6 +21,7 @@ class Bullet : public Sprite {
         Bullet(Texture2D, Vector2, Vector2, Vector2, float);
         //Method for process all logic
         void Update() override;
+        void UpdateDisplay();
         //Method for process all graphics
         void Draw() const override;
 

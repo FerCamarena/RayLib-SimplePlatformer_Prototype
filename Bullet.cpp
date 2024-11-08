@@ -7,15 +7,13 @@ Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _size, Vector2 _di
     //Storing received values as attributes
     this->speed = _speed;
     this->direction = _direction;
+
 }
 
 //Method for process all logic
 void Bullet::Update() {
-    //Defining area pivot
-    this->pivot = {
-        this->position.x - (texture.width / 2),
-        this->position.y - (this->texture.height / 2)
-    };
+    UpdateDisplay();
+
     //Check if enabled
     if (this->enabled) {
         //Check if already has a area size
@@ -37,5 +35,15 @@ void Bullet::Update() {
 //Method for process all graphics
 void Bullet::Draw() const {
     //Drawing sprite
-    DrawTextureRec(texture, area, pivot, YELLOW);
+    DrawTextureRec(this->texture, this->area, Vector2Subtract(this->position, Vector2Scale(this->size, 0.5f)), YELLOW);
+    //Drawing hitbox
+    //DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
+}
+
+void Bullet::UpdateDisplay() {
+    //Updating entity hitbox
+    this->hitbox = {
+        this->position.x - (this->size.x / 2), this->position.y - this->size.y,
+        (float)this->texture.width / 2, (float)this->texture.height / 2
+    };
 }
