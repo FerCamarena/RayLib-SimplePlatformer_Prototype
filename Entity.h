@@ -34,7 +34,7 @@ class Entity : public Sprite {
         //Class constructors to create an instance
         Entity(Texture2D, Vector2, Vector2, Tilemap&);
         //Method for process all logic
-        virtual void Update() override = 0;
+        virtual void Update() override;
         //Method for process all graphics
         virtual void Draw() const override;
 

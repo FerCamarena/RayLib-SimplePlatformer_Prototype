@@ -7,6 +7,9 @@ Character::Character(Texture2D _texture, Vector2 _position, Vector2 _size, Tilem
 
 //Method for process all graphics
 void Character::Update() {
+    //Updating from inherited class
+    Entity::Update();
+
     //Creating custom character sprite
     this->sprite = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
     
@@ -169,10 +172,4 @@ void Character::Update() {
         this->animationRate = 0;
     }
     if (this->frameCount > this->frameLimit) this->frameCount = 0;
-}
-
-//Method for process all graphics
-void Character::Draw() const {
-    //Drawing sprite
-    DrawTextureRec(this->texture, this->area, this->areaPivot, GOLD);
 }

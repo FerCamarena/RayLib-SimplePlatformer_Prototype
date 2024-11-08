@@ -24,8 +24,6 @@ class Character : public Entity {
         Character(Texture2D, Vector2, Vector2, Tilemap&);
         //Method for process all logic
         void Update() override;
-        //Method for process all graphics
-        void Draw() const override;
 
     private:
 

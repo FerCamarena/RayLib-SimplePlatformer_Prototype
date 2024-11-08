@@ -12,6 +12,9 @@ Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture
 
 //Method for process all graphics
 void Saw::Update() {
+    //Updating from inherited class
+    Entity::Update();
+
     //Updating entity hitbox
     this->hitbox = {
         this->position.x - (this->size.x / 2), this->position.y - (this->size.y / 2),

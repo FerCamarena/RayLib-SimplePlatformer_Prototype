@@ -8,6 +8,9 @@ Muggle::Muggle(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadT
 
 //Method for process all graphics
 void Muggle::Update() {
+    //Updating from inherited class
+    Entity::Update();
+    
     //Collisions under the enemy
     bool floorCollision = this->level.CheckCollisionDown(this->position, this->size);
     Vector2 pointUnder = {this->position.x, this->position.y + 1};
