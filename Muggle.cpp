@@ -24,7 +24,7 @@ void Muggle::Update() {
         this->position.y - 12};
 
     //Defining sprite area
-    this->area = {0.0f, 0.0f, (float)(64 * (this->onward ? 1 : -1)), 64.0f};
+    this->area = {0.0f, 0.0f, (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
 
     //Clamping forces
     if (this->velocity.y > 32) this->velocity.y = 32;
@@ -33,10 +33,10 @@ void Muggle::Update() {
     //Falling
     if (floorCollision && this->velocity.y >= 0) {
         //Edge hopping condition
-        if (this->level.CheckTileType(tileUnder) == 1 ||
-        (int)(this->position.y + this->size.y) % 64 < 24) {
+        if (this->level.CheckTileType(tileUnder) != 0 ||
+        (int)(this->position.y + this->size.y) % level.tileSize < 24) {
             //Fixing position to tile position
-            this->position.y = (tileUnder.y * 64) - this->size.y;
+            this->position.y = (tileUnder.y * this->textureSize) - this->size.y;
             //Reseting forces
             this->velocity.y = 0;
             this->acceleration.y = 0;
@@ -66,11 +66,11 @@ void Muggle::Update() {
     this->acceleration.y += 1;
 
     //Calculating physics
-    this->velocity.x *= 0.8f;
-    this->velocity.y += this->acceleration.y;
     this->velocity.x += this->acceleration.x;
+    this->velocity.y += this->acceleration.y;
     this->position.x += this->velocity.x;
     this->position.y += this->velocity.y;
+    this->velocity.x *= 0.8f;
 
     //Resetting acceleration
     this->acceleration.x = 0;

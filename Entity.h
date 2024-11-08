@@ -9,6 +9,11 @@ class Entity : public Sprite {
     public:
         //Variables for environment reference
         const Tilemap& level;
+        //Variables for graphic rendering
+        Rectangle area = {
+            0.0f, 0.0f,
+            (float)texture.width, (float)texture.height
+        };
         //Variables for movement logic
         Vector2 velocity = {0.0f, 0.0f};
         Vector2 acceleration = {0.0f, 0.0f};
@@ -27,11 +32,12 @@ class Entity : public Sprite {
 
     //Methods
     public:
+        //Class constructors to create an instance
         Entity(Texture2D, Vector2, Vector2, Tilemap&);
         //Method for process all logic
         virtual void Update() override = 0;
         //Method for process all graphics
-        virtual void Draw() const override = 0;
+        virtual void Draw() const override;
 
     private:
 

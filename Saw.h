@@ -4,7 +4,7 @@
 #include "Tilemap.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
-class Saw : Entity {
+class Saw : public Entity {
     //Attributes
     public:
         //Variables for graphic rendering
@@ -19,12 +19,10 @@ class Saw : Entity {
 
     //Methods
     public:
-        //Class constructor to create an instance
+        //Class constructors to create an instance
         Saw(Texture2D, Vector2, Vector2, Tilemap&);
         //Method for process all logic
         void Update() override;
-        //Method for process all graphics
-        void Draw() const override;
 
     private:
 

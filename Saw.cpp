@@ -25,7 +25,7 @@ void Saw::Update() {
     };
 
     //Defining sprite area
-    area = {(float)13*64, 0.0f, (float)64, (float)64};
+    area = {0.0f, 0.0f, (float)64, (float)64};
     
     //Clamping forces
     if (this->velocity.y > 32) this->velocity.y = 32;
@@ -64,7 +64,7 @@ void Saw::Update() {
                 //Sleeping gravity after falling
                 this->stuck = true;
                 //Fixing position to tile position
-                this->position.y = (tileUnder.y * this->level.tileSize);
+                this->position.y = (tileUnder.y * this->textureSize) - this->size.y;
                 //Reseting forces
                 this->velocity.y = 0;
                 this->acceleration.y = 0;
@@ -86,10 +86,4 @@ void Saw::Update() {
 
     //Resetting acceleration
     this->acceleration = {0, 0};
-}
-
-//Method for process all graphics
-void Saw::Draw() const {
-    //Drawing sprite
-    DrawTextureRec(texture, area, areaPivot, RED);
 }
