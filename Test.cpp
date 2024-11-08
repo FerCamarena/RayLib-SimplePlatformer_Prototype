@@ -96,14 +96,36 @@ int main(void) {
         
         //=====LEVEL=====
 
-        //Iterating for collisions with each enemy
-        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+        //Detecting ENEMY-PLAYER collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
             //Checking collision with individual enemies
-            if (CheckCollisionRecs(player.hitbox, (*it)->hitbox)) {
+            if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
                 //Change to game over scene
                 break;
             //Continue checking
-            } else ++it;
+            } else ++enemy;
+        }
+        //Detecting ENEMY-BULLET collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
+            //Value to manage better the list iteration
+            bool enemyRemoved = false;
+
+            //Iterating for each bullet
+            for (auto bullet = bulletsList.begin(); bullet != bulletsList.end(); ) {
+                //Checking collision with individual enemies
+                if (CheckCollisionRecs((*enemy)->hitbox, bullet->hitbox)) {
+                    //Removing both
+                    bullet = bulletsList.erase(bullet);
+                    enemy = enemyList.erase(enemy);
+                    //Marking as collided
+                    enemyRemoved = true;
+                    break;
+                    //Possible ammo reload
+                    //ammoLeft++;
+                } else ++bullet;
+            }
+            //Continuing when not colliding
+            if (!enemyRemoved) ++enemy;
         }
 
         //Updating tilemap values
