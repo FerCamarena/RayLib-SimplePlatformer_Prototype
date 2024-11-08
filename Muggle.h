@@ -14,6 +14,7 @@ class Muggle : public Entity{
     public:
         //Class constructors to create an instance
         Muggle(Texture2D, Vector2, Vector2, Tilemap&);
+        Muggle(Vector2, Vector2, Tilemap&);
         //Method for process all logic
         void Update() override;
 

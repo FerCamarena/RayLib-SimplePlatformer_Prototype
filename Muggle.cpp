@@ -3,7 +3,8 @@
 #include "raymath.h"
 
 //Class constructor to create an instance
-Muggle::Muggle(Texture2D _texture, Vector2 _position, Vector2 _direction, Tilemap& _level) : Entity(_texture, _position, _direction, _level) {}
+Muggle::Muggle(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {}
+Muggle::Muggle(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture("./assets/Entities/spritesheet_enemy_muggle.png"), _position, _size, _level) {}
 
 //Method for process all graphics
 void Muggle::Update() {
@@ -75,10 +76,4 @@ void Muggle::Update() {
     //Resetting acceleration
     this->acceleration.x = 0;
     this->acceleration.y = 0;
-}
-
-//Method for process all graphics
-void Muggle::Draw() const {
-    //Drawing sprite
-    DrawTextureRec(this->texture, this->area, this->areaPivot, RED);
 }
