@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <vector>
+#include <memory>
 
 //User libraries
 #include "Cursor.h"
@@ -14,14 +15,32 @@
 
 /*-------------------------------------DEV NOTES----------------------------------------*/
 //
-//Project made by Fernando C.
-//Base platformer example using Raylib
+//                      Project made by Fernando C.
+//                      Base platformer example using Raylib
 //
 /*--------------------------------------------------------------------------------------*/
 
 /*--------------------------------Project attributes------------------------------------*/
 
 /*---------------------------------Custom functions-------------------------------------*/
+
+void Initialize(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
+    //Spawning all enemies
+    for (int y = 0; y < (int)level.spawns.size(); y++) {
+        for (int x = 0; x < (int)level.spawns[y].size(); x++) {
+            switch (level.spawns[y][x]) {
+                case 0:
+                    continue;
+                case 1:
+                    enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 52.0f}, level)));
+                break;
+                case 2:
+                    enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {0.0f, 0.0f}, level)));
+                break;
+            }
+        }
+    }
+};
 
 /*-----------------------------------Main function--------------------------------------*/
 int main(void) {
@@ -54,13 +73,8 @@ int main(void) {
     Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
     std::vector<Bullet> bulletsList; 
 
-    //Muggle enemies variables
-    Texture2D muggleEnemyTilesheet = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Muggle muggleEnemy = Muggle(muggleEnemyTilesheet, {800.0f, 400.0f}, {32.0f, 52.0f}, map);
-
-    //Saw enemies variables
-    Texture2D sawEnemyTilemap = LoadTexture("./assets/Entities/spritesheet_enemies.png");
-    Saw sawEnemy = Saw(sawEnemyTilemap, {264.0f, 340.0f}, {0.0f, 0.0f}, map); 
+    //Enemies variables
+    std::vector<std::unique_ptr<Entity>> enemyList;
 
     //Cursor variables
     Texture2D cursorTexture = LoadTexture("./assets/Other/cursor-aim-empty.png");
@@ -69,6 +83,9 @@ int main(void) {
         LoadTexture("./assets/Other/cursor-aim-full.png")
     };
     Cursor cursor = Cursor(cursorTexture, {0, 0}, {0, 0}, cursorTextures, mainCamera.zoom, ammoLeft);
+
+    //Calling function to populate level
+    Initialize(level, enemyList);
 
     /*-------------------------------------Game loop----------------------------------------*/
     while (!WindowShouldClose()) {
@@ -119,17 +136,13 @@ int main(void) {
 
         //=====ENEMIES=====
 
-        //Updating saw enemy
-        sawEnemy.Update();
+        //Updating enemies
+        for (auto& enemy : enemyList) {
+            //Calling update method for each enemy
+            enemy->Update();
+        }
 
-        //=====SAW ENEMY=====
-
-        //=====DUMB ENEMY=====
-
-        //Updating muggle enemy
-        muggleEnemy.Update();
-    
-        //=====DUMB ENEMY=====
+        //=====ENEMIES=====
 
         //======VIEW======
 
@@ -156,10 +169,11 @@ int main(void) {
                 level.Draw();
                 //Drawing character
                 player.Draw();
-                //Drawing base enemy
-                muggleEnemy.Draw();
-                //Drawing saw enemy
-                sawEnemy.Draw();
+                //Drawing enemies
+                for (const auto& enemy : enemyList) {
+                    //Calling draw method for each enemy
+                    enemy->Draw();
+                }
                 //Drawing bullets
                 for (const Bullet& bullet : bulletsList) {
                     //Calling draw method for each bullet
