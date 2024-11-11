@@ -122,7 +122,8 @@ int main(void) {
                     break;
                     //Possible ammo reload
                     //ammoLeft++;
-                } else ++bullet;
+                }
+                ++bullet;
             }
             //Continuing when not colliding
             if (!enemyRemoved) ++enemy;
