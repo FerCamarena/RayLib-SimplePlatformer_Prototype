@@ -176,7 +176,7 @@ int main(void) {
         //Updating each bullet spawned
         for (auto& bullet : bulletsList) {
             //Make each bullet update itself
-            bullet.Update();
+            bullet->Update();
         }
 
         //=====CHARACTER=====
@@ -219,9 +219,9 @@ int main(void) {
                     enemy->Draw();
                 }
                 //Drawing bullets
-                for (const Bullet& bullet : bulletsList) {
+                for (const auto& bullet : bulletsList) {
                     //Calling draw method for each bullet
-                    bullet.Draw();
+                    bullet->Draw();
                 }
                 //DEBUG
             EndMode2D();
