@@ -20,6 +20,7 @@ class Bullet : public Sprite {
         //Class constructor to create an instance
         Bullet(Texture2D, Vector2, Vector2, Vector2, float);
         //Method for process all logic
+        void SetLaunch(Vector2, Vector2);
         void Update() override;
         void UpdateDisplay();
         //Method for process all graphics

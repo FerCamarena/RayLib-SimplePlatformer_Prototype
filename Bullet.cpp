@@ -6,8 +6,13 @@
 Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _size, Vector2 _direction, float _speed) : Sprite(_texture, _position, _size) {
     //Storing received values as attributes
     this->speed = _speed;
-    this->direction = _direction;
 
+//Method for launching the bullet with custom parameters
+void Bullet::SetLaunch(Vector2 _position, Vector2 _direction) {
+    //Sending values to instance
+    this->position = _position;
+    this->direction = _direction;
+    this->enabled = true;
 }
 
 //Method for process all logic
@@ -35,10 +40,11 @@ void Bullet::Update() {
 
 //Method for process all graphics
 void Bullet::Draw() const {
+    if (!this->enabled) return;
     //Drawing sprite
     DrawTextureRec(this->texture, this->sprite, Vector2Subtract(this->position, (Vector2){(float)this->texture.width / 2, (float)this->texture.height / 2}), YELLOW);
     //Drawing hitbox
-    DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
+    DrawCircleV(this->position, (this->hitbox.width / 2), RED);
 }
 
 void Bullet::UpdateDisplay() {

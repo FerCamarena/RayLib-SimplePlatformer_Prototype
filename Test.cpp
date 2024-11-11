@@ -73,8 +73,8 @@ int main(void) {
     View view = View(screenSize, mainCamera, player);
 
     //Bullets variables
-    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
-    std::vector<Bullet> bulletsList; 
+    std::vector<std::unique_ptr<Bullet>> bulletsList;
+    std::vector<std::unique_ptr<Bullet>> bulletsPool;
 
     //Enemies variables
     std::vector<std::unique_ptr<Entity>> enemyList;
@@ -111,11 +111,17 @@ int main(void) {
             bool enemyRemoved = false;
 
             //Iterating for each bullet
-            for (auto bullet = bulletsList.begin(); bullet != bulletsList.end(); ) {
+            for (auto bullet = bulletsList.begin(); bullet != bulletsList.end();) {
                 //Checking collision with individual enemies
-                if (CheckCollisionRecs((*enemy)->hitbox, bullet->hitbox)) {
-                    //Removing both
+                if (!(*bullet)->enabled) {
+                    //Moving disabled item too pool
+                    bulletsPool.push_back(std::move(*bullet));
                     bullet = bulletsList.erase(bullet);
+                    continue;
+                }
+                if (CheckCollisionRecs((*enemy)->hitbox, (*bullet)->hitbox)) {
+                    //Removing both
+                    (*bullet)->enabled = false;
                     enemy = enemyList.erase(enemy);
                     //Marking as collided
                     enemyRemoved = true;
@@ -145,10 +151,24 @@ int main(void) {
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
-            //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {12, 12}, newBulletDirection, 10.0f);
+
+            //Saving a reference with smartpointer
+            std::unique_ptr<Bullet> newBullet;
+            
+            //Checking for object pool
+            if (!bulletsPool.empty()) {
+                //Moving from object pool
+                newBullet = std::move(bulletsPool.back());
+                bulletsPool.pop_back();
+            } else {
+                //Instanciating new bullet
+                newBullet = std::make_unique<Bullet>(Bullet(newBulletPosition, {12, 12}, 10.0f, level));
+            }
+            //Setting values to bullet
+            newBullet->SetLaunch(newBulletPosition, newBulletDirection);
+
             //Storing new bullet
-            bulletsList.push_back(newBullet);
+            bulletsList.push_back(std::move(newBullet));
         }
 
         //=====BULLETS=====
