@@ -12,6 +12,7 @@ Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _size, Vector2 _di
 
 //Method for process all logic
 void Bullet::Update() {
+    //Updating from inherited class
     UpdateDisplay();
 
     //Check if enabled
@@ -35,7 +36,7 @@ void Bullet::Update() {
 //Method for process all graphics
 void Bullet::Draw() const {
     //Drawing sprite
-    DrawTextureRec(this->texture, this->area, Vector2Subtract(this->position, (Vector2){(float)this->texture.width / 2, (float)this->texture.height / 2}), YELLOW);
+    DrawTextureRec(this->texture, this->sprite, Vector2Subtract(this->position, (Vector2){(float)this->texture.width / 2, (float)this->texture.height / 2}), YELLOW);
     //Drawing hitbox
     DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
 }
@@ -45,5 +46,10 @@ void Bullet::UpdateDisplay() {
     this->hitbox = {
         this->position.x - this->size.x / 2, this->position.y - this->size.y / 2,
         this->size.x, this->size.y
+    };
+    //Updating entity texture
+    this->sprite = {
+        0.0f, 0.0f,
+        (float)this->texture.width, (float)this->texture.height
     };
 }

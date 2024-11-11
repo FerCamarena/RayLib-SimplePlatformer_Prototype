@@ -138,8 +138,8 @@ int main(void) {
             ammoLeft--;
             //Storing position
             Vector2 newBulletPosition = (Vector2){
-                player.position.x - (bulletTexture.width / 2),
-                player.position.y - player.half.y - (bulletTexture.width / 2)
+                player.position.x - 8,
+                player.position.y - player.half.y - 8
             };
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
