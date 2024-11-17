@@ -21,15 +21,18 @@ void View::Update() {
         Vector2 cameraLowerFocus = {
             (mainCamera.offset.x / mainCamera.zoom) - player.half.x,
             (mainCamera.offset.y / mainCamera.zoom) - player.half.y + (player.sliding ? -5 : 0)
-            };
+        };
         Vector2 cameraUpperFocus = {
             (screenSize.x - cameraLowerFocus.x),
             (screenSize.y - cameraLowerFocus.y)
         };
 
         //Updating camera position in X axys
-        if (player.position.x + player.half.x >= cameraLowerFocus.x + player.level.tileSize &&
-        player.position.x + player.half.x <= cameraUpperFocus.x - player.level.tileSize) {
+        if (mainCamera.zoom == 1.0f) {
+            //Main camera zoom 1.0f case
+            mainCamera.target.x = cameraUpperFocus.x + (player.level.tileSize * 0.5f);
+        } else if (player.position.x + player.half.x >= cameraLowerFocus.x + player.level.tileSize &&
+            player.position.x + player.half.x <= cameraUpperFocus.x - player.level.tileSize) {
             //Moving middle
             mainCamera.target.x = player.position.x + player.half.x;
         } else if (player.position.x + player.half.x < cameraLowerFocus.x + player.level.tileSize) {
@@ -42,7 +45,7 @@ void View::Update() {
 
         //Updating camera position in Y axys
         if (player.position.y + player.half.y > cameraLowerFocus.y &&
-        player.position.y + player.half.y < cameraUpperFocus.y) {
+            player.position.y + player.half.y < cameraUpperFocus.y) {
             //Moving center
             mainCamera.target.y = player.position.y + player.half.y + (player.sliding ? -5 : 0);
         } else if (player.position.y + player.half.y <= cameraLowerFocus.y) {
