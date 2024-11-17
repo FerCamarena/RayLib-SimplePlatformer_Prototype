@@ -15,8 +15,8 @@
 
 /*-------------------------------------DEV NOTES----------------------------------------*/
 //
-//                      Project made by Fernando C.
-//                      Base platformer example using Raylib
+//                      Project made by Fernando C. (v0.0.113-alpha)
+//                      Simple platformer example using Raylib
 //
 /*--------------------------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ void InitializeLevel(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemy
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.97-alpha");
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.113-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
