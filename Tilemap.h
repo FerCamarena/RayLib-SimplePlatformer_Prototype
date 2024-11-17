@@ -138,6 +138,7 @@ class Tilemap {
         bool CheckCollisionDown(Vector2, Vector2) const;
         bool CheckCollisionRight(Vector2, Vector2) const;
         bool CheckCollisionCustom(Vector2, Vector2) const;
+        bool CheckCollisionPoint(Vector2) const;
         bool CheckCollisionRightStep(Vector2, Vector2) const;
         bool CheckCollisionLeftStep(Vector2, Vector2) const;
 

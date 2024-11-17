@@ -174,7 +174,7 @@ bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize
     else return false;
 }
 
-//Function to detect tile limits with different entity directions
+//Function to detect tile collision with custom directions
 bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection) const {
     //PointJ
     Vector2 pointJ = {entityPosition.x + collisionDirection.x, entityPosition.y + collisionDirection.y};
@@ -184,5 +184,18 @@ bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDire
     if (CheckTileType(tilePointJ) == 1 ||
     (pointJ.x < tileSize && collisionDirection.x < 0) ||
     (pointJ.x > GetScreenWidth() - tileSize && collisionDirection.x > 0)) return true;
+    else return false;
+}
+
+//Function to detect tile collision in exact points
+bool Tilemap::CheckCollisionPoint(Vector2 pointPosition) const {
+    //PointK
+    Vector2 pointK = pointPosition;
+    if ((pointK.y < 0.0f) || (pointK.y > GetScreenHeight()) ||
+        (pointK.x < tileSize) || (pointK.x > GetScreenWidth())) return true;
+    //Precalculating
+    Vector2 tilePointK = CheckTilePosition(pointK);
+    //Returning on each case
+    if (CheckTileType(tilePointK) > 0) return true;
     else return false;
 }

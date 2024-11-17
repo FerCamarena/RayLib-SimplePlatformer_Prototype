@@ -40,6 +40,10 @@ void Bullet::Update() {
         //Moving through a scaled direction
         Vector2 scaledDirection = Vector2Scale(this->direction, this->speed);
         this->position = Vector2Add(this->position, scaledDirection);
+
+        //Checking for map collisions to disable
+        Vector2 collisionPoint = Vector2Add(this->position, Vector2Scale(this->size, 0.5f));
+        if (this->level.CheckCollisionPoint(collisionPoint)) this->enabled = false;
     }
 }
 
