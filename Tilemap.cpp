@@ -120,8 +120,8 @@ bool Tilemap::CheckCollisionOver(Vector2 entityPosition, Vector2 entitySize) con
     Vector2 tilePointC = CheckTilePosition(pointC);
     Vector2 tilePointD = CheckTilePosition(pointD);
     //Checking types on points
-    if (CheckTileType(tilePointC) > 0 ||
-    CheckTileType(tilePointD) > 0) return true;
+    if (CheckTileType(tilePointC) == 1 ||
+    CheckTileType(tilePointD) == 1) return true;
     else return false;
 }
 
