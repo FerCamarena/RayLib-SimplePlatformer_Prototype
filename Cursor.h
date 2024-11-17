@@ -1,7 +1,7 @@
 //Libraries
 #pragma once
-#include <vector>
 #include "raylib.h"
+#include <vector>
 #include "Sprite.h"
 
 /*-----------------------------------Main class-----------------------------------------*/

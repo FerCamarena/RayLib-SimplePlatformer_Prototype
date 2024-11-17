@@ -22,14 +22,14 @@ void Entity::UpdateDisplay() {
         this->position.x - (this->size.x / 2), this->position.y - this->size.y,
         (float)this->size.x, (float)this->size.y
     };
-    //Updating entity texture
+    //Updating entity sprite
     this->sprite = {
         0.0f, 0.0f,
-        64.0f, 64.0f
+        (float)this->textureSize, (float)this->textureSize
     };
     //Updating entity area
     this->area = {
         this->position.x, this->position.y,
-        64.0f, 64.0f
+        (float)this->textureSize, (float)this->textureSize
     };
 }
