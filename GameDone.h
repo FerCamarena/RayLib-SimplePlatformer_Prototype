@@ -4,13 +4,13 @@
 #include "Scene.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
-class GameWon : public Scene {
+class GameDone : public Scene {
     //Methods
     public:
         //Class constructors to create an instance
-        GameWon();
+        GameDone();
         //Class virtual destructor
-        virtual ~GameWon() = default;
+        virtual ~GameDone() = default;
         //Method for process all logic
         void Update() override;
         //Method for process all graphics
