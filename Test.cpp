@@ -15,8 +15,8 @@
 
 /*-------------------------------------DEV NOTES----------------------------------------*/
 //
-//                      Project made by Fernando C.
-//                      Base platformer example using Raylib
+//                      Project made by Fernando C. (v0.0.113-alpha)
+//                      Simple platformer example using Raylib
 //
 /*--------------------------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ void InitializeLevel(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemy
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.97-alpha");
+    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.113-alpha");
     SetTargetFPS(60);
     
     /*---------------------------------Game properties--------------------------------------*/
@@ -73,8 +73,8 @@ int main(void) {
     View view = View(screenSize, mainCamera, player);
 
     //Bullets variables
-    Texture2D bulletTexture = LoadTexture("./assets/Other/bullet.png");
-    std::vector<Bullet> bulletsList; 
+    std::vector<std::unique_ptr<Bullet>> bulletsList;
+    std::vector<std::unique_ptr<Bullet>> bulletsPool;
 
     //Enemies variables
     std::vector<std::unique_ptr<Entity>> enemyList;
@@ -96,14 +96,43 @@ int main(void) {
         
         //=====LEVEL=====
 
-        //Iterating for collisions with each enemy
-        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+        //Detecting ENEMY-PLAYER collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
             //Checking collision with individual enemies
-            if (CheckCollisionRecs(player.hitbox, (*it)->hitbox)) {
+            if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
                 //Change to game over scene
                 break;
             //Continue checking
-            } else ++it;
+            } else ++enemy;
+        }
+        //Detecting ENEMY-BULLET collisions
+        for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
+            //Value to manage better the list iteration
+            bool enemyRemoved = false;
+
+            //Iterating for each bullet
+            for (auto bullet = bulletsList.begin(); bullet != bulletsList.end();) {
+                //Checking collision with individual enemies
+                if (!(*bullet)->enabled) {
+                    //Moving disabled item too pool
+                    bulletsPool.push_back(std::move(*bullet));
+                    bullet = bulletsList.erase(bullet);
+                    continue;
+                }
+                if (CheckCollisionRecs((*enemy)->hitbox, (*bullet)->hitbox)) {
+                    //Removing both
+                    (*bullet)->enabled = false;
+                    enemy = enemyList.erase(enemy);
+                    //Marking as collided
+                    enemyRemoved = true;
+                    break;
+                    //Possible ammo reload
+                    //ammoLeft++;
+                }
+                ++bullet;
+            }
+            //Continuing when not colliding
+            if (!enemyRemoved) ++enemy;
         }
 
         //Updating tilemap values
@@ -115,14 +144,31 @@ int main(void) {
             //Decreasing ammo
             ammoLeft--;
             //Storing position
-            Vector2 newBulletPosition = Vector2Add(player.position, player.half);
+            Vector2 newBulletPosition = (Vector2){
+                player.position.x - 8,
+                player.position.y - player.half.y - 8
+            };
             //Storing direction
             Vector2 newBulletVector = Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), mainCamera), newBulletPosition);
             Vector2 newBulletDirection = Vector2Normalize(newBulletVector);
-            //Creating new bullet instance
-            Bullet newBullet = Bullet(bulletTexture, newBulletPosition, {0, 0}, newBulletDirection, 10.0f);
+
+            //Saving a reference with smartpointer
+            std::unique_ptr<Bullet> newBullet;
+            
+            //Checking for object pool
+            if (!bulletsPool.empty()) {
+                //Moving from object pool
+                newBullet = std::move(bulletsPool.back());
+                bulletsPool.pop_back();
+            } else {
+                //Instanciating new bullet
+                newBullet = std::make_unique<Bullet>(Bullet(newBulletPosition, {12, 12}, 10.0f, level));
+            }
+            //Setting values to bullet
+            newBullet->SetLaunch(newBulletPosition, newBulletDirection);
+
             //Storing new bullet
-            bulletsList.push_back(newBullet);
+            bulletsList.push_back(std::move(newBullet));
         }
 
         //=====BULLETS=====
@@ -130,7 +176,7 @@ int main(void) {
         //Updating each bullet spawned
         for (auto& bullet : bulletsList) {
             //Make each bullet update itself
-            bullet.Update();
+            bullet->Update();
         }
 
         //=====CHARACTER=====
@@ -173,14 +219,16 @@ int main(void) {
                     enemy->Draw();
                 }
                 //Drawing bullets
-                for (const Bullet& bullet : bulletsList) {
+                for (const auto& bullet : bulletsList) {
                     //Calling draw method for each bullet
-                    bullet.Draw();
+                    bullet->Draw();
                 }
+                //DEBUG
             EndMode2D();
             //DEBUG
             //Drawing cursor
             cursor.Draw();
+            
         EndDrawing();
     }
     /*----------------------------------------End-------------------------------------------*/

@@ -16,15 +16,19 @@ void Character::Update() {
     //Collisions under the character
     bool floorCollision = this->level.CheckCollisionDown(this->position, this->size);
     Vector2 pointUnder = {this->position.x, this->position.y + 1};
-    Vector2 tileUnder = this->level.CheckTilePosition(pointUnder); 
+    Vector2 tileUnder = this->level.CheckTilePosition(pointUnder);
+    
+    //Collisions over the character
+    bool roofCollision = this->level.CheckCollisionOver(this->position, this->size);
+    Vector2 pointOver = {this->position.x, this->position.y + 1};
     
     //Collisions on the left of the character
     bool leftCollision = this->level.CheckCollisionLeft(this->position, this->size);
-    Vector2 pointLeft = {this->position.x - (size.x / 2), this->position.y - 1};
+    Vector2 pointLeft = {this->position.x - (size.x / 2) + 1, this->position.y - 1};
     
     //Collisions on the right of the character
     bool rightCollision = this->level.CheckCollisionRight(this->position, this->size);
-    Vector2 pointRight = {this->position.x + (size.x / 2), this->position.y - 1};
+    Vector2 pointRight = {this->position.x + (size.x / 2) - 1, this->position.y - 1};
     
     //Gravity
     this->acceleration.y += 1;
@@ -39,13 +43,6 @@ void Character::Update() {
             //Reseting forces
             this->velocity.y = 0;
             this->acceleration.y = 0;
-            //Update for work within the tilemap class
-            /*
-            //Preventing falling from screen TEMP
-            if ((this->position.y) > screenHeight) {
-                this->position.y = screenHeight;
-            }
-            */
         }
     }
     
@@ -64,7 +61,7 @@ void Character::Update() {
     //Forcing movement only when not this->sliding
     if (!this->sliding) {
         //Jumping
-        if (IsKeyDown(KEY_W) && this->velocity.y == 0 &&
+        if (IsKeyDown(KEY_W) && this->velocity.y == 0 && !roofCollision &&
         ((floorCollision && (int)(this->position.y + 1) % this->textureSize < 4)/* ||
         this->position.y + this->size.y >= screenHeight*/)) {
             //Adding jump force
@@ -144,6 +141,15 @@ void Character::Update() {
     //Updating character center point
     this->half.y = this->size.y / 2;
     
+    //Checking collisions for roof and solid platoforms
+    if (roofCollision && this->velocity.y < 0) {
+        //Fixing position to tile position
+        this->position.y = pointOver.y + 1;
+        //Reseting forces
+        this->velocity.y = 0;
+        this->acceleration.y = 0;
+    }
+
     //Clamping forces
     if (this->velocity.y > 32) this->velocity.y = 32;
     else if (this->velocity.y < -32) this->velocity.y = -32;

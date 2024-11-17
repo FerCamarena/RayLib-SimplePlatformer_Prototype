@@ -107,7 +107,7 @@ class Tilemap {
             { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -134,10 +134,12 @@ class Tilemap {
         Vector2 CheckTilePosition(Vector2) const;
         int CheckTileType(Vector2) const;
         //Methods for solving external collision calls
-        bool CheckCollisionLeft(Vector2, Vector2) const;
         bool CheckCollisionDown(Vector2, Vector2) const;
+        bool CheckCollisionOver(Vector2, Vector2) const;
+        bool CheckCollisionLeft(Vector2, Vector2) const;
         bool CheckCollisionRight(Vector2, Vector2) const;
         bool CheckCollisionCustom(Vector2, Vector2) const;
+        bool CheckCollisionPoint(Vector2) const;
         bool CheckCollisionRightStep(Vector2, Vector2) const;
         bool CheckCollisionLeftStep(Vector2, Vector2) const;
 

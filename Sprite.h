@@ -12,6 +12,10 @@ class Sprite {
         Rectangle area = {0.0f, 0.0f, 64.0f, 64.0f};
         Vector2 position = {0.0f, 0.0f};
         Vector2 size = {64.0f, 64.0f};
+        Rectangle hitbox = {
+            this->position.x - (this->size.x / 2), this->position.y - this->size.y,
+            (float)this->size.x, (float)this->size.y
+        };
         Vector2 pivot = {sprite.width / 2, sprite.height};
         float rotation = 0.0f;
         
@@ -25,6 +29,7 @@ class Sprite {
         virtual ~Sprite() = default;
         //Method for process all logic
         virtual void Update() = 0;
+        virtual void UpdateDisplay();
         //Method for process all graphics
         virtual void Draw() const = 0;
 

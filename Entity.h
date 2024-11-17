@@ -14,10 +14,6 @@ class Entity : public Sprite {
         Vector2 acceleration = {0.0f, 0.0f};
         Vector2 direction = {0.0f, 0.0f};
         //Variables to store current states
-        Rectangle hitbox = {
-            this->position.x - (this->size.x / 2), this->position.y - this->size.y,
-            (float)this->size.x, (float)this->size.y
-        };
         bool alive = true;
         bool onward = false;
         //Variables for controlling animatons
@@ -37,6 +33,7 @@ class Entity : public Sprite {
         virtual ~Entity() = default;
         //Method for process all logic
         virtual void Update() override;
+        virtual void UpdateDisplay() override;
         //Method for process all graphics
         virtual void Draw() const override;
 
