@@ -101,12 +101,15 @@ bool Tilemap::CheckCollisionDown(Vector2 entityPosition, Vector2 entitySize) con
     Vector2 pointA = {entityPosition.x - (entitySize.x / 2), entityPosition.y + 1};
     //PointB
     Vector2 pointB = {entityPosition.x + (entitySize.x / 2), entityPosition.y + 1};
+    //Checking level limits
+    if (pointA.y > GetScreenHeight() - this->tileSize ||
+        pointB.y > GetScreenHeight() - this->tileSize) return true;
     //Precalculating
     Vector2 tilePointA = CheckTilePosition(pointA);
     Vector2 tilePointB = CheckTilePosition(pointB);
     //Checking types on points
     if (CheckTileType(tilePointA) > 0 ||
-    CheckTileType(tilePointB) > 0) return true;
+        CheckTileType(tilePointB) > 0) return true;
     else return false;
 }
 
@@ -116,56 +119,60 @@ bool Tilemap::CheckCollisionOver(Vector2 entityPosition, Vector2 entitySize) con
     Vector2 pointC = {entityPosition.x - (entitySize.x / 2), entityPosition.y - entitySize.y - 1};
     //PointD
     Vector2 pointD = {entityPosition.x + (entitySize.x / 2), entityPosition.y - entitySize.y - 1};
+    //Checking level limits
+    if (pointC.y < 0 || pointD.y < 0) return true;
     //Precalculating
     Vector2 tilePointC = CheckTilePosition(pointC);
     Vector2 tilePointD = CheckTilePosition(pointD);
     //Checking types on points
     if (CheckTileType(tilePointC) == 1 ||
-    CheckTileType(tilePointD) == 1) return true;
+        CheckTileType(tilePointD) == 1) return true;
     else return false;
 }
 
 //Function for detecting when colliding with a tile with collision in the left side of entities
 bool Tilemap::CheckCollisionLeft(Vector2 entityPosition, Vector2 entitySize) const {
     //PointE
-    Vector2 pointE = {entityPosition.x - 1, entityPosition.y - 1};
+    Vector2 pointE = {entityPosition.x - (entitySize.x + 0.5f), entityPosition.y - 1};
     //PointF
-    Vector2 pointF = {entityPosition.x - 1, entityPosition.y - (entitySize.y * 0.5f)};
+    Vector2 pointF = {entityPosition.x - (entitySize.x + 0.5f), entityPosition.y - (entitySize.y * 0.5f)};
     //PointG
-    Vector2 pointG = {entityPosition.x - 1, entityPosition.y - entitySize.y};
+    Vector2 pointG = {entityPosition.x - (entitySize.x + 0.5f), entityPosition.y - entitySize.y + 1};
+    //Checking level limits
+    if (pointE.x < this->tileSize ||
+        pointF.x < this->tileSize ||
+        pointG.x < this->tileSize) return true;
     //Precalculating
     Vector2 tilePointE = CheckTilePosition(pointE);
     Vector2 tilePointF = CheckTilePosition(pointF);
     Vector2 tilePointG = CheckTilePosition(pointG);
     //Returning on each case
     if (CheckTileType(tilePointE) == 1 ||
-    CheckTileType(tilePointF) == 1 ||
-    CheckTileType(tilePointG) == 1 ||
-    pointE.x <= this->tileSize ||
-    pointF.x <= this->tileSize ||
-    pointG.x <= this->tileSize) return true;
+        CheckTileType(tilePointF) == 1 ||
+        CheckTileType(tilePointG) == 1) return true;
     else return false;
 }
 
 //Function for detecting when colliding with a tile with collision in the right side of entities
 bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) const {
     //PointH
-    Vector2 pointH = {entityPosition.x + entitySize.x, entityPosition.y - 1};
+    Vector2 pointH = {entityPosition.x + (entitySize.x + 0.5f), entityPosition.y - 1};
     //PointI
-    Vector2 pointI = {entityPosition.x + entitySize.x, entityPosition.y - (entitySize.y * 0.5f)};
+    Vector2 pointI = {entityPosition.x + (entitySize.x + 0.5f), entityPosition.y - (entitySize.y * 0.5f)};
     //PointJ
-    Vector2 pointJ = {entityPosition.x + entitySize.x, entityPosition.y - entitySize.y};
+    Vector2 pointJ = {entityPosition.x + (entitySize.x + 0.5f), entityPosition.y - entitySize.y + 1};
+    //Checking level limits
+    if (pointH.x > GetScreenWidth() - this->tileSize ||
+        pointI.x > GetScreenWidth() - this->tileSize ||
+        pointJ.x > GetScreenWidth() - this->tileSize) return true;
     //Precalculating
     Vector2 tilePointH = CheckTilePosition(pointH);
     Vector2 tilePointI = CheckTilePosition(pointI);
     Vector2 tilePointJ = CheckTilePosition(pointJ);
     //Returning for each case
     if (CheckTileType(tilePointH) == 1 ||
-    CheckTileType(tilePointI) == 1 ||
-    CheckTileType(tilePointJ) == 1 ||
-    pointH.x >= GetScreenWidth() - this->tileSize ||
-    pointI.x >= GetScreenWidth() - this->tileSize ||
-    pointJ.x >= GetScreenWidth() - this->tileSize) return true;
+        CheckTileType(tilePointI) == 1 ||
+        CheckTileType(tilePointJ) == 1) return true;
     else return false;
 }
 
@@ -173,11 +180,12 @@ bool Tilemap::CheckCollisionRight(Vector2 entityPosition, Vector2 entitySize) co
 bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointK
     Vector2 pointK = {entityPosition.x - (entitySize.x / 2) - 1, entityPosition.y + 1};
+    //Checking level limits
+    if (pointK.x <= this->tileSize) return true;
     //Precalculating
     Vector2 tilePointK = CheckTilePosition(pointK);
     //Returning on each case
-    if (CheckTileType(tilePointK) != 0 ||
-    pointK.x <= this->tileSize) return true;
+    if (CheckTileType(tilePointK) > 0) return true;
     else return false;
 }
 
@@ -185,11 +193,12 @@ bool Tilemap::CheckCollisionLeftStep(Vector2 entityPosition, Vector2 entitySize)
 bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize) const {
     //PointL
     Vector2 pointL = {entityPosition.x + (entitySize.x / 2) + 1, entityPosition.y + 1};
+    //Checking level limits
+    if (pointL.x >= GetScreenWidth() - this->tileSize) return true;
     //Precalculating
     Vector2 tilePointL = CheckTilePosition(pointL);
     //Returning on each case
-    if (CheckTileType(tilePointL) != 0 ||
-    pointL.x >= GetScreenWidth() - this->tileSize) return true;
+    if (CheckTileType(tilePointL) > 0) return true;
     else return false;
 }
 
@@ -197,12 +206,15 @@ bool Tilemap::CheckCollisionRightStep(Vector2 entityPosition, Vector2 entitySize
 bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDirection) const {
     //PointM
     Vector2 pointM = {entityPosition.x + collisionDirection.x, entityPosition.y + collisionDirection.y};
+    //Checking level limits
+    if ((pointM.x < this->tileSize && collisionDirection.x < 0) ||
+        (pointM.x > GetScreenWidth() - this->tileSize && collisionDirection.x > 0) ||
+        (pointM.y < this->tileSize && collisionDirection.y < 0) ||
+        (pointM.y > GetScreenHeight() - this->tileSize && collisionDirection.y > 0)) return true;
     //Precalculating
     Vector2 tilePointM = CheckTilePosition(pointM);
     //Returning on each case
-    if (CheckTileType(tilePointM) == 1 ||
-    (pointM.x < this->tileSize && collisionDirection.x < 0) ||
-    (pointM.x > GetScreenWidth() - this->tileSize && collisionDirection.x > 0)) return true;
+    if (CheckTileType(tilePointM) == 1) return true;
     else return false;
 }
 
@@ -210,8 +222,8 @@ bool Tilemap::CheckCollisionCustom(Vector2 entityPosition, Vector2 collisionDire
 bool Tilemap::CheckCollisionPoint(Vector2 pointPosition) const {
     //PointN
     Vector2 pointN = pointPosition;
-    if ((pointN.y < 0.0f) || (pointN.y > GetScreenHeight()) ||
-        (pointN.x < this->tileSize) || (pointN.x > GetScreenWidth())) return true;
+    if (pointN.x < this->tileSize || pointN.x > GetScreenWidth() - this->tileSize ||
+        pointN.y < 0.0f || pointN.y > GetScreenHeight() - this->tileSize) return true;
     //Precalculating
     Vector2 tilePointN = CheckTilePosition(pointN);
     //Returning on each case
