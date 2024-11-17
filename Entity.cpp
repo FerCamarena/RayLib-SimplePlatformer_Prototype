@@ -5,6 +5,7 @@
 //Class constructor to create an instance
 Entity::Entity(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Sprite(_texture, _position, _size), level(_level) {}
 
+//Method for process all logic
 void Entity::Update() {
     UpdateDisplay();
 }
@@ -16,6 +17,7 @@ void Entity::Draw() const {
     //DrawRectangle(this->hitbox.x, this->hitbox.y, this->hitbox.width, this->hitbox.height, RED);
 }
 
+//Method for process display changes
 void Entity::UpdateDisplay() {
     //Updating entity hitbox
     this->hitbox = {

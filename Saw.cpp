@@ -10,7 +10,7 @@ Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture
     this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Saw::Update() {
     //Updating from inherited class
     Entity::Update();

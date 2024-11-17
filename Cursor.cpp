@@ -9,7 +9,7 @@ Cursor::Cursor(Texture2D _texture, Vector2 _position, Vector2 _size, std::vector
 
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Cursor::Update() {
     //Cursor scaling calculation
     this->area = {
