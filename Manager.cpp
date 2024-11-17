@@ -23,7 +23,7 @@
 /*--------------------------------Project attributes------------------------------------*/
 
 /*---------------------------------Custom functions-------------------------------------*/
-
+//Function to start populating the level
 void InitializeLevel(Tilemap& level, std::vector<std::unique_ptr<Entity>>& enemyList) {
     //Hiding cursor by default
     HideCursor();

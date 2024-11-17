@@ -23,7 +23,7 @@ class Sprite {
 
     //Methods
     public:
-        //Class constructors to create an instance
+        //Class constructor to create an instance
         Sprite(Texture2D, Vector2, Vector2);
         //Class virtual destructor
         virtual ~Sprite() = default;
