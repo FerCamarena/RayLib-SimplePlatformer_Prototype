@@ -24,11 +24,11 @@ void Character::Update() {
     
     //Collisions on the left of the character
     bool leftCollision = this->level.CheckCollisionLeft(this->position, this->size);
-    Vector2 pointLeft = {this->position.x - (size.x / 2), this->position.y - 1};
+    Vector2 pointLeft = {this->position.x - (size.x / 2) + 1, this->position.y - 1};
     
     //Collisions on the right of the character
     bool rightCollision = this->level.CheckCollisionRight(this->position, this->size);
-    Vector2 pointRight = {this->position.x + (size.x / 2), this->position.y - 1};
+    Vector2 pointRight = {this->position.x + (size.x / 2) - 1, this->position.y - 1};
     
     //Gravity
     this->acceleration.y += 1;
