@@ -35,7 +35,7 @@ void Tilemap::DrawBackground() const {
     for (int y = 0; y < (int)this->background.size(); y++) {
         for (int x = 0; x < (int)this->background[y].size(); x++) {
             Vector2 tilePosition = {
-                ((float)x * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 1),
+                ((float)x * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 0.5f),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 2)
             };
             //Getting the correct tile
@@ -49,7 +49,7 @@ void Tilemap::DrawBackground() const {
         for (int x = 0; x < (int)this->horizon[y].size(); x++) {
             //Calculating each tile position
             Vector2 tilePosition = {
-                ((float)x * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 4),
+                ((float)x * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 2),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 8)
             };
             //Getting the correct tile
