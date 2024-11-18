@@ -38,11 +38,19 @@ void Level_02::InitializeLevel() {
 void Level_02::Update() {
     //=====LEVEL=====
     
+    //Checking for inputs to start a new game
+    if (IsKeyPressed(KEY_ENTER)) {
+        SceneManager::ChangeScene(0);
+    } else if (IsKeyPressed(KEY_N)) { //Temp
+        SceneManager::ChangeScene(2);
+    }
+
     //Detecting ENEMY-PLAYER collisions
     for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
         //Checking collision with individual enemies
         if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
             //Change to game over scene
+            SceneManager::ChangeScene(1);
             break;
         //Continue checking
         } else ++enemy;

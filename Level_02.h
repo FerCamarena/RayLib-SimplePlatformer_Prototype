@@ -1,11 +1,17 @@
 //Libraries
 #pragma once
+#include <vector>
+#include <memory>
 
 //User libraries
 #include "Scene.h"
-
-//User libraries
-#include "SceneManager.h"
+#include "Cursor.h"
+#include "Tilemap.h"
+#include "Character.h"
+#include "View.h"
+#include "Bullet.h"
+#include "Saw.h"
+#include "Muggle.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
 class Level_02 : public Scene {
