@@ -9,6 +9,12 @@ GameOver::GameOver() {}
 
 //Method for process all logic
 void GameOver::Update() {
+    //Checking for inputs to start a new game
+    if (IsKeyPressed(KEY_ENTER)) {
+        SceneManager::ChangeScene(0);
+    } else if (IsKeyPressed(KEY_R)) {
+        SceneManager::ChangeScene(3);
+    }
 }
 
 //Method for process all graphics
