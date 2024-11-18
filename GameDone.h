@@ -1,6 +1,7 @@
 //Libraries
 #pragma once
-#include "raylib.h"
+
+//User libraries
 #include "Scene.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
@@ -14,7 +15,7 @@ class GameDone : public Scene {
         //Method for process all logic
         void Update() override;
         //Method for process all graphics
-        void Draw() override;
+        void Draw() const override;
         
     private:
 

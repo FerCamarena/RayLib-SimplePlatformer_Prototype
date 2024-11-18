@@ -1,5 +1,7 @@
 //Libraries
 #pragma once
+#include "raylib.h"
+#include "raymath.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
 class Scene {
@@ -10,7 +12,7 @@ class Scene {
         //Method for process all logic
         virtual void Update() = 0;
         //Method for process all graphics
-        virtual void Draw() = 0;
+        virtual void Draw() const = 0;
     
     private:
 
