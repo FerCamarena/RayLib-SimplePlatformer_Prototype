@@ -1,6 +1,5 @@
-//Libraries
+//Base class
 #include "Saw.h"
-#include "raymath.h"
 
 //Class constructor to create an instance
 Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {
@@ -10,7 +9,7 @@ Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture
     this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Saw::Update() {
     //Updating from inherited class
     Entity::Update();

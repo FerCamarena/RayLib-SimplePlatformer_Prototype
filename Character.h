@@ -1,8 +1,8 @@
 //Libraries
 #pragma once
-#include "raylib.h"
+
+//User libraries
 #include "Entity.h"
-#include "Tilemap.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
 class Character : public Entity {

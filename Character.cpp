@@ -1,11 +1,10 @@
-//Libraries
+//Base class
 #include "Character.h"
-#include "raymath.h"
 
 //Class constructor to create an instance
 Character::Character(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {}
 
-//Method for process all graphics
+//Method for process all logic
 void Character::Update() {
     //Updating from inherited class
     Entity::Update();

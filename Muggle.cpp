@@ -1,12 +1,11 @@
-//Libraries
+//Base class
 #include "Muggle.h"
-#include "raymath.h"
 
 //Class constructor to create an instance
 Muggle::Muggle(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {}
 Muggle::Muggle(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture("./assets/Entities/spritesheet_enemy_muggle.png"), _position, _size, _level) {}
 
-//Method for process all graphics
+//Method for process all logic
 void Muggle::Update() {
     //Updating from inherited class
     Entity::Update();

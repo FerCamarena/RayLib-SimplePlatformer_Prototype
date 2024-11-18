@@ -23,7 +23,6 @@ Tilemap::Tilemap(Texture2D _texture) {
     this->texture = _texture;
 };
 
-
 //Method for process all logic
 void Tilemap::Update() {
 

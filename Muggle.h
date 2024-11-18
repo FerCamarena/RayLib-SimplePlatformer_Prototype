@@ -1,10 +1,11 @@
 //Libraries
 #pragma once
+
+//User libraries
 #include "Entity.h"
-#include "Tilemap.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
-class Muggle : public Entity{
+class Muggle : public Entity {
     //Attributes
     public:
         
