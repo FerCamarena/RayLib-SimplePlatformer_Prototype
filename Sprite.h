@@ -1,6 +1,7 @@
 //Libraries
 #pragma once
 #include "raylib.h"
+#include "raymath.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
 class Sprite {

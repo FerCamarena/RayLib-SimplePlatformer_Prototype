@@ -1,4 +1,4 @@
-//Libraries
+//Base class
 #include "Sprite.h"
 
 //Class constructor to create an instance
