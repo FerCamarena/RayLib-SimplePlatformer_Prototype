@@ -1,5 +1,7 @@
 //Libraries
 #pragma once
+#include <vector>
+#include <memory>
 
 //User libraries
 #include "Scene.h"
