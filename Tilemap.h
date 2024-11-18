@@ -127,7 +127,7 @@ class Tilemap {
         Tilemap(Texture2D);
         //Method for process all logic
         void Update();
-        //Method for process all graphics
+        //Methods for process all graphics
         void Draw() const;
         void DrawBackground() const;
         //Methods called for internal calculations

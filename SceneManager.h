@@ -3,7 +3,8 @@
 #include <vector>
 #include <memory>
 #include <functional>
-#include "raylib.h"
+
+//User libraries
 #include "Scene.h"
 #include "MainMenu.h"
 #include "GameOver.h"

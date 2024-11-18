@@ -1,8 +1,5 @@
-//Libraries
+//Base class
 #include "SceneManager.h"
-
-//Class static parameters
-std::unique_ptr<Scene> SceneManager::currentScene = nullptr;
 
 // Vector of scene factories (lambdas)
 std::vector<std::function<std::unique_ptr<Scene>()>> SceneManager::builtScenes = {
@@ -13,11 +10,11 @@ std::vector<std::function<std::unique_ptr<Scene>()>> SceneManager::builtScenes =
     []() { return std::make_unique<Level_02>(); },
 };
 
+//Class static parameters
+std::unique_ptr<Scene> SceneManager::currentScene = builtScenes[0]();
+
 //Class constructors to create an instance
-SceneManager::SceneManager() {
-    //Loading first main menu scene
-    currentScene = builtScenes[0]();
-}
+SceneManager::SceneManager() {}
 
 //Method for process all logic
 void SceneManager::Update() {
@@ -38,7 +35,7 @@ void SceneManager::Draw() {
 //Method for globally changing scenes
 void SceneManager::ChangeScene(int newSceneIndex) {
     //Creating new scene from index
-    if (newSceneIndex >= 0 && newSceneIndex < builtScenes.size()) {
+    if (newSceneIndex >= 0 && newSceneIndex < (int)builtScenes.size()) {
         currentScene = builtScenes[newSceneIndex]();
     }
 }
