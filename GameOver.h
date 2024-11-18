@@ -1,6 +1,5 @@
 //Libraries
 #pragma once
-#include "raylib.h"
 #include "Scene.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
@@ -14,7 +13,7 @@ class GameOver : public Scene {
         //Method for process all logic
         void Update() override;
         //Method for process all graphics
-        void Draw() override;
+        void Draw() const override;
         
     private:
 
