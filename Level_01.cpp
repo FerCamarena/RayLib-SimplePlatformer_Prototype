@@ -42,6 +42,7 @@ void Level_01::Update() {
     if (IsKeyPressed(KEY_ENTER)) {
         SceneManager::ChangeScene(0);
     } else if (IsKeyPressed(KEY_N)) { //Temp
+    } else if (IsKeyPressed(KEY_N)) { //TEMP
         SceneManager::ChangeScene(2);
     }
 

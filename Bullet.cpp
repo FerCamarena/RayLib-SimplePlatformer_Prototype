@@ -56,6 +56,7 @@ void Bullet::Draw() const {
     DrawCircleV(this->position, (this->hitbox.width / 2), RED);
 }
 
+//Method for updating custom display parameters
 void Bullet::UpdateDisplay() {
     //Updating entity hitbox
     this->hitbox = {

@@ -1,7 +1,7 @@
 //Libraries
 #include "Tilemap.h"
 
-//Class constructors to create an instance (with overloads)
+//Class constructors to create an instance
 Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
     //Storing received values as attributes
     texture = _texture;

@@ -9,7 +9,7 @@ Sprite::Sprite(Texture2D _texture, Vector2 _position, Vector2 _size) {
     size = _size;
 }
 
-//Method for process display changes
+//Method for updating custom display parameters
 void Sprite::UpdateDisplay() {
     //Updating entity hitbox
     this->hitbox = {

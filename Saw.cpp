@@ -71,13 +71,6 @@ void Saw::Update() {
                 //Reseting forces
                 this->velocity.y = 0;
                 this->acceleration.y = 0;
-                //Update for work within the tilemap class
-                /*
-                //Preventing falling from screen TEMP
-                if ((this->position.y) > screenHeight) {
-                    this->position.y = screenHeight;
-                }
-                */
             }
         }
     }
