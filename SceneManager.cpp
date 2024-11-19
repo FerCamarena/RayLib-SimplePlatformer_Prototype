@@ -11,7 +11,7 @@ std::vector<std::function<std::unique_ptr<Scene>()>> SceneManager::builtScenes =
 };
 
 //Class static parameters
-std::unique_ptr<Scene> SceneManager::currentScene = builtScenes[0]();
+std::unique_ptr<Scene> SceneManager::currentScene = SceneManager::builtScenes[0]();
 
 //Class constructors to create an instance
 SceneManager::SceneManager() {}
@@ -34,6 +34,8 @@ void SceneManager::Draw() {
 
 //Method for globally changing scenes
 void SceneManager::ChangeScene(int newSceneIndex) {
+    //Destroying current scene
+    currentScene.reset(); 
     //Creating new scene from index
     if (newSceneIndex >= 0 && newSceneIndex < (int)builtScenes.size()) {
         currentScene = builtScenes[newSceneIndex]();
