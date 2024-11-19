@@ -22,7 +22,7 @@ class Level_02 : public Scene {
 
         //Tilemap variables
         Texture2D levelTilesheet = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
-        Tilemap level = Tilemap(levelTilesheet);
+        Tilemap level = Tilemap(levelTilesheet, 2);
 
         //Character variables
         Texture2D charactersTilesheet = LoadTexture("./assets/Entities/spritesheet_characters.png");

@@ -1,26 +1,51 @@
 //Libraries
 #include "Tilemap.h"
 
-//Class constructors to create an instance
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
+//Class constructor to create an instance
+Tilemap::Tilemap(Texture2D _texture, int _id) {
     //Storing received values as attributes
     texture = _texture;
-    tiles[15] = _tiles[15];
-    tileSize = _tileSize;
-};
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15]) {
-    //Storing received values as attributes
-    texture = _texture;
-    tiles[15] = _tiles[15];
-};
-Tilemap::Tilemap(Texture2D _texture, int _tileSize) {
-    //Storing received values as attributes
-    texture = _texture;
-    tileSize = _tileSize;
-};
-Tilemap::Tilemap(Texture2D _texture) {
-    //Storing received values as attributes
-    texture = _texture;
+    id = _id;
+    
+    //Storing JSON level info
+    std::ifstream archivo(TextFormat("./assets/Level_%02d.json", id));
+    if (archivo.is_open()) {
+        json JSON;
+        archivo >> JSON;
+        
+        //Obtaning cell info
+        if (JSON.contains("tileSize")) tileSize = JSON.at("tileSize").get<int>();
+
+        //Obtaining tilemap dimmensions
+        if (JSON.contains("width")) width = JSON.at("width").get<int>();
+        if (JSON.contains("height")) height = JSON.at("height").get<int>();
+        
+        //Obtaining tileset
+        if (JSON.contains("tileset")) { //TEMP Must control vectors
+            const auto& levelTileset = JSON.at("tileset");
+            int index = 0;
+            //Assigning each value respectivelly
+            for (const auto& tileData : levelTileset) {
+                //TEMP Checking for only adding 2 coords
+                if (tileData.size() == 2) {
+                    tileset[index++] = Rectangle{
+                        (float)tileData[0] * tileSize,
+                        (float)tileData[1] * tileSize,
+                        (float)tileSize,
+                        (float)tileSize,
+                    };
+                }
+                if (index >= 15) break; //TEMP Array safety
+            }
+        }
+
+        //Obtaining diferent tilemaps
+        if (JSON.contains("background")) background = JSON.at("background").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("horizon")) horizon = JSON.at("horizon").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("drawn")) drawn = JSON.at("drawn").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("hitbox")) hitbox = JSON.at("hitbox").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("spawns")) spawns = JSON.at("spawns").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+    }
 };
 
 //Method for process all logic
@@ -33,28 +58,32 @@ void Tilemap::DrawBackground() const {
     //Drawing bg1 tilemap
     for (int y = 0; y < (int)this->background.size(); y++) {
         for (int x = 0; x < (int)this->background[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = background[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             Vector2 tilePosition = {
                 ((float)x * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 0.5f),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 2)
             };
-            //Getting the correct tile
-            int tileIndex = background[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, BLACK);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, BLACK);
         }
     }
     //Drawing bg2 tilemap
     for (int y = 0; y < (int)this->horizon.size(); y++) {
         for (int x = 0; x < (int)this->horizon[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = horizon[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             //Calculating each tile position
             Vector2 tilePosition = {
                 ((float)x * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 2),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 8)
             };
-            //Getting the correct tile
-            int tileIndex = horizon[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, GRAY);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, GRAY);
         }
     }
 }
@@ -64,15 +93,17 @@ void Tilemap::Draw() const {
     //Drawing base tilemap
     for (int y = 0; y < (int)this->drawn.size(); y++) {
         for (int x = 0; x < (int)this->drawn[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = drawn[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             //Calculating each tile position
             Vector2 tilePosition = {
                 ((float)x * this->tileSize),
                 ((float)y * this->tileSize)
             };
-            //Getting the correct tile
-            int tileIndex = drawn[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, WHITE);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, WHITE);
         }
     }
 }
