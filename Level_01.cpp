@@ -50,7 +50,7 @@ void Level_01::Update() {
     //Detecting ENEMY-PLAYER collisions
     for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
         //Checking collision with individual enemies
-        if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
+        if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox) && player.graceTimer >= 60.0f) {
             //Change to game over scene
             SceneManager::ChangeScene(1);
             return;

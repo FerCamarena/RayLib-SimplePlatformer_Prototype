@@ -9,6 +9,9 @@ void Character::Update() {
     //Updating from inherited class
     Entity::Update();
 
+    //Initializing player without damage
+    if (this->graceTimer < 60.0f) this->graceTimer++;
+
     //Creating custom character sprite
     this->sprite = {(float)(this->animationState * this->textureSize), (float)(this->frameCount * (this->textureSize)), (float)(this->textureSize * (this->onward ? 1 : -1)), (float)this->textureSize};
     

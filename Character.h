@@ -14,6 +14,7 @@ class Character : public Entity {
             (this->size.y * 0.5f)
         };
         //Variables to store current states
+        float graceTimer = 0.0f;
         bool sliding = false;
         
     private:
