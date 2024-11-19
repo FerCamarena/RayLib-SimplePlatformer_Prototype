@@ -1,24 +1,8 @@
 //Libraries
 #include "Tilemap.h"
 
-//Class constructors to create an instance
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
-    //Storing received values as attributes
-    texture = _texture;
-    tiles[15] = _tiles[15];
-    tileSize = _tileSize;
-};
-Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15]) {
-    //Storing received values as attributes
-    texture = _texture;
-    tiles[15] = _tiles[15];
-};
-Tilemap::Tilemap(Texture2D _texture, int _tileSize) {
-    //Storing received values as attributes
-    texture = _texture;
-    tileSize = _tileSize;
-};
-Tilemap::Tilemap(Texture2D _texture) {
+//Class constructor to create an instance
+Tilemap::Tilemap(Texture2D _texture, int _id) {
     //Storing received values as attributes
     texture = _texture;
 };
