@@ -16,11 +16,11 @@
 class SceneManager {
     //Attributes
     public:
-
-    private:
         //Scene variables
         static std::unique_ptr<Scene> currentScene;
         static std::vector<std::function<std::unique_ptr<Scene>()>> builtScenes;
+
+    private:
 
     //Methods
     public:

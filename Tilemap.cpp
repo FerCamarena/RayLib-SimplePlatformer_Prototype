@@ -4,23 +4,23 @@
 //Class constructors to create an instance (with overloads)
 Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15], int _tileSize) {
     //Storing received values as attributes
-    this->texture = _texture;
-    this->tiles[15] = _tiles[15];
-    this->tileSize = _tileSize;
+    texture = _texture;
+    tiles[15] = _tiles[15];
+    tileSize = _tileSize;
 };
 Tilemap::Tilemap(Texture2D _texture, Rectangle _tiles[15]) {
     //Storing received values as attributes
-    this->texture = _texture;
-    this->tiles[15] = _tiles[15];
+    texture = _texture;
+    tiles[15] = _tiles[15];
 };
 Tilemap::Tilemap(Texture2D _texture, int _tileSize) {
     //Storing received values as attributes
-    this->texture = _texture;
-    this->tileSize = _tileSize;
+    texture = _texture;
+    tileSize = _tileSize;
 };
 Tilemap::Tilemap(Texture2D _texture) {
     //Storing received values as attributes
-    this->texture = _texture;
+    texture = _texture;
 };
 
 //Method for process all logic

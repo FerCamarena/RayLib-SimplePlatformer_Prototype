@@ -4,10 +4,10 @@
 //Class constructors to create an instance (with overloads)
 View::View(Vector2 _screenSize, Camera2D& _mainCamera, Character& _player) : mainCamera(_mainCamera), player(_player) {
     //Storing received values as attributes
-    this->screenSize = _screenSize;
+    screenSize = _screenSize;
 
     //Calling a starter function
-    this->Initialize();
+    Initialize();
 };
 
 //Method called once for initialize default values

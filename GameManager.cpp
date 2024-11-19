@@ -20,7 +20,7 @@
 int main(void) {
     //Initialization
     const Vector2 screenSize = {1280.0f, 720.0f};
-    InitWindow(screenSize.x, screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.113-alpha");
+    InitWindow((int)screenSize.x, (int)screenSize.y, "Base platformer - Prototype - Fernando C. - v0.0.113-alpha");
     SetTargetFPS(60);
     //Hiding cursor by default
     HideCursor();

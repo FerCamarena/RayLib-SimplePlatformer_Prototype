@@ -3,10 +3,10 @@
 
 //Class constructor to create an instance
 Saw::Saw(Texture2D _texture, Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(_texture, _position, _size, _level) {
-    this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
+    pivot = {sprite.width / 2, sprite.height / 2};
 }
 Saw::Saw(Vector2 _position, Vector2 _size, Tilemap& _level) : Entity(LoadTexture("./assets/Entities/spritesheet_enemy_saw.png"), _position, _size, _level) {
-    this->pivot = {this->sprite.width / 2, this->sprite.height / 2};
+    pivot = {sprite.width / 2, sprite.height / 2};
 }
 
 //Method for process all logic
