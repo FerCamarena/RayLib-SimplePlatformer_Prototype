@@ -5,11 +5,11 @@
 //Class constructor to create an instance
 Cursor::Cursor(Texture2D _texture, Vector2 _position, Vector2 _size, std::vector<Texture2D> _textures, float& _scale, int& _ammo) : Sprite(_texture, _position, _size), scale(_scale), ammo(_ammo) {
     //Storing received values as attributes
-    this->textures = _textures;
+    textures = _textures;
 
 }
 
-//Method for process all graphics
+//Method for process all logic
 void Cursor::Update() {
     //Cursor scaling calculation
     this->area = {

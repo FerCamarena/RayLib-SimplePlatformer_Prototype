@@ -1,8 +1,8 @@
 //Libraries
 #pragma once
-#include "raylib.h"
+
+//User libraries
 #include "Entity.h"
-#include "Tilemap.h"
 
 /*-----------------------------------Class main-----------------------------------------*/
 class Character : public Entity {
@@ -14,6 +14,7 @@ class Character : public Entity {
             (this->size.y * 0.5f)
         };
         //Variables to store current states
+        float graceTimer = 0.0f;
         bool sliding = false;
         
     private:

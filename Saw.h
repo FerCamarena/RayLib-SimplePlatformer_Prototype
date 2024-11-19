@@ -1,7 +1,8 @@
 //Libraries
 #pragma once
+
+//User libraries
 #include "Entity.h"
-#include "Tilemap.h"
 
 /*-----------------------------------Main class-----------------------------------------*/
 class Saw : public Entity {

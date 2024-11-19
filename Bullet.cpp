@@ -5,11 +5,11 @@
 //Class constructors to create an instance
 Bullet::Bullet(Texture2D _texture, Vector2 _position, Vector2 _size, float _speed, Tilemap& _level) : Sprite(_texture, _position, _size), level(_level) {
     //Storing received values as attributes
-    this->speed = _speed;
+    speed = _speed;
 }
 Bullet::Bullet(Vector2 _position, Vector2 _size, float _speed, Tilemap& _level) : Sprite(LoadTexture("./assets/Other/bullet.png"), _position, _size), level(_level) {
     //Storing received values as attributes
-    this->speed = _speed;
+    speed = _speed;
 }
 
 //Method for launching the bullet with custom parameters
@@ -56,6 +56,7 @@ void Bullet::Draw() const {
     DrawCircleV(this->position, (this->hitbox.width / 2), RED);
 }
 
+//Method for updating custom display parameters
 void Bullet::UpdateDisplay() {
     //Updating entity hitbox
     this->hitbox = {
