@@ -7,6 +7,45 @@ Tilemap::Tilemap(Texture2D _texture, int _id) {
     texture = _texture;
     id = _id;
     
+    //Storing JSON level info
+    std::ifstream archivo(TextFormat("./assets/Level_%02d.json", id));
+    if (archivo.is_open()) {
+        json JSON;
+        archivo >> JSON;
+        
+        //Obtaning cell info
+        if (JSON.contains("tileSize")) tileSize = JSON.at("tileSize").get<int>();
+
+        //Obtaining tilemap dimmensions
+        if (JSON.contains("width")) width = JSON.at("width").get<int>();
+        if (JSON.contains("height")) height = JSON.at("height").get<int>();
+        
+        //Obtaining tileset
+        if (JSON.contains("tileset")) { //TEMP Must control vectors
+            const auto& levelTileset = JSON.at("tileset");
+            int index = 0;
+            //Assigning each value respectivelly
+            for (const auto& tileData : levelTileset) {
+                //TEMP Checking for only adding 2 coords
+                if (tileData.size() == 2) {
+                    tileset[index++] = Rectangle{
+                        (float)tileData[0] * tileSize,
+                        (float)tileData[1] * tileSize,
+                        (float)tileSize,
+                        (float)tileSize,
+                    };
+                }
+                if (index >= 15) break; //TEMP Array safety
+            }
+        }
+
+        //Obtaining diferent tilemaps
+        if (JSON.contains("background")) background = JSON.at("background").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("horizon")) horizon = JSON.at("horizon").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("drawn")) drawn = JSON.at("drawn").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("hitbox")) hitbox = JSON.at("hitbox").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+        if (JSON.contains("spawns")) spawns = JSON.at("spawns").get<std::vector<std::vector<int>>>(); //TEMP Must control 1D vectors
+    }
 };
 
 //Method for process all logic
