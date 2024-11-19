@@ -17,16 +17,19 @@ void Level_01::InitializeLevel() {
     mainCamera.rotation = 0.0f;
     mainCamera.zoom = 1.5f;
 
-    //Spawning all enemies
+    //Spawning all enemies per tile
     for (int y = 0; y < (int)level.spawns.size(); y++) {
         for (int x = 0; x < (int)level.spawns[y].size(); x++) {
             switch (level.spawns[y][x]) {
                 case 0:
+                    //Skipping empty tiles
                     continue;
                 case 1:
+                    //Generating Muggle type enemies
                     enemyList.push_back(std::make_unique<Muggle>(Muggle({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
                 case 2:
+                    //Generating Saw type enemies
                     enemyList.push_back(std::make_unique<Saw>(Saw({(float)x * level.tileSize, (float)y * level.tileSize}, {32.0f, 32.0f}, level)));
                 break;
             }
