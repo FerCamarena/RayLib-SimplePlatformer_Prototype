@@ -13,6 +13,7 @@ class Tilemap {
     public:
         //Variables for graphic rendering
         Texture2D texture = LoadTexture("./assets/Tilemaps/spritesheet_tilemap_red.png");
+        int id;
         int tileSize;
         int width;
         int height;

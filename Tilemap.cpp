@@ -5,6 +5,8 @@
 Tilemap::Tilemap(Texture2D _texture, int _id) {
     //Storing received values as attributes
     texture = _texture;
+    id = _id;
+    
 };
 
 //Method for process all logic
