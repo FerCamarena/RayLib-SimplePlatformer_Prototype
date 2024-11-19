@@ -19,12 +19,14 @@ void Tilemap::DrawBackground() const {
     //Drawing bg1 tilemap
     for (int y = 0; y < (int)this->background.size(); y++) {
         for (int x = 0; x < (int)this->background[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = background[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             Vector2 tilePosition = {
                 ((float)x * this->tileSize) - (this->parallaxOffset.x * 2) + (this->tileSize * 0.5f),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 2)
             };
-            //Getting the correct tile
-            int tileIndex = background[y][x];
             //Drawing single tile
             DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, BLACK);
         }
@@ -32,13 +34,15 @@ void Tilemap::DrawBackground() const {
     //Drawing bg2 tilemap
     for (int y = 0; y < (int)this->horizon.size(); y++) {
         for (int x = 0; x < (int)this->horizon[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = horizon[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             //Calculating each tile position
             Vector2 tilePosition = {
                 ((float)x * this->tileSize) - (this->parallaxOffset.x * 8) + (this->tileSize * 2),
                 ((float)y * this->tileSize) - (this->parallaxOffset.y * 8)
             };
-            //Getting the correct tile
-            int tileIndex = horizon[y][x];
             //Drawing single tile
             DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, GRAY);
         }
@@ -50,13 +54,15 @@ void Tilemap::Draw() const {
     //Drawing base tilemap
     for (int y = 0; y < (int)this->drawn.size(); y++) {
         for (int x = 0; x < (int)this->drawn[y].size(); x++) {
+            //Getting the correct tile
+            int tileIndex = drawn[y][x];
+            //Skipping blank tiles
+            if (tileIndex == 0) continue; 
             //Calculating each tile position
             Vector2 tilePosition = {
                 ((float)x * this->tileSize),
                 ((float)y * this->tileSize)
             };
-            //Getting the correct tile
-            int tileIndex = drawn[y][x];
             //Drawing single tile
             DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, WHITE);
         }
