@@ -40,7 +40,7 @@ void Tilemap::DrawBackground() const {
             //Getting the correct tile
             int tileIndex = background[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, BLACK);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, BLACK);
         }
     }
     //Drawing bg2 tilemap
@@ -54,7 +54,7 @@ void Tilemap::DrawBackground() const {
             //Getting the correct tile
             int tileIndex = horizon[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, GRAY);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, GRAY);
         }
     }
 }
@@ -72,7 +72,7 @@ void Tilemap::Draw() const {
             //Getting the correct tile
             int tileIndex = drawn[y][x];
             //Drawing single tile
-            DrawTextureRec(this->texture, this->tiles[tileIndex], tilePosition, WHITE);
+            DrawTextureRec(this->texture, this->tileset[tileIndex], tilePosition, WHITE);
         }
     }
 }
