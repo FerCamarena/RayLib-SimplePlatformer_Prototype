@@ -41,8 +41,10 @@ void Level_02::Update() {
     //Checking for inputs to start a new game
     if (IsKeyPressed(KEY_ENTER)) {
         SceneManager::ChangeScene(0);
+        return;
     } else if (IsKeyPressed(KEY_N)) { //Temp
         SceneManager::ChangeScene(2);
+        return;
     }
 
     //Detecting ENEMY-PLAYER collisions
@@ -51,7 +53,7 @@ void Level_02::Update() {
         if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
             //Change to game over scene
             SceneManager::ChangeScene(1);
-            break;
+            return;
         //Continue checking
         } else ++enemy;
     }

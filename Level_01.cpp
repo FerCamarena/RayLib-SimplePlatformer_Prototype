@@ -41,9 +41,10 @@ void Level_01::Update() {
     //Checking for inputs to start a new game
     if (IsKeyPressed(KEY_ENTER)) {
         SceneManager::ChangeScene(0);
-    } else if (IsKeyPressed(KEY_N)) { //Temp
+        return;
     } else if (IsKeyPressed(KEY_N)) { //TEMP
         SceneManager::ChangeScene(2);
+        return;
     }
 
     //Detecting ENEMY-PLAYER collisions
@@ -52,10 +53,11 @@ void Level_01::Update() {
         if (CheckCollisionRecs(player.hitbox, (*enemy)->hitbox)) {
             //Change to game over scene
             SceneManager::ChangeScene(1);
-            break;
+            return;
         //Continue checking
         } else ++enemy;
     }
+    
     //Detecting ENEMY-BULLET collisions
     for (auto enemy = enemyList.begin(); enemy != enemyList.end(); ) {
         //Value to manage better the list iteration
